@@ -22,7 +22,7 @@ Below is the inheritance graph of the various Immutable Ecosystem smart contract
 
 ## ImmutableToken
 
-![image token](./images/TokenDependencyGraph.svg)
+<img src="./images/TokenDependencyGraph.svg" width="200" height="800">
 
 The full public API documentation for this smart contract is available in the docs folder, [ImmuteToken](./docs/ImmuteToken.md).
 
