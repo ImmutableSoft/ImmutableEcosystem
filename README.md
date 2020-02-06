@@ -18,30 +18,30 @@ The Immutable Ecosystem is split into four Smart Contracts. The ImmuteToken is t
 
 Below is the inheritance graph of the various Immutable Ecosystem smart contracts.
 
-![image info](./images/InheritanceGraph.svg)
+![image inheritance](./images/InheritanceGraph.svg)
 
 ## ImmutableToken
 
-![image info](./images/TokenDependencyGraph.svg)
+![image token](./images/TokenDependencyGraph.svg)
 
-The full public API documentation for this smart contract is available in the docs folder, [a ImmuteToken](./docs/ImmuteToken.md).
+The full public API documentation for this smart contract is available in the docs folder, [ImmuteToken](./docs/ImmuteToken.md).
 
 ## ImmutableEntity
 
 Registered Entities can be of various types such as Creator, Distributor, or End User. Each Entity is assigned a unique index within the Ecosystem upon creation. This index, as well as the Entity Ethereum wallet address, can be used to identify the Entity.
 
-![image info](./images/EntityDependencyGraph.svg)
+![image entity](./images/EntityDependencyGraph.svg)
 
-The full public API documentation for this smart contract is available in the docs folder, [a ImmutableEntity](./docs/ImmutableEntity.md).
+The full public API documentation for this smart contract is available in the docs folder, [ImmutableEntity](./docs/ImmutableEntity.md).
 
 ## ImmutableProduct
 
-![image info](./images/ProductDependencyGraph.svg)
+![image product](./images/ProductDependencyGraph.svg)
 
-The full public API documentation for this smart contract is available in the docs folder, [a ImmutableProduct](./docs/ImmutableProduct.md).
+The full public API documentation for this smart contract is available in the docs folder, [ImmutableProduct](./docs/ImmutableProduct.md).
 
 ## ImmutableLicense
 
-![image info](./images/LicenseDependencyGraph.svg)
+![image license](./images/LicenseDependencyGraph.svg)
 
-The full public API documentation for this smart contract is available in the docs folder, [a ImmutableLicense](./docs/ImmutableLicense.md).
+The full public API documentation for this smart contract is available in the docs folder, [ImmutableLicense](./docs/ImmutableLicense.md).
