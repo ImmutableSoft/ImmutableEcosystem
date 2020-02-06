@@ -20,6 +20,28 @@ Below is the inheritance graph of the various Immutable Ecosystem smart contract
 
 ![image info](./images/InheritanceGraph.svg)
 
-### ImmutableEntity
+## ImmutableToken
+
+![image info](./images/TokenDependencyGraph.svg)
+
+The full public API documentation for this smart contract is available in the docs folder, [a ImmuteToken](./docs/ImmuteToken.md).
+
+## ImmutableEntity
 
 Registered Entities can be of various types such as Creator, Distributor, or End User. Each Entity is assigned a unique index within the Ecosystem upon creation. This index, as well as the Entity Ethereum wallet address, can be used to identify the Entity.
+
+![image info](./images/EntityDependencyGraph.svg)
+
+The full public API documentation for this smart contract is available in the docs folder, [a ImmutableEntity](./docs/ImmutableEntity.md).
+
+## ImmutableProduct
+
+![image info](./images/ProductDependencyGraph.svg)
+
+The full public API documentation for this smart contract is available in the docs folder, [a ImmutableProduct](./docs/ImmutableProduct.md).
+
+## ImmutableLicense
+
+![image info](./images/LicenseDependencyGraph.svg)
+
+The full public API documentation for this smart contract is available in the docs folder, [a ImmutableLicense](./docs/ImmutableLicense.md).

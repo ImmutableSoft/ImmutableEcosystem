@@ -1,0 +1,656 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [  <!ENTITY quot "&#34;">  <!ENTITY amp "&#38;">  <!ENTITY apos "&#39;">  <!ENTITY lt "&#60;">  <!ENTITY gt "&#62;">  <!ENTITY nbsp "&#160;">  <!ENTITY iexcl "&#161;">  <!ENTITY cent "&#162;">  <!ENTITY pound "&#163;">  <!ENTITY curren "&#164;">  <!ENTITY yen "&#165;">  <!ENTITY brvbar "&#166;">  <!ENTITY sect "&#167;">  <!ENTITY uml "&#168;">  <!ENTITY copy "&#169;">  <!ENTITY ordf "&#170;">  <!ENTITY laquo "&#171;">  <!ENTITY not "&#172;">  <!ENTITY shy "&#173;">  <!ENTITY reg "&#174;">  <!ENTITY macr "&#175;">  <!ENTITY deg "&#176;">  <!ENTITY plusmn "&#177;">  <!ENTITY sup2 "&#178;">  <!ENTITY sup3 "&#179;">  <!ENTITY acute "&#180;">  <!ENTITY micro "&#181;">  <!ENTITY para "&#182;">  <!ENTITY middot "&#183;">  <!ENTITY cedil "&#184;">  <!ENTITY sup1 "&#185;">  <!ENTITY ordm "&#186;">  <!ENTITY raquo "&#187;">  <!ENTITY frac14 "&#188;">  <!ENTITY frac12 "&#189;">  <!ENTITY frac34 "&#190;">  <!ENTITY iquest "&#191;">  <!ENTITY Agrave "&#192;">  <!ENTITY Aacute "&#193;">  <!ENTITY Acirc "&#194;">  <!ENTITY Atilde "&#195;">  <!ENTITY Auml "&#196;">  <!ENTITY Aring "&#197;">  <!ENTITY AElig "&#198;">  <!ENTITY Ccedil "&#199;">  <!ENTITY Egrave "&#200;">  <!ENTITY Eacute "&#201;">  <!ENTITY Ecirc "&#202;">  <!ENTITY Euml "&#203;">  <!ENTITY Igrave "&#204;">  <!ENTITY Iacute "&#205;">  <!ENTITY Icirc "&#206;">  <!ENTITY Iuml "&#207;">  <!ENTITY ETH "&#208;">  <!ENTITY Ntilde "&#209;">  <!ENTITY Ograve "&#210;">  <!ENTITY Oacute "&#211;">  <!ENTITY Ocirc "&#212;">  <!ENTITY Otilde "&#213;">  <!ENTITY Ouml "&#214;">  <!ENTITY times "&#215;">  <!ENTITY Oslash "&#216;">  <!ENTITY Ugrave "&#217;">  <!ENTITY Uacute "&#218;">  <!ENTITY Ucirc "&#219;">  <!ENTITY Uuml "&#220;">  <!ENTITY Yacute "&#221;">  <!ENTITY THORN "&#222;">  <!ENTITY szlig "&#223;">  <!ENTITY agrave "&#224;">  <!ENTITY aacute "&#225;">  <!ENTITY acirc "&#226;">  <!ENTITY atilde "&#227;">  <!ENTITY auml "&#228;">  <!ENTITY aring "&#229;">  <!ENTITY aelig "&#230;">  <!ENTITY ccedil "&#231;">  <!ENTITY egrave "&#232;">  <!ENTITY eacute "&#233;">  <!ENTITY ecirc "&#234;">  <!ENTITY euml "&#235;">  <!ENTITY igrave "&#236;">  <!ENTITY iacute "&#237;">  <!ENTITY icirc "&#238;">  <!ENTITY iuml "&#239;">  <!ENTITY eth "&#240;">  <!ENTITY ntilde "&#241;">  <!ENTITY ograve "&#242;">  <!ENTITY oacute "&#243;">  <!ENTITY ocirc "&#244;">  <!ENTITY otilde "&#245;">  <!ENTITY ouml "&#246;">  <!ENTITY divide "&#247;">  <!ENTITY oslash "&#248;">  <!ENTITY ugrave "&#249;">  <!ENTITY uacute "&#250;">  <!ENTITY ucirc "&#251;">  <!ENTITY uuml "&#252;">  <!ENTITY yacute "&#253;">  <!ENTITY thorn "&#254;">  <!ENTITY yuml "&#255;">  <!ENTITY OElig "&#338;">  <!ENTITY oelig "&#339;">  <!ENTITY Scaron "&#352;">  <!ENTITY scaron "&#353;">  <!ENTITY Yuml "&#376;">  <!ENTITY fnof "&#402;">  <!ENTITY circ "&#710;">  <!ENTITY tilde "&#732;">  <!ENTITY Alpha "&#913;">  <!ENTITY Beta "&#914;">  <!ENTITY Gamma "&#915;">  <!ENTITY Delta "&#916;">  <!ENTITY Epsilon "&#917;">  <!ENTITY Zeta "&#918;">  <!ENTITY Eta "&#919;">  <!ENTITY Theta "&#920;">  <!ENTITY Iota "&#921;">  <!ENTITY Kappa "&#922;">  <!ENTITY Lambda "&#923;">  <!ENTITY Mu "&#924;">  <!ENTITY Nu "&#925;">  <!ENTITY Xi "&#926;">  <!ENTITY Omicron "&#927;">  <!ENTITY Pi "&#928;">  <!ENTITY Rho "&#929;">  <!ENTITY Sigma "&#931;">  <!ENTITY Tau "&#932;">  <!ENTITY Upsilon "&#933;">  <!ENTITY Phi "&#934;">  <!ENTITY Chi "&#935;">  <!ENTITY Psi "&#936;">  <!ENTITY Omega "&#937;">  <!ENTITY alpha "&#945;">  <!ENTITY beta "&#946;">  <!ENTITY gamma "&#947;">  <!ENTITY delta "&#948;">  <!ENTITY epsilon "&#949;">  <!ENTITY zeta "&#950;">  <!ENTITY eta "&#951;">  <!ENTITY theta "&#952;">  <!ENTITY iota "&#953;">  <!ENTITY kappa "&#954;">  <!ENTITY lambda "&#955;">  <!ENTITY mu "&#956;">  <!ENTITY nu "&#957;">  <!ENTITY xi "&#958;">  <!ENTITY omicron "&#959;">  <!ENTITY pi "&#960;">  <!ENTITY rho "&#961;">  <!ENTITY sigmaf "&#962;">  <!ENTITY sigma "&#963;">  <!ENTITY tau "&#964;">  <!ENTITY upsilon "&#965;">  <!ENTITY phi "&#966;">  <!ENTITY chi "&#967;">  <!ENTITY psi "&#968;">  <!ENTITY omega "&#969;">  <!ENTITY thetasym "&#977;">  <!ENTITY upsih "&#978;">  <!ENTITY piv "&#982;">  <!ENTITY ensp "&#8194;">  <!ENTITY emsp "&#8195;">  <!ENTITY thinsp "&#8201;">  <!ENTITY zwnj "&#8204;">  <!ENTITY zwj "&#8205;">  <!ENTITY lrm "&#8206;">  <!ENTITY rlm "&#8207;">  <!ENTITY ndash "&#8211;">  <!ENTITY mdash "&#8212;">  <!ENTITY lsquo "&#8216;">  <!ENTITY rsquo "&#8217;">  <!ENTITY sbquo "&#8218;">  <!ENTITY ldquo "&#8220;">  <!ENTITY rdquo "&#8221;">  <!ENTITY bdquo "&#8222;">  <!ENTITY dagger "&#8224;">  <!ENTITY Dagger "&#8225;">  <!ENTITY bull "&#8226;">  <!ENTITY hellip "&#8230;">  <!ENTITY permil "&#8240;">  <!ENTITY prime "&#8242;">  <!ENTITY Prime "&#8243;">  <!ENTITY lsaquo "&#8249;">  <!ENTITY rsaquo "&#8250;">  <!ENTITY oline "&#8254;">  <!ENTITY frasl "&#8260;">  <!ENTITY euro "&#8364;">  <!ENTITY image "&#8465;">  <!ENTITY weierp "&#8472;">  <!ENTITY real "&#8476;">  <!ENTITY trade "&#8482;">  <!ENTITY alefsym "&#8501;">  <!ENTITY larr "&#8592;">  <!ENTITY uarr "&#8593;">  <!ENTITY rarr "&#8594;">  <!ENTITY darr "&#8595;">  <!ENTITY harr "&#8596;">  <!ENTITY crarr "&#8629;">  <!ENTITY lArr "&#8656;">  <!ENTITY uArr "&#8657;">  <!ENTITY rArr "&#8658;">  <!ENTITY dArr "&#8659;">  <!ENTITY hArr "&#8660;">  <!ENTITY forall "&#8704;">  <!ENTITY part "&#8706;">  <!ENTITY exist "&#8707;">  <!ENTITY empty "&#8709;">  <!ENTITY nabla "&#8711;">  <!ENTITY isin "&#8712;">  <!ENTITY notin "&#8713;">  <!ENTITY ni "&#8715;">  <!ENTITY prod "&#8719;">  <!ENTITY sum "&#8721;">  <!ENTITY minus "&#8722;">  <!ENTITY lowast "&#8727;">  <!ENTITY radic "&#8730;">  <!ENTITY prop "&#8733;">  <!ENTITY infin "&#8734;">  <!ENTITY ang "&#8736;">  <!ENTITY and "&#8743;">  <!ENTITY or "&#8744;">  <!ENTITY cap "&#8745;">  <!ENTITY cup "&#8746;">  <!ENTITY int "&#8747;">  <!ENTITY there4 "&#8756;">  <!ENTITY sim "&#8764;">  <!ENTITY cong "&#8773;">  <!ENTITY asymp "&#8776;">  <!ENTITY ne "&#8800;">  <!ENTITY equiv "&#8801;">  <!ENTITY le "&#8804;">  <!ENTITY ge "&#8805;">  <!ENTITY sub "&#8834;">  <!ENTITY sup "&#8835;">  <!ENTITY nsub "&#8836;">  <!ENTITY sube "&#8838;">  <!ENTITY supe "&#8839;">  <!ENTITY oplus "&#8853;">  <!ENTITY otimes "&#8855;">  <!ENTITY perp "&#8869;">  <!ENTITY sdot "&#8901;">  <!ENTITY lceil "&#8968;">  <!ENTITY rceil "&#8969;">  <!ENTITY lfloor "&#8970;">  <!ENTITY rfloor "&#8971;">  <!ENTITY lang "&#9001;">  <!ENTITY rang "&#9002;">  <!ENTITY loz "&#9674;">  <!ENTITY spades "&#9824;">  <!ENTITY clubs "&#9827;">  <!ENTITY hearts "&#9829;">  <!ENTITY diams "&#9830;"> ]><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0.00 0.00 960.30 1654.00">
+<g id="graph0" class="graph" transform="translate(-19.97794031802175,1609.9145975020783) scale(1)" data-name="G">
+
+<polygon fill="#2e3e56" stroke="transparent" points="-4,4 -4,-1650 956.2983,-1650 956.2983,4 -4,4" style=""></polygon>
+<g id="clust1" class="cluster">
+<title style="">clusterImmutableLicense</title>
+<path fill="#445773" stroke="#445773" d="M20,-1005C20,-1005 699.9107,-1005 699.9107,-1005 705.9107,-1005 711.9107,-1011 711.9107,-1017 711.9107,-1017 711.9107,-1448 711.9107,-1448 711.9107,-1454 705.9107,-1460 699.9107,-1460 699.9107,-1460 20,-1460 20,-1460 14,-1460 8,-1454 8,-1448 8,-1448 8,-1017 8,-1017 8,-1011 14,-1005 20,-1005" style=""></path>
+<text text-anchor="middle" x="359.9553" y="-1443.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmutableLicense</text>
+</g>
+<g id="clust2" class="cluster">
+<title style="">clusterImmutableEntity</title>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M500.7865,-511C500.7865,-511 731.571,-511 731.571,-511 737.571,-511 743.571,-517 743.571,-523 743.571,-523 743.571,-846 743.571,-846 743.571,-852 737.571,-858 731.571,-858 731.571,-858 500.7865,-858 500.7865,-858 494.7865,-858 488.7865,-852 488.7865,-846 488.7865,-846 488.7865,-523 488.7865,-523 488.7865,-517 494.7865,-511 500.7865,-511" style=""></path>
+<text text-anchor="middle" x="616.1787" y="-841.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmutableEntity</text>
+</g>
+<g id="clust3" class="cluster">
+<title style="">clusterImmutableProduct</title>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M775.571,-1120C775.571,-1120 932.2983,-1120 932.2983,-1120 938.2983,-1120 944.2983,-1126 944.2983,-1132 944.2983,-1132 944.2983,-1239 944.2983,-1239 944.2983,-1245 938.2983,-1251 932.2983,-1251 932.2983,-1251 775.571,-1251 775.571,-1251 769.571,-1251 763.571,-1245 763.571,-1239 763.571,-1239 763.571,-1132 763.571,-1132 763.571,-1126 769.571,-1120 775.571,-1120" style=""></path>
+<text text-anchor="middle" x="853.9346" y="-1234.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmutableProduct</text>
+</g>
+<g id="clust4" class="cluster">
+<title style="">clusterERC20</title>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M558.733,-866C558.733,-866 673.6245,-866 673.6245,-866 679.6245,-866 685.6245,-872 685.6245,-878 685.6245,-878 685.6245,-985 685.6245,-985 685.6245,-991 679.6245,-997 673.6245,-997 673.6245,-997 558.733,-997 558.733,-997 552.733,-997 546.733,-991 546.733,-985 546.733,-985 546.733,-878 546.733,-878 546.733,-872 552.733,-866 558.733,-866" style=""></path>
+<text text-anchor="middle" x="616.1787" y="-980.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC20</text>
+</g>
+<g id="clust5" class="cluster">
+<title style="">clusterImmuteToken</title>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M558.733,-8C558.733,-8 673.6245,-8 673.6245,-8 679.6245,-8 685.6245,-14 685.6245,-20 685.6245,-20 685.6245,-181 685.6245,-181 685.6245,-187 679.6245,-193 673.6245,-193 673.6245,-193 558.733,-193 558.733,-193 552.733,-193 546.733,-187 546.733,-181 546.733,-181 546.733,-20 546.733,-20 546.733,-14 552.733,-8 558.733,-8" style=""></path>
+<text text-anchor="middle" x="616.1787" y="-176.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmuteToken</text>
+</g>
+<g id="clust6" class="cluster">
+<title style="">cluster_01</title>
+<polygon fill="#2e3e56" stroke="#000000" points="47.8875,-1509 47.8875,-1638 396.2808,-1638 396.2808,-1509 47.8875,-1509" style=""></polygon>
+<text text-anchor="middle" x="222.0841" y="-1621.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Legend</text>
+</g>
+<!-- ImmutableLicense.&lt;Constructor&gt; -->
+<g id="node1" class="node" data-name="ImmutableLicense.&lt;Constructor&gt;">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="120.8875" cy="-1409" rx="63.4794" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="120.8875" y="-1404.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&lt;Constructor&gt;</text>
+</g>
+<!-- ImmutableLicense.licenseOffer -->
+<g id="node2" class="node" data-name="ImmutableLicense.licenseOffer">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="120.8875" cy="-1139" rx="54.4396" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="120.8875" y="-1134.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseOffer</text>
+</g>
+<!-- ImmutableEntity.entityAddressStatus -->
+<g id="node16" class="node" data-name="ImmutableEntity.entityAddressStatus">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-537" rx="83.9951" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-532.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityAddressStatus</text>
+</g>
+<!-- ImmutableLicense.licenseOffer&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge1" class="edge" data-name="ImmutableLicense.licenseOffer->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M179.4914,-1136.8777C196.9463,-1133.2056 214.4247,-1125.9151 225.775,-1112 276.7551,-1049.5002 203.3464,-442.5994 261.775,-387 325.8504,-326.0274 378.7742,-353.8745 460.7865,-387 522.6452,-411.9853 573.5793,-474.6959 598.8942,-510.6244" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="596.2104,-512.8977 604.7693,-519.1424 601.9727,-508.9233 596.2104,-512.8977" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityIdToLocalId -->
+<g id="node17" class="node" data-name="ImmutableEntity.entityIdToLocalId">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-591" rx="77.5991" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-586.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityIdToLocalId</text>
+</g>
+<!-- ImmutableLicense.licenseOffer&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge2" class="edge" data-name="ImmutableLicense.licenseOffer->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M179.306,-1136.7248C196.7492,-1133.043 214.2676,-1125.7854 225.775,-1112 296.7365,-1026.9915 183.2909,-693.1167 261.775,-615 298.0066,-578.9381 435.9422,-579.5182 528.6602,-584.4055" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="528.711,-587.9136 538.8891,-584.9716 529.0978,-580.9243 528.711,-587.9136" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityAddressToIndex -->
+<g id="node18" class="node" data-name="ImmutableEntity.entityAddressToIndex">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-753" rx="93.2116" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-748.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityAddressToIndex</text>
+</g>
+<!-- ImmutableLicense.licenseOffer&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge3" class="edge" data-name="ImmutableLicense.licenseOffer->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M178.3753,-1134.9088C195.4516,-1131.0859 212.9894,-1124.2039 225.775,-1112 265.1307,-1074.435 228.1159,-1037.7442 261.775,-995 325.3918,-914.2123 397.8782,-958.3405 460.7865,-877 488.2377,-841.5055 455.9337,-810.5635 488.7865,-780 496.5636,-772.7648 505.7771,-767.2759 515.6378,-763.1361" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="517.1046,-766.3251 525.2644,-759.5673 514.6714,-759.7616 517.1046,-766.3251" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productNumberOf -->
+<g id="node22" class="node" data-name="ImmutableProduct.productNumberOf">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="853.9346" cy="-1200" rx="78.1651" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="853.9346" y="-1195.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productNumberOf</text>
+</g>
+<!-- ImmutableLicense.licenseOffer&#45;&gt;ImmutableProduct.productNumberOf -->
+<g id="edge4" class="edge" data-name="ImmutableLicense.licenseOffer->ImmutableProduct.productNumberOf">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M178.9953,-1141.8399C196.3126,-1145.5701 213.835,-1152.7137 225.775,-1166 299.6337,-1248.1868 178.1756,-1339.7442 261.775,-1412 440.6069,-1566.5661 740.3986,-1308.1594 828.7256,-1224.6637" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="831.3139,-1227.0317 836.136,-1217.5978 826.4833,-1221.9656 831.3139,-1227.0317" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productDetails -->
+<g id="node23" class="node" data-name="ImmutableProduct.productDetails">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="853.9346" cy="-1146" rx="63.711600000000004" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="853.9346" y="-1141.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productDetails</text>
+</g>
+<!-- ImmutableLicense.licenseOffer&#45;&gt;ImmutableProduct.productDetails -->
+<g id="edge5" class="edge" data-name="ImmutableLicense.licenseOffer->ImmutableProduct.productDetails">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M179.5131,-1136.8954C196.9694,-1133.2245 214.4432,-1125.9301 225.775,-1112 279.5436,-1045.9028 200.128,-404.8179 261.775,-346 425.1235,-190.1482 613.8409,-322.2228 743.571,-507 814.7839,-608.43 845.1371,-1008.0344 852.2389,-1117.9102" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="848.7465,-1118.1424 852.8717,-1127.9011 855.7325,-1117.6999 848.7465,-1118.1424" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransferEscrow -->
+<g id="node3" class="node" data-name="ImmutableLicense.licenseTransferEscrow">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="361.2808" cy="-1223" rx="95.4489" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="361.2808" y="-1218.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseTransferEscrow</text>
+</g>
+<!-- ImmutableLicense.licenseTransferEscrow&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge7" class="edge" data-name="ImmutableLicense.licenseTransferEscrow->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M440.4662,-1211.9974C448.2537,-1208.0442 455.291,-1202.8359 460.7865,-1196 501.0721,-1145.8878 447.111,-666.9625 488.7865,-618 498.1923,-606.9495 510.8902,-599.743 524.638,-595.1477" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="525.6539,-598.4974 534.2959,-592.3683 523.7179,-591.7705 525.6539,-598.4974" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityIndexStatus -->
+<g id="node19" class="node" data-name="ImmutableEntity.entityIndexStatus">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-699" rx="74.6867" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-694.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityIndexStatus</text>
+</g>
+<!-- ImmutableLicense.licenseTransferEscrow&#45;&gt;ImmutableEntity.entityIndexStatus -->
+<g id="edge6" class="edge" data-name="ImmutableLicense.licenseTransferEscrow->ImmutableEntity.entityIndexStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M440.392,-1211.9373C448.1925,-1207.9947 455.2531,-1202.8053 460.7865,-1196 526.7938,-1114.8188 420.5279,-805.2977 488.7865,-726 498.889,-714.2636 512.7054,-706.8748 527.525,-702.3471" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="528.5916,-705.686 537.3796,-699.7681 526.8192,-698.914 528.5916,-705.686" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityCustomTokenAddress -->
+<g id="node20" class="node" data-name="ImmutableEntity.entityCustomTokenAddress">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-645" rx="115.2221" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-640.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityCustomTokenAddress</text>
+</g>
+<!-- ImmutableLicense.licenseTransferEscrow&#45;&gt;ImmutableEntity.entityCustomTokenAddress -->
+<g id="edge9" class="edge" data-name="ImmutableLicense.licenseTransferEscrow->ImmutableEntity.entityCustomTokenAddress">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M440.4329,-1211.9705C448.2262,-1208.022 455.274,-1202.8222 460.7865,-1196 534.075,-1105.2982 412.9826,-760.6103 488.7865,-672 493.1265,-666.9267 498.1605,-662.6646 503.6706,-659.094" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="505.6803,-661.9798 512.6898,-654.0352 502.2558,-655.8746 505.6803,-661.9798" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransferEscrow&#45;&gt;ImmutableProduct.productNumberOf -->
+<g id="edge8" class="edge" data-name="ImmutableLicense.licenseTransferEscrow->ImmutableProduct.productNumberOf">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M451.6291,-1230.5447C529.3234,-1235.4594 644.2321,-1238.9748 743.571,-1227 760.5185,-1224.9571 778.6196,-1221.2099 795.1578,-1217.1443" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="796.3995,-1220.44 805.2289,-1214.5841 794.6748,-1213.6558 796.3995,-1220.44" style=""></polygon>
+</g>
+<!-- ERC20.transferFrom -->
+<g id="node24" class="node" data-name="ERC20.transferFrom">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-946" rx="57.3291" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-941.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferFrom</text>
+</g>
+<!-- ImmutableLicense.licenseTransferEscrow&#45;&gt;ERC20.transferFrom -->
+<g id="edge10" class="edge" data-name="ImmutableLicense.licenseTransferEscrow->ERC20.transferFrom">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M439.3626,-1211.7099C447.4473,-1207.8187 454.8566,-1202.7037 460.7865,-1196 518.7968,-1130.4197 435.5955,-1070.5463 488.7865,-1001 504.8005,-980.0619 530.3995,-966.9746 554.4636,-958.8521" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="555.7988,-962.1015 564.2936,-955.77 553.7045,-955.4221 555.7988,-962.1015" style=""></polygon>
+</g>
+<!-- ImmuteToken.transferFrom -->
+<g id="node26" class="node" data-name="ImmuteToken.transferFrom">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-142" rx="57.3291" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-137.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferFrom</text>
+</g>
+<!-- ImmutableLicense.licenseTransferEscrow&#45;&gt;ImmuteToken.transferFrom -->
+<g id="edge11" class="edge" data-name="ImmutableLicense.licenseTransferEscrow->ImmuteToken.transferFrom">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M440.5185,-1212.0392C448.2969,-1208.0787 455.3177,-1202.8573 460.7865,-1196 508.5591,-1136.0983 474.4511,-582.2657 488.7865,-507 513.7071,-376.1574 576.5458,-228.8308 603.5383,-169.2057" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="606.7347,-170.6318 607.7003,-160.0811 600.3659,-167.7268 606.7347,-170.6318" style=""></polygon>
+</g>
+<!-- ImmutableLicense.license_product -->
+<g id="node4" class="node" data-name="ImmutableLicense.license_product">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="361.2808" cy="-1331" rx="68.2891" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="361.2808" y="-1326.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">license_product</text>
+</g>
+<!-- ImmutableLicense.licenseLookupHash -->
+<g id="node15" class="node" data-name="ImmutableLicense.licenseLookupHash">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-1200" rx="83.902" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-1195.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseLookupHash</text>
+</g>
+<!-- ImmutableLicense.license_product&#45;&gt;ImmutableLicense.licenseLookupHash -->
+<g id="edge12" class="edge" data-name="ImmutableLicense.license_product->ImmutableLicense.licenseLookupHash">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M416.6272,-1319.3947C431.3185,-1315.4017 446.94,-1310.3065 460.7865,-1304 508.0429,-1282.4767 556.9137,-1247.2458 586.9308,-1223.841" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="589.1937,-1226.514 594.8802,-1217.5745 584.8601,-1221.0166 589.1937,-1226.514" style=""></polygon>
+</g>
+<!-- ImmutableLicense.license_product&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge13" class="edge" data-name="ImmutableLicense.license_product->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M429.0474,-1324.7419C441.2717,-1320.546 452.6865,-1314.0245 460.7865,-1304 534.075,-1213.2982 412.9826,-868.6103 488.7865,-780 495.455,-772.2048 503.7618,-766.3248 512.9166,-761.9258" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="514.441,-765.0823 522.3248,-758.0044 511.7479,-758.6211 514.441,-765.0823" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseCreate -->
+<g id="node5" class="node" data-name="ImmutableLicense.licenseCreate">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="120.8875" cy="-1193" rx="59.0313" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="120.8875" y="-1188.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseCreate</text>
+</g>
+<!-- ImmutableLicense.licenseCreate&#45;&gt;ImmutableLicense.license_product -->
+<g id="edge17" class="edge" data-name="ImmutableLicense.licenseCreate->ImmutableLicense.license_product">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M180.8865,-1198.7043C196.896,-1202.6709 213.2149,-1209.2277 225.775,-1220 256.6062,-1246.4428 231.1166,-1277.3572 261.775,-1304 269.2737,-1310.5165 278.1978,-1315.4765 287.5769,-1319.2486" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="286.4771,-1322.5722 297.0717,-1322.6384 288.8308,-1315.9798 286.4771,-1322.5722" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseCreate&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge16" class="edge" data-name="ImmutableLicense.licenseCreate->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M183.3364,-1190.0179C199.4847,-1186.1086 215.2636,-1178.9008 225.775,-1166 277.8433,-1102.0964 202.0905,-481.8553 261.775,-425 325.8178,-363.9931 376.6142,-397.8274 460.7865,-425 513.4338,-441.9957 563.2775,-484.1993 591.7287,-511.6713" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="589.5885,-514.4758 599.1707,-518.996 594.4988,-509.4868 589.5885,-514.4758" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseCreate&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge14" class="edge" data-name="ImmutableLicense.licenseCreate->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M183.159,-1189.8718C199.3038,-1185.9597 215.1254,-1178.7869 225.775,-1166 298.9106,-1078.1866 185.239,-737.866 261.775,-653 270.9979,-642.7733 435.7412,-617.2081 537.3286,-602.2945" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="537.8713,-605.7524 547.259,-600.841 536.8575,-598.8262 537.8713,-605.7524" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseCreate&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge15" class="edge" data-name="ImmutableLicense.licenseCreate->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M181.9038,-1188.4008C197.9294,-1184.4518 214.0023,-1177.6277 225.775,-1166 269.3445,-1122.9672 221.3952,-1079.039 261.775,-1033 324.9668,-960.952 401.316,-1025.149 460.7865,-950 508.3048,-889.9541 435.8896,-835.3663 488.7865,-780 496.0059,-772.4435 504.7719,-766.7356 514.2905,-762.4551" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="515.603,-765.6999 523.6213,-758.7748 513.0345,-759.1882 515.603,-765.6999" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licensePurchase -->
+<g id="node6" class="node" data-name="ImmutableLicense.licensePurchase">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="120.8875" cy="-1355" rx="68.8457" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="120.8875" y="-1350.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licensePurchase</text>
+</g>
+<!-- ImmutableLicense.licensePurchase&#45;&gt;ImmutableLicense.licenseTransferEscrow -->
+<g id="edge19" class="edge" data-name="ImmutableLicense.licensePurchase->ImmutableLicense.licenseTransferEscrow">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M186.9812,-1347.3814C200.9177,-1343.3315 214.7285,-1337.2135 225.775,-1328 255.0959,-1303.5446 232.614,-1274.6457 261.775,-1250 266.6647,-1245.8675 272.1303,-1242.3627 277.9155,-1239.3909" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="279.5838,-1242.477 287.2327,-1235.1459 276.6815,-1236.1069 279.5838,-1242.477" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licensePurchase&#45;&gt;ImmutableLicense.license_product -->
+<g id="edge21" class="edge" data-name="ImmutableLicense.licensePurchase->ImmutableLicense.license_product">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M188.4902,-1348.2508C218.1849,-1345.2862 253.2143,-1341.789 283.9432,-1338.7211" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="284.5827,-1342.1747 294.1855,-1337.6985 283.8873,-1335.2094 284.5827,-1342.1747" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licensePurchase&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge20" class="edge" data-name="ImmutableLicense.licensePurchase->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M190.7137,-1349.7077C204.1201,-1345.4997 216.7678,-1338.7288 225.775,-1328 291.8459,-1249.3012 211.947,-956.8667 261.775,-867 315.0975,-770.831 398.5832,-810.6781 460.7865,-720 487.3792,-681.234 454.5782,-650.2454 488.7865,-618 499.1122,-608.2667 512.0325,-601.6832 525.6544,-597.29" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="526.9962,-600.5482 535.6702,-594.4645 525.0955,-593.8111 526.9962,-600.5482" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licensePurchase&#45;&gt;ImmutableEntity.entityIndexStatus -->
+<g id="edge18" class="edge" data-name="ImmutableLicense.licensePurchase->ImmutableEntity.entityIndexStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M189.5487,-1348.9965C203.1064,-1344.8402 216.1106,-1338.2703 225.775,-1328 283.4779,-1266.6799 228.0343,-1219.1449 261.775,-1142 321.6555,-1005.0894 400.9354,-1007.9235 460.7865,-871 487.0747,-810.8595 442.7974,-772.829 488.7865,-726 499.507,-715.0837 513.4622,-708.0521 528.1927,-703.6143" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="529.1709,-706.9762 537.9585,-701.0577 527.3981,-700.2044 529.1709,-706.9762" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licensePurchaseInETH -->
+<g id="node7" class="node" data-name="ImmutableLicense.licensePurchaseInETH">
+
+<ellipse fill="#ffbdb9" stroke="#a52a2a" stroke-width="3" cx="120.8875" cy="-1085" rx="95.4721" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="120.8875" y="-1080.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licensePurchaseInETH</text>
+</g>
+<!-- ImmutableLicense.licensePurchaseInETH&#45;&gt;ImmutableLicense.license_product -->
+<g id="edge26" class="edge" data-name="ImmutableLicense.licensePurchaseInETH->ImmutableLicense.license_product">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M201.8249,-1095.5082C210.8014,-1099.5062 219.0952,-1104.8598 225.775,-1112 285.0883,-1175.4012 202.8755,-1240.2142 261.775,-1304 268.3093,-1311.0763 276.4928,-1316.3707 285.3436,-1320.3197" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="284.1782,-1323.6216 294.7674,-1323.9662 286.7043,-1317.0933 284.1782,-1323.6216" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licensePurchaseInETH&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge23" class="edge" data-name="ImmutableLicense.licensePurchaseInETH->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M203.3604,-1074.8154C211.91,-1070.7423 219.6812,-1065.2824 225.775,-1058 294.5627,-975.796 183.2043,-649.91 261.775,-577 301.5285,-540.1107 454.3659,-560.6147 545.8461,-576.9955" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="545.4015,-580.4719 555.8663,-578.8171 546.6536,-573.5848 545.4015,-580.4719" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licensePurchaseInETH&#45;&gt;ImmutableEntity.entityIndexStatus -->
+<g id="edge22" class="edge" data-name="ImmutableLicense.licensePurchaseInETH->ImmutableEntity.entityIndexStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M202.2159,-1074.4986C211.0711,-1070.4929 219.2285,-1065.1356 225.775,-1058 291.2738,-986.6082 195.7329,-913.8894 261.775,-843 323.7954,-776.4275 391.8448,-854.3758 460.7865,-795 485.8635,-773.4025 463.4115,-747.2466 488.7865,-726 500.4463,-716.2371 514.774,-709.7407 529.5626,-705.4681" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="530.5042,-708.84 539.324,-702.9696 528.7684,-702.0587 530.5042,-708.84" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licensePurchaseInETH&#45;&gt;ImmutableProduct.productNumberOf -->
+<g id="edge24" class="edge" data-name="ImmutableLicense.licensePurchaseInETH->ImmutableProduct.productNumberOf">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M203.5315,-1074.9568C212.0521,-1070.8597 219.7697,-1065.3555 225.775,-1058 275.871,-996.6407 204.3668,-400.5789 261.775,-346 325.878,-285.0563 375.2822,-323.3653 460.7865,-346 600.595,-383.0102 669.0131,-383.0755 743.571,-507 781.7373,-570.4371 718.4591,-1114.2986 763.571,-1173 767.2142,-1177.7407 771.6566,-1181.6783 776.5961,-1184.9455" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="774.8897,-1188.0013 785.3248,-1189.8344 778.3104,-1181.894 774.8897,-1188.0013" style=""></polygon>
+</g>
+<!-- ImmuteToken.currentRate -->
+<g id="node27" class="node" data-name="ImmuteToken.currentRate">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-88" rx="52.0925" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-83.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">currentRate</text>
+</g>
+<!-- ImmutableLicense.licensePurchaseInETH&#45;&gt;ImmuteToken.currentRate -->
+<g id="edge25" class="edge" data-name="ImmutableLicense.licensePurchaseInETH->ImmuteToken.currentRate">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M203.8587,-1074.8951C212.2664,-1070.8006 219.8675,-1065.3138 225.775,-1058 288.5909,-980.2314 196.8738,-235.037 261.775,-159 271.3411,-147.7926 457.6996,-114.8026 556.2401,-98.0327" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="557.087,-101.4391 566.3602,-96.3149 555.9155,-94.5378 557.087,-101.4391" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseMove -->
+<g id="node8" class="node" data-name="ImmutableLicense.licenseMove">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="120.8875" cy="-1247" rx="56.1893" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="120.8875" y="-1242.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseMove</text>
+</g>
+<!-- ImmutableLicense.licenseMove&#45;&gt;ImmutableLicense.license_product -->
+<g id="edge33" class="edge" data-name="ImmutableLicense.licenseMove->ImmutableLicense.license_product">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M173.7601,-1255.8138C190.9422,-1259.917 209.7086,-1265.7711 225.775,-1274 244.3124,-1283.4944 243.2999,-1294.3851 261.775,-1304 271.8454,-1309.2408 283.0334,-1313.5421 294.167,-1317.0476" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="293.3258,-1320.4486 303.9078,-1319.927 295.3102,-1313.7357 293.3258,-1320.4486" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseMove&#45;&gt;ImmutableLicense.licenseLookupHash -->
+<g id="edge29" class="edge" data-name="ImmutableLicense.licenseMove->ImmutableLicense.licenseLookupHash">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M179.7879,-1251.0091C196.5309,-1254.8657 213.523,-1261.7875 225.775,-1274 270.6681,-1318.7481 211.6155,-1373.2469 261.775,-1412 331.7682,-1466.0765 381.8932,-1451.9896 460.7865,-1412 537.9276,-1372.8986 586.0162,-1275.5029 605.7901,-1227.5545" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="609.1032,-1228.6963 609.5801,-1218.1122 602.6069,-1226.0888 609.1032,-1228.6963" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseMove&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge31" class="edge" data-name="ImmutableLicense.licenseMove->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M180.8794,-1244.5959C197.8752,-1240.8341 214.7361,-1233.5624 225.775,-1220 278.9315,-1154.6925 200.8345,-521.1113 261.775,-463 351.6386,-377.3084 513.8552,-467.9369 583.2444,-513.7879" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="581.3706,-516.7454 591.6254,-519.408 585.2692,-510.9316 581.3706,-516.7454" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseMove&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge28" class="edge" data-name="ImmutableLicense.licenseMove->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M180.7116,-1244.4579C197.6996,-1240.6896 214.5981,-1233.4489 225.775,-1220 301.085,-1129.3814 184.9197,-780.3116 261.775,-691 320.8613,-622.3374 381.7402,-691.2428 460.7865,-647 476.4203,-638.2496 473.1145,-626.682 488.7865,-618 502.1701,-610.5857 517.3805,-605.2045 532.5164,-601.2997" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="533.5139,-604.6602 542.4321,-598.9404 531.8935,-597.8503 533.5139,-604.6602" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseMove&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge30" class="edge" data-name="ImmutableLicense.licenseMove->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M179.9247,-1243.1269C196.6732,-1239.2758 213.6341,-1232.3229 225.775,-1220 273.5888,-1171.4693 215.6456,-1121.1343 261.775,-1071 324.8721,-1002.425 401.6719,-1077.0363 460.7865,-1005 524.7125,-927.1005 420.6239,-854.2208 488.7865,-780 495.8555,-772.3026 504.5255,-766.5048 513.9876,-762.1714" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="515.2941,-765.4184 523.2759,-758.4512 512.6914,-758.9203 515.2941,-765.4184" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseMove&#45;&gt;ImmutableEntity.entityIndexStatus -->
+<g id="edge27" class="edge" data-name="ImmutableLicense.licenseMove->ImmutableEntity.entityIndexStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M180.6783,-1244.1365C197.5603,-1240.3398 214.4071,-1233.1638 225.775,-1220 324.8035,-1105.3274 161.8736,-994.9128 261.775,-881 321.7671,-812.594 395.8328,-896.7138 460.7865,-833 495.8789,-798.5774 453.2186,-759.9312 488.7865,-726 499.7899,-715.5029 513.8062,-708.658 528.4923,-704.2709" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="529.4254,-707.6446 538.215,-701.7291 527.6549,-700.8722 529.4254,-707.6446" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseMove&#45;&gt;ImmuteToken.transferFrom -->
+<g id="edge32" class="edge" data-name="ImmutableLicense.licenseMove->ImmuteToken.transferFrom">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M180.899,-1244.6119C197.8958,-1240.8508 214.7522,-1233.5755 225.775,-1220 281.6522,-1151.1826 221.4094,-501.9221 261.775,-423 330.0634,-289.4839 493.7127,-198.7867 572.429,-161.331" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="574.0306,-164.4457 581.5954,-157.0279 571.0559,-158.1092 574.0306,-164.4457" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseOfferResale -->
+<g id="node9" class="node" data-name="ImmutableLicense.licenseOfferResale">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="361.2808" cy="-1277" rx="80.4178" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="361.2808" y="-1272.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseOfferResale</text>
+</g>
+<!-- ImmutableLicense.licenseOfferDetails -->
+<g id="node14" class="node" data-name="ImmutableLicense.licenseOfferDetails">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-1146" rx="82.1414" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-1141.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseOfferDetails</text>
+</g>
+<!-- ImmutableLicense.licenseOfferResale&#45;&gt;ImmutableLicense.licenseOfferDetails -->
+<g id="edge39" class="edge" data-name="ImmutableLicense.licenseOfferResale->ImmutableLicense.licenseOfferDetails">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M431.7746,-1267.021C442.4062,-1263.0567 452.5513,-1257.5724 460.7865,-1250 487.5916,-1225.3523 461.3005,-1196.8861 488.7865,-1173 498.7813,-1164.3142 510.871,-1158.1895 523.5739,-1153.9087" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="524.8006,-1157.1953 533.3828,-1150.9827 522.7996,-1150.4874 524.8006,-1157.1953" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseOfferResale&#45;&gt;ImmutableLicense.licenseLookupHash -->
+<g id="edge36" class="edge" data-name="ImmutableLicense.licenseOfferResale->ImmutableLicense.licenseLookupHash">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M414.5997,-1263.0212C429.5806,-1258.9611 445.8555,-1254.4253 460.7865,-1250 493.9869,-1240.16 530.8945,-1228.3227 560.4071,-1218.6363" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="561.7122,-1221.8915 570.1161,-1215.4398 559.5231,-1215.2425 561.7122,-1221.8915" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseOfferResale&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge35" class="edge" data-name="ImmutableLicense.licenseOfferResale->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M435.6416,-1268.2883C445.3434,-1264.1232 454.1865,-1258.2447 460.7865,-1250 504.7142,-1195.1257 443.3368,-671.6206 488.7865,-618 498.1695,-606.9301 510.856,-599.714 524.5995,-595.115" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="525.6148,-598.4649 534.2555,-592.334 523.6775,-591.7384 525.6148,-598.4649" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseOfferResale&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge37" class="edge" data-name="ImmutableLicense.licenseOfferResale->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M421.5355,-1264.3115C436.4909,-1259.9911 451.0185,-1253.0135 460.7865,-1241 526.7938,-1159.8188 420.5279,-850.2977 488.7865,-771 494.9603,-763.8277 502.5212,-758.279 510.8504,-754.0541" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="512.4059,-757.1938 520.1608,-749.975 509.5968,-750.7822 512.4059,-757.1938" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseOfferResale&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge38" class="edge" data-name="ImmutableLicense.licenseOfferResale->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M444.1501,-1272.868C450.4573,-1269.2571 456.1565,-1264.6943 460.7865,-1259 526.7938,-1177.8188 420.5279,-868.2977 488.7865,-789 498.3734,-777.8627 511.3047,-770.6403 525.264,-765.9157" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="526.462,-769.2115 535.064,-763.0263 524.4824,-762.4972 526.462,-769.2115" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseOfferResale&#45;&gt;ImmutableEntity.entityIndexStatus -->
+<g id="edge34" class="edge" data-name="ImmutableLicense.licenseOfferResale->ImmutableEntity.entityIndexStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M435.575,-1268.2347C445.2857,-1264.0768 454.149,-1258.2145 460.7865,-1250 534.075,-1159.2982 412.9826,-814.6103 488.7865,-726 498.853,-714.2328 512.6527,-706.8296 527.4672,-702.2975" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="528.533,-705.6365 537.3199,-699.7169 526.7594,-698.8649 528.533,-705.6365" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer -->
+<g id="node10" class="node" data-name="ImmutableLicense.licenseTransfer">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="361.2808" cy="-1169" rx="66.5363" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="361.2808" y="-1164.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseTransfer</text>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmutableLicense.licenseOfferDetails -->
+<g id="edge43" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmutableLicense.licenseOfferDetails">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M427.9193,-1162.9871C458.1307,-1160.261 494.2967,-1156.9977 526.8189,-1154.0631" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="527.1394,-1157.5485 536.7844,-1153.1639 526.5103,-1150.5768 527.1394,-1157.5485" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmutableLicense.licenseLookupHash -->
+<g id="edge42" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmutableLicense.licenseLookupHash">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M425.2733,-1176.7826C457.084,-1180.6513 495.9758,-1185.3812 530.3359,-1189.56" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="530.0181,-1193.0471 540.3675,-1190.78 530.8632,-1186.0983 530.0181,-1193.0471" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge45" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M362.5041,-1150.7862C369.0255,-1059.2227 402.6865,-650.1982 488.7865,-564 497.6744,-555.1019 508.715,-548.7961 520.5531,-544.376" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="521.7764,-547.6584 530.192,-541.2219 519.5994,-541.0055 521.7764,-547.6584" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge41" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M365.8923,-1150.9855C380.5196,-1093.626 426.9067,-910.0292 460.7865,-757 474.4086,-695.4712 444.4505,-662.7849 488.7865,-618 498.7697,-607.9157 511.5154,-601.1533 525.0689,-596.69" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="526.4023,-599.9489 535.0528,-593.8318 524.4757,-593.2193 526.4023,-599.9489" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge44" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M386.5389,-1151.9083C410.1285,-1138.8041 444.1279,-1118.9171 460.7865,-1090 496.3084,-1028.3385 441.6103,-824.2763 488.7865,-771 494.9502,-764.0392 502.4212,-758.6181 510.6204,-754.4589" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="512.0339,-757.6608 519.7757,-750.4278 509.2131,-751.2543 512.0339,-757.6608" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge46" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M408.5867,-1155.4611C428.0886,-1144.7436 448.8724,-1128.6812 460.7865,-1108 496.3084,-1046.3385 441.6103,-842.2763 488.7865,-789 498.5895,-777.9294 511.699,-770.7533 525.7856,-766.0541" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="527.0416,-769.3339 535.6654,-763.1792 525.0857,-762.6127 527.0416,-769.3339" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmutableEntity.entityIndexStatus -->
+<g id="edge40" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmutableEntity.entityIndexStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M369.7883,-1150.8472C389.001,-1109.1054 435.9984,-1002.6811 460.7865,-909 471.3099,-869.2288 460.5373,-755.9078 488.7865,-726 499.2925,-714.8771 513.1466,-707.7482 527.8445,-703.2789" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="528.819,-706.6417 537.5982,-700.7107 527.0366,-699.8724 528.819,-706.6417" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmutableEntity.entityCustomTokenAddress -->
+<g id="edge47" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmutableEntity.entityCustomTokenAddress">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M366.3822,-1150.7694C381.4638,-1096.6802 426.9021,-932.3147 460.7865,-795 474.2185,-740.5676 448.8467,-711.3462 488.7865,-672 493.8723,-666.9898 499.6418,-662.8048 505.8489,-659.3176" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="507.8065,-662.2548 515.2275,-654.6931 504.7107,-655.9765 507.8065,-662.2548" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ERC20.transferFrom -->
+<g id="edge49" class="edge" data-name="ImmutableLicense.licenseTransfer->ERC20.transferFrom">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M422.9254,-1160.0954C437.0675,-1155.3382 450.8483,-1148.075 460.7865,-1137 502.0024,-1091.0692 449.8318,-1048.8637 488.7865,-1001 505.4926,-980.4731 531.3219,-967.4351 555.3671,-959.2387" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="556.7066,-962.4855 565.1757,-956.1196 554.5852,-955.8147 556.7066,-962.4855" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmuteToken.transferFrom -->
+<g id="edge48" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmuteToken.transferFrom">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M363.3906,-1150.7901C373.6042,-1071.673 420.236,-752.5712 488.7865,-498 522.523,-372.7151 577.9519,-228.5085 603.0736,-169.2753" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="606.3836,-170.4377 607.1192,-159.8684 599.9531,-167.6721 606.3836,-170.4377" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTransfer&#45;&gt;ImmuteToken.transferFrom -->
+<g id="edge50" class="edge" data-name="ImmutableLicense.licenseTransfer->ImmuteToken.transferFrom">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M364.2438,-1150.9207C375.9992,-1073.4235 421.9859,-764.0727 488.7865,-516 524.3285,-384.0102 583.9468,-231.0193 606.8385,-169.4482" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="610.1338,-170.6279 610.3097,-160.0345 603.5661,-168.2061 610.1338,-170.6279" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw -->
+<g id="node11" class="node" data-name="ImmutableLicense.licenseTokensWithdraw">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="120.8875" cy="-1031" rx="100.7127" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="120.8875" y="-1026.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseTokensWithdraw</text>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge51" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M121.6767,-1012.7588C126.3982,-913.1685 154.4417,-436.4268 261.775,-349 330.3536,-293.1404 380.763,-311.323 460.7865,-349 531.843,-382.4552 581.5043,-466.1156 603.4743,-509.6728" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="600.4244,-511.4022 607.9811,-518.8283 606.7048,-508.3106 600.4244,-511.4022" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge52" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M123.1804,-1012.9409C133.9346,-931.4039 182.2235,-598.9688 261.775,-539 332.4044,-485.7571 378.1456,-507.4753 460.7865,-539 476.3738,-544.946 473.9038,-556.4616 488.7865,-564 502.6837,-571.0393 518.3292,-576.2453 533.7749,-580.0948" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="533.3438,-583.5876 543.8757,-582.4343 534.9234,-576.7681 533.3438,-583.5876" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge53" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M145.6035,-1013.3118C221.9182,-958.8133 450.9689,-796.158 488.7865,-780 501.5844,-774.5319 515.5937,-770.1324 529.4916,-766.6037" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="530.6652,-769.9215 539.5729,-764.1853 529.0323,-763.1146 530.6652,-769.9215" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ImmutableEntity.entityCustomTokenAddress -->
+<g id="edge55" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ImmutableEntity.entityCustomTokenAddress">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M127.7636,-1012.8344C144.7089,-970.0874 192.2123,-861.7239 261.775,-795 344.5892,-715.5654 381.0981,-711.639 488.7865,-672 500.5052,-667.6865 513.0974,-663.9774 525.6407,-660.8128" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="526.7731,-664.14 535.6721,-658.3904 525.1299,-657.3356 526.7731,-664.14" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ImmutableProduct.productNumberOf -->
+<g id="edge54" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ImmutableProduct.productNumberOf">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M121.4559,-1012.7251C125.0766,-909.6539 148.5373,-402.2769 261.775,-309 330.0453,-252.764 376.4304,-282.4035 460.7865,-309 607.1132,-355.1351 670.6901,-371.9876 743.571,-507 778.7382,-572.1476 718.4591,-1114.2986 763.571,-1173 767.2142,-1177.7407 771.6566,-1181.6783 776.5961,-1184.9455" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="774.8897,-1188.0013 785.3248,-1189.8344 778.3104,-1181.894 774.8897,-1188.0013" style=""></polygon>
+</g>
+<!-- ERC20.transfer -->
+<g id="node25" class="node" data-name="ERC20.transfer">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-892" rx="36.4816" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-887.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transfer</text>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ERC20.transfer -->
+<g id="edge56" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ERC20.transfer">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M212.0495,-1022.0145C283.4726,-1011.881 383.3676,-990.6958 460.7865,-947 476.1129,-938.3496 473.3176,-927.393 488.7865,-919 512.3466,-906.2169 541.4085,-899.483 565.8226,-895.9371" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="566.5125,-899.3766 575.9717,-894.6043 565.601,-892.4362 566.5125,-899.3766" style=""></polygon>
+</g>
+<!-- ImmuteToken.transfer -->
+<g id="node28" class="node" data-name="ImmuteToken.transfer">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-34" rx="36.4816" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-29.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transfer</text>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ImmuteToken.transfer -->
+<g id="edge57" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ImmuteToken.transfer">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M122.1085,-1012.8082C131.718,-887.2671 196.5145,-162.635 261.775,-93 344.6709,-4.5476 503.3357,-5.5884 576.9142,-19.1983" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="576.635,-22.7136 587.1336,-21.2884 578.0377,-15.8556 576.635,-22.7136" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ImmuteToken.transfer -->
+<g id="edge58" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ImmuteToken.transfer">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M122.432,-1012.9202C133.0894,-890.0043 197.2051,-179.8981 261.775,-111 340.9342,-26.5348 489.1854,-23.6764 566.4602,-28.774" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="566.6491,-32.2972 576.8784,-29.5385 567.1614,-25.316 566.6491,-32.2972" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokensWithdraw&#45;&gt;ImmuteToken.transfer -->
+<g id="edge59" class="edge" data-name="ImmutableLicense.licenseTokensWithdraw->ImmuteToken.transfer">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M122.8687,-1012.7182C134.7352,-889.8826 198.0338,-197.0138 261.775,-129 341.2426,-44.2057 490.3417,-41.6554 567.3602,-40.0883" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="567.8123,-43.5794 577.7347,-39.8652 567.6618,-36.5811 567.8123,-43.5794" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokenEscrow -->
+<g id="node12" class="node" data-name="ImmutableLicense.licenseTokenEscrow">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="120.8875" cy="-1301" rx="87.3894" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="120.8875" y="-1296.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseTokenEscrow</text>
+</g>
+<!-- ImmutableLicense.licenseTokenEscrow&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge60" class="edge" data-name="ImmutableLicense.licenseTokenEscrow->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M200.6463,-1292.1853C210.2877,-1287.985 219.0753,-1282.1235 225.775,-1274 310.0564,-1171.8072 189.0527,-789.7167 261.775,-679 318.9477,-591.9571 439.4325,-558.2695 523.9826,-545.2317" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="524.7248,-548.6603 534.1088,-543.7419 523.7058,-541.7348 524.7248,-548.6603" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokenEscrow&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge61" class="edge" data-name="ImmutableLicense.licenseTokenEscrow->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M200.6052,-1292.1514C210.2527,-1287.956 219.0529,-1282.105 225.775,-1274 303.2595,-1180.5759 183.1383,-821.4563 261.775,-729 320.5908,-659.848 391.0963,-741.1771 460.7865,-683 484.9337,-662.842 464.4558,-637.9362 488.7865,-618 499.9401,-608.8609 513.4436,-602.5997 527.4338,-598.3497" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="528.4332,-601.7053 537.1742,-595.7181 526.6074,-594.9476 528.4332,-601.7053" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokenEscrow&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge62" class="edge" data-name="ImmutableLicense.licenseTokenEscrow->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M198.1248,-1291.2699C208.3772,-1287.2293 218.0085,-1281.6563 225.775,-1274 269.0802,-1231.3099 222.3144,-1188.267 261.775,-1142 324.7685,-1068.1411 404.0414,-1130.7611 460.7865,-1052 496.3063,-1002.699 448.1626,-825.1879 488.7865,-780 495.6447,-772.3712 504.074,-766.5985 513.3018,-762.2636" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="514.8363,-765.4175 522.7673,-758.3925 512.1865,-758.9384 514.8363,-765.4175" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseTokenEscrow&#45;&gt;ImmutableProduct.productNumberOf -->
+<g id="edge63" class="edge" data-name="ImmutableLicense.licenseTokenEscrow->ImmutableProduct.productNumberOf">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M197.7176,-1310.7714C208.0884,-1314.8005 217.862,-1320.3591 225.775,-1328 266.4436,-1367.2698 216.4949,-1416.151 261.775,-1450 332.618,-1502.9584 372.9007,-1459.9706 460.7865,-1450 588.9239,-1435.4629 639.3243,-1460.9154 743.571,-1385 798.4755,-1345.017 831.0224,-1268.6588 845.3016,-1227.6574" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="848.6662,-1228.6329 848.5408,-1218.0388 842.0323,-1226.3988 848.6662,-1228.6329" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseValid -->
+<g id="node13" class="node" data-name="ImmutableLicense.licenseValid">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="361.2808" cy="-1385" rx="55.042" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="361.2808" y="-1380.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">licenseValid</text>
+</g>
+<!-- ImmutableLicense.licenseValid&#45;&gt;ImmutableLicense.licenseLookupHash -->
+<g id="edge64" class="edge" data-name="ImmutableLicense.licenseValid->ImmutableLicense.licenseLookupHash">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M413.4558,-1376.3247C429.3568,-1372.2679 446.4178,-1366.4061 460.7865,-1358 519.4122,-1323.7021 571.0784,-1261.5704 597.5039,-1226.3042" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="600.5467,-1228.0752 603.6673,-1217.9503 594.9139,-1223.9193 600.5467,-1228.0752" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseOfferDetails&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge65" class="edge" data-name="ImmutableLicense.licenseOfferDetails->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M591.3288,-1128.589C557.4309,-1103.1386 498.2318,-1052.2024 474.7865,-992 460.0691,-954.2091 455.3527,-662.5961 474.7865,-627 485.003,-608.2866 503.7862,-597.9871 524.3984,-592.5916" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="525.3038,-595.9757 534.3023,-590.3832 523.7803,-589.1435 525.3038,-595.9757" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseOfferDetails&#45;&gt;ImmutableProduct.productNumberOf -->
+<g id="edge66" class="edge" data-name="ImmutableLicense.licenseOfferDetails->ImmutableProduct.productNumberOf">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M677.8196,-1158.6613C698.7234,-1163.0621 722.191,-1168.1203 743.571,-1173 758.6364,-1176.4385 774.8164,-1180.3009 790.018,-1184.0059" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="789.2992,-1187.4332 799.8447,-1186.4118 790.9639,-1180.634 789.2992,-1187.4332" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseLookupHash&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge67" class="edge" data-name="ImmutableLicense.licenseLookupHash->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M528.3345,-1199.3753C506.1995,-1194.2836 485.65,-1183.8984 474.7865,-1164 460.4907,-1137.8149 460.4907,-653.1851 474.7865,-627 485.003,-608.2866 503.7862,-597.9871 524.3984,-592.5916" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="525.3038,-595.9757 534.3023,-590.3832 523.7803,-589.1435 525.3038,-595.9757" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityDetailsByIndex -->
+<g id="node21" class="node" data-name="ImmutableEntity.entityDetailsByIndex">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="616.1787" cy="-807" rx="89.714" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="616.1787" y="-802.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityDetailsByIndex</text>
+</g>
+<!-- ImmutableLicense.licenseLookupHash&#45;&gt;ImmutableEntity.entityDetailsByIndex -->
+<g id="edge69" class="edge" data-name="ImmutableLicense.licenseLookupHash->ImmutableEntity.entityDetailsByIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M528.3345,-1199.3753C506.1995,-1194.2836 485.65,-1183.8984 474.7865,-1164 459.1862,-1135.4256 459.1862,-899.5744 474.7865,-871 487.8383,-847.0934 512.6286,-832.0877 537.8519,-822.6812" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="539.2071,-825.9161 547.5167,-819.3433 536.9219,-819.2996 539.2071,-825.9161" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseLookupHash&#45;&gt;ImmutableProduct.productNumberOf -->
+<g id="edge68" class="edge" data-name="ImmutableLicense.licenseLookupHash->ImmutableProduct.productNumberOf">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M704.0347,-1200C722.7602,-1200 742.5899,-1200 761.4817,-1200" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="761.5649,-1203.5001 771.5649,-1200 761.5649,-1196.5001 761.5649,-1203.5001" style=""></polygon>
+</g>
+<!-- ImmutableLicense.licenseLookupHash&#45;&gt;ImmutableProduct.productDetails -->
+<g id="edge70" class="edge" data-name="ImmutableLicense.licenseLookupHash->ImmutableProduct.productDetails">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M678.4669,-1187.2024C699.207,-1182.8336 722.4114,-1177.8294 743.571,-1173 760.1336,-1169.2198 778.0432,-1164.9272 794.519,-1160.8948" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="795.692,-1164.2107 804.5673,-1158.4246 794.0208,-1157.4131 795.692,-1164.2107" style=""></polygon>
+</g>
+<!-- key -->
+<g id="node29" class="node" data-name="key">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="181.82500004768372,-1600.9375 59.950000047683716,-1600.9375 59.950000047683716,-1521.0625 181.82500004768372,-1521.0625 181.82500004768372,-1600.9375 " style=""></polygon>
+<text text-anchor="start" x="105.5235" y="-1586.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Internal Call</text>
+<text text-anchor="start" x="101.6315" y="-1566.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">External Call</text>
+<text text-anchor="start" x="79.0929" y="-1546.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Defined Contract</text>
+<text text-anchor="start" x="65.4902" y="-1526.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Undefined Contract</text>
+</g>
+<!-- key2 -->
+<g id="node30" class="node" data-name="key2">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="384.21829883185495,-1600.9375 338.34329883185495,-1600.9375 338.34329883185495,-1521.0625 384.21829883185495,-1521.0625 384.21829883185495,-1600.9375 " style=""></polygon>
+<text text-anchor="start" x="349.0399" y="-1586.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<text text-anchor="start" x="349.0399" y="-1566.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<polygon fill="#445773" stroke="transparent" points="351.34329774714877,-1545.0625 351.34329774714877,-1556.9375 371.21829774714877,-1556.9375 371.21829774714877,-1545.0625 351.34329774714877,-1545.0625 " style=""></polygon>
+<text text-anchor="start" x="349.0399" y="-1546.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<polygon fill="none" stroke="#e8726d" points="353.3432973716736,-1527.0625 353.3432973716736,-1534.9375 369.2182973716736,-1534.9375 369.2182973716736,-1527.0625 353.3432973716736,-1527.0625 " style=""></polygon>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge71" class="edge" data-name="key->key2">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M177.8875,-1591C249.6444,-1591 270.1063,-1591 337.0543,-1591" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="337.2808,-1594.5001 347.2808,-1591 337.2807,-1587.5001 337.2808,-1594.5001" style=""></polygon>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge72" class="edge" data-name="key->key2">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M177.8875,-1571C249.6444,-1571 270.1063,-1571 337.0543,-1571" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="337.2808,-1574.5001 347.2808,-1571 337.2807,-1567.5001 337.2808,-1574.5001" style=""></polygon>
+</g>
+</g>
+</svg>

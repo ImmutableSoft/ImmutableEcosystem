@@ -1,0 +1,315 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [  <!ENTITY quot "&#34;">  <!ENTITY amp "&#38;">  <!ENTITY apos "&#39;">  <!ENTITY lt "&#60;">  <!ENTITY gt "&#62;">  <!ENTITY nbsp "&#160;">  <!ENTITY iexcl "&#161;">  <!ENTITY cent "&#162;">  <!ENTITY pound "&#163;">  <!ENTITY curren "&#164;">  <!ENTITY yen "&#165;">  <!ENTITY brvbar "&#166;">  <!ENTITY sect "&#167;">  <!ENTITY uml "&#168;">  <!ENTITY copy "&#169;">  <!ENTITY ordf "&#170;">  <!ENTITY laquo "&#171;">  <!ENTITY not "&#172;">  <!ENTITY shy "&#173;">  <!ENTITY reg "&#174;">  <!ENTITY macr "&#175;">  <!ENTITY deg "&#176;">  <!ENTITY plusmn "&#177;">  <!ENTITY sup2 "&#178;">  <!ENTITY sup3 "&#179;">  <!ENTITY acute "&#180;">  <!ENTITY micro "&#181;">  <!ENTITY para "&#182;">  <!ENTITY middot "&#183;">  <!ENTITY cedil "&#184;">  <!ENTITY sup1 "&#185;">  <!ENTITY ordm "&#186;">  <!ENTITY raquo "&#187;">  <!ENTITY frac14 "&#188;">  <!ENTITY frac12 "&#189;">  <!ENTITY frac34 "&#190;">  <!ENTITY iquest "&#191;">  <!ENTITY Agrave "&#192;">  <!ENTITY Aacute "&#193;">  <!ENTITY Acirc "&#194;">  <!ENTITY Atilde "&#195;">  <!ENTITY Auml "&#196;">  <!ENTITY Aring "&#197;">  <!ENTITY AElig "&#198;">  <!ENTITY Ccedil "&#199;">  <!ENTITY Egrave "&#200;">  <!ENTITY Eacute "&#201;">  <!ENTITY Ecirc "&#202;">  <!ENTITY Euml "&#203;">  <!ENTITY Igrave "&#204;">  <!ENTITY Iacute "&#205;">  <!ENTITY Icirc "&#206;">  <!ENTITY Iuml "&#207;">  <!ENTITY ETH "&#208;">  <!ENTITY Ntilde "&#209;">  <!ENTITY Ograve "&#210;">  <!ENTITY Oacute "&#211;">  <!ENTITY Ocirc "&#212;">  <!ENTITY Otilde "&#213;">  <!ENTITY Ouml "&#214;">  <!ENTITY times "&#215;">  <!ENTITY Oslash "&#216;">  <!ENTITY Ugrave "&#217;">  <!ENTITY Uacute "&#218;">  <!ENTITY Ucirc "&#219;">  <!ENTITY Uuml "&#220;">  <!ENTITY Yacute "&#221;">  <!ENTITY THORN "&#222;">  <!ENTITY szlig "&#223;">  <!ENTITY agrave "&#224;">  <!ENTITY aacute "&#225;">  <!ENTITY acirc "&#226;">  <!ENTITY atilde "&#227;">  <!ENTITY auml "&#228;">  <!ENTITY aring "&#229;">  <!ENTITY aelig "&#230;">  <!ENTITY ccedil "&#231;">  <!ENTITY egrave "&#232;">  <!ENTITY eacute "&#233;">  <!ENTITY ecirc "&#234;">  <!ENTITY euml "&#235;">  <!ENTITY igrave "&#236;">  <!ENTITY iacute "&#237;">  <!ENTITY icirc "&#238;">  <!ENTITY iuml "&#239;">  <!ENTITY eth "&#240;">  <!ENTITY ntilde "&#241;">  <!ENTITY ograve "&#242;">  <!ENTITY oacute "&#243;">  <!ENTITY ocirc "&#244;">  <!ENTITY otilde "&#245;">  <!ENTITY ouml "&#246;">  <!ENTITY divide "&#247;">  <!ENTITY oslash "&#248;">  <!ENTITY ugrave "&#249;">  <!ENTITY uacute "&#250;">  <!ENTITY ucirc "&#251;">  <!ENTITY uuml "&#252;">  <!ENTITY yacute "&#253;">  <!ENTITY thorn "&#254;">  <!ENTITY yuml "&#255;">  <!ENTITY OElig "&#338;">  <!ENTITY oelig "&#339;">  <!ENTITY Scaron "&#352;">  <!ENTITY scaron "&#353;">  <!ENTITY Yuml "&#376;">  <!ENTITY fnof "&#402;">  <!ENTITY circ "&#710;">  <!ENTITY tilde "&#732;">  <!ENTITY Alpha "&#913;">  <!ENTITY Beta "&#914;">  <!ENTITY Gamma "&#915;">  <!ENTITY Delta "&#916;">  <!ENTITY Epsilon "&#917;">  <!ENTITY Zeta "&#918;">  <!ENTITY Eta "&#919;">  <!ENTITY Theta "&#920;">  <!ENTITY Iota "&#921;">  <!ENTITY Kappa "&#922;">  <!ENTITY Lambda "&#923;">  <!ENTITY Mu "&#924;">  <!ENTITY Nu "&#925;">  <!ENTITY Xi "&#926;">  <!ENTITY Omicron "&#927;">  <!ENTITY Pi "&#928;">  <!ENTITY Rho "&#929;">  <!ENTITY Sigma "&#931;">  <!ENTITY Tau "&#932;">  <!ENTITY Upsilon "&#933;">  <!ENTITY Phi "&#934;">  <!ENTITY Chi "&#935;">  <!ENTITY Psi "&#936;">  <!ENTITY Omega "&#937;">  <!ENTITY alpha "&#945;">  <!ENTITY beta "&#946;">  <!ENTITY gamma "&#947;">  <!ENTITY delta "&#948;">  <!ENTITY epsilon "&#949;">  <!ENTITY zeta "&#950;">  <!ENTITY eta "&#951;">  <!ENTITY theta "&#952;">  <!ENTITY iota "&#953;">  <!ENTITY kappa "&#954;">  <!ENTITY lambda "&#955;">  <!ENTITY mu "&#956;">  <!ENTITY nu "&#957;">  <!ENTITY xi "&#958;">  <!ENTITY omicron "&#959;">  <!ENTITY pi "&#960;">  <!ENTITY rho "&#961;">  <!ENTITY sigmaf "&#962;">  <!ENTITY sigma "&#963;">  <!ENTITY tau "&#964;">  <!ENTITY upsilon "&#965;">  <!ENTITY phi "&#966;">  <!ENTITY chi "&#967;">  <!ENTITY psi "&#968;">  <!ENTITY omega "&#969;">  <!ENTITY thetasym "&#977;">  <!ENTITY upsih "&#978;">  <!ENTITY piv "&#982;">  <!ENTITY ensp "&#8194;">  <!ENTITY emsp "&#8195;">  <!ENTITY thinsp "&#8201;">  <!ENTITY zwnj "&#8204;">  <!ENTITY zwj "&#8205;">  <!ENTITY lrm "&#8206;">  <!ENTITY rlm "&#8207;">  <!ENTITY ndash "&#8211;">  <!ENTITY mdash "&#8212;">  <!ENTITY lsquo "&#8216;">  <!ENTITY rsquo "&#8217;">  <!ENTITY sbquo "&#8218;">  <!ENTITY ldquo "&#8220;">  <!ENTITY rdquo "&#8221;">  <!ENTITY bdquo "&#8222;">  <!ENTITY dagger "&#8224;">  <!ENTITY Dagger "&#8225;">  <!ENTITY bull "&#8226;">  <!ENTITY hellip "&#8230;">  <!ENTITY permil "&#8240;">  <!ENTITY prime "&#8242;">  <!ENTITY Prime "&#8243;">  <!ENTITY lsaquo "&#8249;">  <!ENTITY rsaquo "&#8250;">  <!ENTITY oline "&#8254;">  <!ENTITY frasl "&#8260;">  <!ENTITY euro "&#8364;">  <!ENTITY image "&#8465;">  <!ENTITY weierp "&#8472;">  <!ENTITY real "&#8476;">  <!ENTITY trade "&#8482;">  <!ENTITY alefsym "&#8501;">  <!ENTITY larr "&#8592;">  <!ENTITY uarr "&#8593;">  <!ENTITY rarr "&#8594;">  <!ENTITY darr "&#8595;">  <!ENTITY harr "&#8596;">  <!ENTITY crarr "&#8629;">  <!ENTITY lArr "&#8656;">  <!ENTITY uArr "&#8657;">  <!ENTITY rArr "&#8658;">  <!ENTITY dArr "&#8659;">  <!ENTITY hArr "&#8660;">  <!ENTITY forall "&#8704;">  <!ENTITY part "&#8706;">  <!ENTITY exist "&#8707;">  <!ENTITY empty "&#8709;">  <!ENTITY nabla "&#8711;">  <!ENTITY isin "&#8712;">  <!ENTITY notin "&#8713;">  <!ENTITY ni "&#8715;">  <!ENTITY prod "&#8719;">  <!ENTITY sum "&#8721;">  <!ENTITY minus "&#8722;">  <!ENTITY lowast "&#8727;">  <!ENTITY radic "&#8730;">  <!ENTITY prop "&#8733;">  <!ENTITY infin "&#8734;">  <!ENTITY ang "&#8736;">  <!ENTITY and "&#8743;">  <!ENTITY or "&#8744;">  <!ENTITY cap "&#8745;">  <!ENTITY cup "&#8746;">  <!ENTITY int "&#8747;">  <!ENTITY there4 "&#8756;">  <!ENTITY sim "&#8764;">  <!ENTITY cong "&#8773;">  <!ENTITY asymp "&#8776;">  <!ENTITY ne "&#8800;">  <!ENTITY equiv "&#8801;">  <!ENTITY le "&#8804;">  <!ENTITY ge "&#8805;">  <!ENTITY sub "&#8834;">  <!ENTITY sup "&#8835;">  <!ENTITY nsub "&#8836;">  <!ENTITY sube "&#8838;">  <!ENTITY supe "&#8839;">  <!ENTITY oplus "&#8853;">  <!ENTITY otimes "&#8855;">  <!ENTITY perp "&#8869;">  <!ENTITY sdot "&#8901;">  <!ENTITY lceil "&#8968;">  <!ENTITY rceil "&#8969;">  <!ENTITY lfloor "&#8970;">  <!ENTITY rfloor "&#8971;">  <!ENTITY lang "&#9001;">  <!ENTITY rang "&#9002;">  <!ENTITY loz "&#9674;">  <!ENTITY spades "&#9824;">  <!ENTITY clubs "&#9827;">  <!ENTITY hearts "&#9829;">  <!ENTITY diams "&#9830;"> ]><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0.00 0.00 503.07 894.00">
+<g id="graph0" class="graph" transform="translate(-6.843182193424752,879.1568460551965) scale(1)" data-name="G">
+
+<polygon fill="#2e3e56" stroke="transparent" points="-4,4 -4,-890 499.0651,-890 499.0651,4 -4,4" style=""></polygon>
+<g id="clust1" class="cluster">
+<title style="">clusterImmutableProduct</title>
+<path fill="#445773" stroke="#445773" d="M20,-124C20,-124 244.2912,-124 244.2912,-124 250.2912,-124 256.2912,-130 256.2912,-136 256.2912,-136 256.2912,-729 256.2912,-729 256.2912,-735 250.2912,-741 244.2912,-741 244.2912,-741 20,-741 20,-741 14,-741 8,-735 8,-729 8,-729 8,-136 8,-136 8,-130 14,-124 20,-124" style=""></path>
+<text text-anchor="middle" x="132.1456" y="-724.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmutableProduct</text>
+</g>
+<g id="clust2" class="cluster">
+<title style="">clusterImmutableEntity</title>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M288.2912,-286C288.2912,-286 475.0651,-286 475.0651,-286 481.0651,-286 487.0651,-292 487.0651,-298 487.0651,-298 487.0651,-459 487.0651,-459 487.0651,-465 481.0651,-471 475.0651,-471 475.0651,-471 288.2912,-471 288.2912,-471 282.2912,-471 276.2912,-465 276.2912,-459 276.2912,-459 276.2912,-298 276.2912,-298 276.2912,-292 282.2912,-286 288.2912,-286" style=""></path>
+<text text-anchor="middle" x="381.6782" y="-454.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmutableEntity</text>
+</g>
+<g id="clust3" class="cluster">
+<title style="">clusterStringCommon</title>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M326.3647,-201C326.3647,-201 436.9917,-201 436.9917,-201 442.9917,-201 448.9917,-207 448.9917,-213 448.9917,-213 448.9917,-266 448.9917,-266 448.9917,-272 442.9917,-278 436.9917,-278 436.9917,-278 326.3647,-278 326.3647,-278 320.3647,-278 314.3647,-272 314.3647,-266 314.3647,-266 314.3647,-213 314.3647,-213 314.3647,-207 320.3647,-201 326.3647,-201" style=""></path>
+<text text-anchor="middle" x="381.6782" y="-261.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">StringCommon</text>
+</g>
+<g id="clust4" class="cluster">
+<title style="">clusterImmuteToken</title>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M324.2324,-8C324.2324,-8 439.1239,-8 439.1239,-8 445.1239,-8 451.1239,-14 451.1239,-20 451.1239,-20 451.1239,-181 451.1239,-181 451.1239,-187 445.1239,-193 439.1239,-193 439.1239,-193 324.2324,-193 324.2324,-193 318.2324,-193 312.2324,-187 312.2324,-181 312.2324,-181 312.2324,-20 312.2324,-20 312.2324,-14 318.2324,-8 324.2324,-8" style=""></path>
+<text text-anchor="middle" x="381.6782" y="-176.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmuteToken</text>
+</g>
+<g id="clust5" class="cluster">
+<title style="">cluster_01</title>
+<polygon fill="#2e3e56" stroke="#000000" points="59.1456,-749 59.1456,-878 416.6782,-878 416.6782,-749 59.1456,-749" style=""></polygon>
+<text text-anchor="middle" x="237.9119" y="-861.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Legend</text>
+</g>
+<!-- ImmutableProduct.&lt;Constructor&gt; -->
+<g id="node1" class="node" data-name="ImmutableProduct.&lt;Constructor&gt;">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="132.1456" cy="-690" rx="63.4794" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-685.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&lt;Constructor&gt;</text>
+</g>
+<!-- ImmutableProduct.productCreate -->
+<g id="node2" class="node" data-name="ImmutableProduct.productCreate">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-312" rx="61.9072" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-307.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productCreate</text>
+</g>
+<!-- ImmutableEntity.entityIdToLocalId -->
+<g id="node12" class="node" data-name="ImmutableEntity.entityIdToLocalId">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="381.6782" cy="-420" rx="77.5991" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="381.6782" y="-415.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityIdToLocalId</text>
+</g>
+<!-- ImmutableProduct.productCreate&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge1" class="edge" data-name="ImmutableProduct.productCreate->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M197.6332,-314.073C218.4017,-317.6969 240.1375,-324.971 256.2912,-339 275.6144,-355.7817 257.2787,-375.867 276.2912,-393 283.1948,-399.2211 291.3377,-404.0483 299.9885,-407.7875" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="298.9496,-411.1371 309.5404,-411.4323 301.4453,-404.5971 298.9496,-411.1371" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityAddressToIndex -->
+<g id="node13" class="node" data-name="ImmutableEntity.entityAddressToIndex">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="381.6782" cy="-366" rx="93.2116" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="381.6782" y="-361.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityAddressToIndex</text>
+</g>
+<!-- ImmutableProduct.productCreate&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge2" class="edge" data-name="ImmutableProduct.productCreate->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M183.8489,-323.1888C219.7759,-330.9636 268.1824,-341.439 308.1193,-350.0815" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="307.5635,-353.5422 318.0775,-352.2365 309.0441,-346.7006 307.5635,-353.5422" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityAddressStatus -->
+<g id="node14" class="node" data-name="ImmutableEntity.entityAddressStatus">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="381.6782" cy="-312" rx="83.9951" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="381.6782" y="-307.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityAddressStatus</text>
+</g>
+<!-- ImmutableProduct.productCreate&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge3" class="edge" data-name="ImmutableProduct.productCreate->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M198.0337,-312C224.1249,-312 254.6733,-312 283.2831,-312" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="283.3114,-315.5001 293.3113,-312 283.3113,-308.5001 283.3114,-315.5001" style=""></polygon>
+</g>
+<!-- StringCommon.stringsEqual -->
+<g id="node15" class="node" data-name="StringCommon.stringsEqual">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="381.6782" cy="-227" rx="55.0651" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="381.6782" y="-222.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">stringsEqual</text>
+</g>
+<!-- ImmutableProduct.productCreate&#45;&gt;StringCommon.stringsEqual -->
+<g id="edge4" class="edge" data-name="ImmutableProduct.productCreate->StringCommon.stringsEqual">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M188.161,-302.5271C209.7405,-298.1766 234.4388,-292.3316 256.2912,-285 286.5358,-274.8528 319.2001,-259.593 343.6053,-247.2724" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="345.2198,-250.3779 352.5321,-242.7111 342.0347,-244.1445 345.2198,-250.3779" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productRelease -->
+<g id="node3" class="node" data-name="ImmutableProduct.productRelease">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-150" rx="66.5614" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-145.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productRelease</text>
+</g>
+<!-- ImmutableProduct.productRelease&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge5" class="edge" data-name="ImmutableProduct.productRelease->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M202.8327,-150.2761C222.8109,-153.9593 242.7693,-161.7217 256.2912,-177 288.2393,-213.098 245.0099,-356.3226 276.2912,-393 281.9731,-399.6621 289.0532,-404.7967 296.8388,-408.7387" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="295.6948,-412.0578 306.2609,-412.8383 298.4877,-405.6391 295.6948,-412.0578" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productRelease&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge6" class="edge" data-name="ImmutableProduct.productRelease->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M202.8733,-150.5909C222.7315,-154.3085 242.6122,-162.0112 256.2912,-177 305.1946,-230.5861 228.378,-284.5267 276.2912,-339 280.5889,-343.8861 285.6386,-347.9461 291.1601,-351.3138" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="289.7043,-354.5026 300.1848,-356.0554 292.9601,-348.3058 289.7043,-354.5026" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productRelease&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge7" class="edge" data-name="ImmutableProduct.productRelease->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M202.6025,-151.2126C222.3305,-154.9742 242.2065,-162.5453 256.2912,-177 289.4444,-211.0243 244.2291,-246.9456 276.2912,-282 282.4012,-288.6803 289.8816,-293.9136 298.0115,-298.0071" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="296.8662,-301.3272 307.4282,-302.1608 299.6913,-294.9226 296.8662,-301.3272" style=""></polygon>
+</g>
+<!-- ImmuteToken.mint -->
+<g id="node16" class="node" data-name="ImmuteToken.mint">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="381.6782" cy="-88" rx="24.9285" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="381.6782" y="-83.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">mint</text>
+</g>
+<!-- ImmutableProduct.productRelease&#45;&gt;ImmuteToken.mint -->
+<g id="edge8" class="edge" data-name="ImmutableProduct.productRelease->ImmuteToken.mint">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M182.943,-137.3786C231.095,-125.4146 302.2522,-107.7345 345.0748,-97.0946" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="345.9402,-100.4861 354.8012,-94.678 344.2522,-93.6927 345.9402,-100.4861" style=""></polygon>
+</g>
+<!-- ImmuteToken.transferFrom -->
+<g id="node17" class="node" data-name="ImmuteToken.transferFrom">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="381.6782" cy="-34" rx="57.3291" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="381.6782" y="-29.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferFrom</text>
+</g>
+<!-- ImmutableProduct.productRelease&#45;&gt;ImmuteToken.transferFrom -->
+<g id="edge9" class="edge" data-name="ImmutableProduct.productRelease->ImmuteToken.transferFrom">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M154.9249,-132.8873C182.3808,-113.004 230.5484,-80.4461 276.2912,-61 290.1314,-55.1162 305.5575,-50.2805 320.244,-46.4101" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="321.4238,-49.7223 330.2648,-43.8838 319.7126,-42.9347 321.4238,-49.7223" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productReleaseChallenge -->
+<g id="node4" class="node" data-name="ImmutableProduct.productReleaseChallenge">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-636" rx="105.868" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-631.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productReleaseChallenge</text>
+</g>
+<!-- ImmutableProduct.productReleaseChallenge&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge10" class="edge" data-name="ImmutableProduct.productReleaseChallenge->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M221.4301,-625.3835C233.7908,-621.461 245.8208,-616.157 256.2912,-609 315.7294,-568.3713 354.2252,-489.3663 371.3733,-447.5292" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="374.6314,-448.8078 375.0857,-438.2227 368.1296,-446.2141 374.6314,-448.8078" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productTokensWithdraw -->
+<g id="node5" class="node" data-name="ImmutableProduct.productTokensWithdraw">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-204" rx="103.5877" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-199.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productTokensWithdraw</text>
+</g>
+<!-- ImmutableProduct.productTokensWithdraw&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge12" class="edge" data-name="ImmutableProduct.productTokensWithdraw->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M228.5812,-212.099C239.0333,-216.5022 248.6339,-222.6095 256.2912,-231 305.1946,-284.5861 228.378,-338.5267 276.2912,-393 282.1822,-399.6976 289.4863,-404.843 297.4816,-408.7809" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="296.1918,-412.0357 306.7637,-412.7322 298.9336,-405.595 296.1918,-412.0357" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productTokensWithdraw&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge13" class="edge" data-name="ImmutableProduct.productTokensWithdraw->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M227.7969,-212.4224C238.4455,-216.7613 248.3078,-222.7649 256.2912,-231 290.2695,-266.0498 242.9609,-303.3335 276.2912,-339 280.7765,-343.7997 285.9883,-347.7935 291.6465,-351.112" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="290.3637,-354.3858 300.8651,-355.7894 293.531,-348.1433 290.3637,-354.3858" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productTokensWithdraw&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge11" class="edge" data-name="ImmutableProduct.productTokensWithdraw->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M224.4841,-213.2472C236.0598,-217.3999 247.0566,-223.1329 256.2912,-231 274.8247,-246.7892 258.2656,-265.6333 276.2912,-282 283.3992,-288.4538 291.8005,-293.5289 300.7089,-297.5181" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="299.5586,-300.8276 310.1431,-301.2945 302.1599,-294.3289 299.5586,-300.8276" style=""></polygon>
+</g>
+<!-- ImmuteToken.transfer -->
+<g id="node18" class="node" data-name="ImmuteToken.transfer">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="381.6782" cy="-142" rx="36.4816" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="381.6782" y="-137.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transfer</text>
+</g>
+<!-- ImmutableProduct.productTokensWithdraw&#45;&gt;ImmuteToken.transfer -->
+<g id="edge14" class="edge" data-name="ImmutableProduct.productTokensWithdraw->ImmuteToken.transfer">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M174.8055,-187.4337C198.8216,-181.3372 229.3172,-174.692 256.2912,-168 281.4183,-161.7662 309.1635,-154.1035 332.1529,-148.3451" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="333.1441,-151.7058 342.0226,-145.9245 331.4768,-144.9073 333.1441,-151.7058" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productTokensWithdraw&#45;&gt;ImmuteToken.transfer -->
+<g id="edge15" class="edge" data-name="ImmutableProduct.productTokensWithdraw->ImmuteToken.transfer">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M222.1339,-194.0014C233.6527,-191.4626 245.2661,-188.7352 256.2912,-186 287.0818,-178.3612 321.8036,-168.5767 346.8885,-159.8125" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="348.1308,-163.0851 356.337,-156.3837 345.7428,-156.505 348.1308,-163.0851" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productChallengeReward -->
+<g id="node6" class="node" data-name="ImmutableProduct.productChallengeReward">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-258" rx="105.8719" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-253.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productChallengeReward</text>
+</g>
+<!-- ImmutableProduct.productChallengeReward&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge16" class="edge" data-name="ImmutableProduct.productChallengeReward->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M228.4103,-266.6746C238.8241,-270.993 248.4613,-276.9233 256.2912,-285 290.2695,-320.0498 242.9609,-357.3335 276.2912,-393 282.3814,-399.5171 289.8111,-404.5485 297.8789,-408.4206" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="296.6447,-411.6981 307.2215,-412.3172 299.3393,-405.2375 296.6447,-411.6981" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productChallengeReward&#45;&gt;ImmuteToken.transfer -->
+<g id="edge17" class="edge" data-name="ImmutableProduct.productChallengeReward->ImmuteToken.transfer">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M222.4277,-247.6792C234.5107,-243.7051 246.1966,-238.3079 256.2912,-231 270.4921,-220.7194 263.5841,-209.0784 276.2912,-197 294.5817,-179.6144 319.4421,-166.2894 340.4237,-157.1122" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="341.8927,-160.2914 349.7534,-153.1879 339.1786,-153.839 341.8927,-160.2914" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productTokenEscrow -->
+<g id="node7" class="node" data-name="ImmutableProduct.productTokenEscrow">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-366" rx="90.2648" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-361.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productTokenEscrow</text>
+</g>
+<!-- ImmutableProduct.productTokenEscrow&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge19" class="edge" data-name="ImmutableProduct.productTokenEscrow->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M194.7911,-379.5568C230.8165,-387.3528 276.1189,-397.1565 313.098,-405.1589" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="312.7786,-408.6708 323.2926,-407.3651 314.2592,-401.8291 312.7786,-408.6708" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productTokenEscrow&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge20" class="edge" data-name="ImmutableProduct.productTokenEscrow->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M226.4832,-366C241.8804,-366 257.936,-366 273.6322,-366" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="273.8843,-369.5001 283.8843,-366 273.8843,-362.5001 273.8843,-369.5001" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productTokenEscrow&#45;&gt;ImmutableEntity.entityAddressStatus -->
+<g id="edge18" class="edge" data-name="ImmutableProduct.productTokenEscrow->ImmutableEntity.entityAddressStatus">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M194.7911,-352.4432C230.0248,-344.8185 274.1321,-335.2735 310.6479,-327.3713" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="311.6988,-330.725 320.7323,-325.189 310.2182,-323.8833 311.6988,-330.725" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productReleaseDetails -->
+<g id="node8" class="node" data-name="ImmutableProduct.productReleaseDetails">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-582" rx="93.7641" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-577.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productReleaseDetails</text>
+</g>
+<!-- ImmutableProduct.productReleaseDetails&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge21" class="edge" data-name="ImmutableProduct.productReleaseDetails->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M213.2596,-571.8092C228.1763,-567.8961 243.166,-562.4841 256.2912,-555 303.3321,-528.1769 342.9896,-477.7939 364.4579,-446.7404" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="367.5653,-448.3936 370.2733,-438.1506 361.7688,-444.4692 367.5653,-448.3936" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productNumberOf -->
+<g id="node9" class="node" data-name="ImmutableProduct.productNumberOf">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-528" rx="78.1651" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-523.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productNumberOf</text>
+</g>
+<!-- ImmutableProduct.productNumberOf&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge22" class="edge" data-name="ImmutableProduct.productNumberOf->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M200.1772,-517.7938C218.7868,-513.7781 238.6727,-508.3217 256.2912,-501 291.3995,-486.4101 327.4462,-461.9418 351.8263,-443.7082" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="354.0951,-446.3802 359.9427,-437.5452 349.8618,-440.8052 354.0951,-446.3802" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productNumberOfReleases -->
+<g id="node10" class="node" data-name="ImmutableProduct.productNumberOfReleases">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-474" rx="112.2289" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-469.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productNumberOfReleases</text>
+</g>
+<!-- ImmutableProduct.productNumberOfReleases&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge23" class="edge" data-name="ImmutableProduct.productNumberOfReleases->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M200.0019,-459.3156C235.0732,-451.726 277.7798,-442.4841 312.9731,-434.8681" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="314.1275,-438.1994 323.1609,-432.6634 312.6469,-431.3577 314.1275,-438.1994" style=""></polygon>
+</g>
+<!-- ImmutableProduct.productDetails -->
+<g id="node11" class="node" data-name="ImmutableProduct.productDetails">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="132.1456" cy="-420" rx="63.711600000000004" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="132.1456" y="-415.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">productDetails</text>
+</g>
+<!-- ImmutableProduct.productDetails&#45;&gt;ImmutableEntity.entityIdToLocalId -->
+<g id="edge24" class="edge" data-name="ImmutableProduct.productDetails->ImmutableEntity.entityIdToLocalId">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M200.3315,-420C227.8258,-420 259.971,-420 289.4978,-420" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="289.8207,-423.5001 299.8207,-420 289.8207,-416.5001 289.8207,-423.5001" style=""></polygon>
+</g>
+<!-- key -->
+<g id="node19" class="node" data-name="key">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="193.08309996032716,-840.9375 71.20809996032715,-840.9375 71.20809996032715,-761.0625 193.08309996032716,-761.0625 193.08309996032716,-840.9375 " style=""></polygon>
+<text text-anchor="start" x="116.7816" y="-826.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Internal Call</text>
+<text text-anchor="start" x="112.8896" y="-806.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">External Call</text>
+<text text-anchor="start" x="90.351" y="-786.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Defined Contract</text>
+<text text-anchor="start" x="76.7483" y="-766.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Undefined Contract</text>
+</g>
+<!-- key2 -->
+<g id="node20" class="node" data-name="key2">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="404.6156988171613,-840.9375 358.7406988171613,-840.9375 358.7406988171613,-761.0625 404.6156988171613,-761.0625 404.6156988171613,-840.9375 " style=""></polygon>
+<text text-anchor="start" x="369.4373" y="-826.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<text text-anchor="start" x="369.4373" y="-806.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<polygon fill="#445773" stroke="transparent" points="371.740697718811,-785.0625 371.740697718811,-796.9375 391.615697718811,-796.9375 391.615697718811,-785.0625 371.740697718811,-785.0625 " style=""></polygon>
+<text text-anchor="start" x="369.4373" y="-786.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<polygon fill="none" stroke="#e8726d" points="373.7406973386129,-767.0625 373.7406973386129,-774.9375 389.6156973386129,-774.9375 389.6156973386129,-767.0625 373.7406973386129,-767.0625 " style=""></polygon>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge25" class="edge" data-name="key->key2">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M189.1456,-831C264.9289,-831 286.428,-831 357.3343,-831" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="357.6782,-834.5001 367.6782,-831 357.6781,-827.5001 357.6782,-834.5001" style=""></polygon>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge26" class="edge" data-name="key->key2">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M189.1456,-811C264.9289,-811 286.428,-811 357.3343,-811" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="357.6782,-814.5001 367.6782,-811 357.6781,-807.5001 357.6782,-814.5001" style=""></polygon>
+</g>
+</g>
+</svg>
