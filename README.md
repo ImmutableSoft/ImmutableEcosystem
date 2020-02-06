@@ -22,26 +22,40 @@ Below is the inheritance graph of the various Immutable Ecosystem smart contract
 
 ## ImmutableToken
 
-<img src="./images/TokenDependencyGraph.jpg" width="500" height="1000">
+The ERC20 token used for the Immutable Ecosystem monetization of both product release escrows as well as product activation license escrows. To avoid persecution under ambiguous US securities laws, this token is restricted to transfers to and from the Immutable Ecosystem smart contracts only. No direct transfer of these tokens between third parties is allowed. This token is minted on demand with no hard cap and available for purchase in exchange for ETH at a fixed in price.
 
 The full public API documentation for this smart contract is available in the docs folder, [ImmuteToken](./docs/ImmuteToken.md).
 
+The function dependency graph for the ImmuteToken smart contract is below.
+
+![image entity](./images/TokenDependencyGraph.jpg)
+
 ## ImmutableEntity
 
-Registered Entities can be of various types such as Creator, Distributor, or End User. Each Entity is assigned a unique index within the Ecosystem upon creation. This index, as well as the Entity Ethereum wallet address, can be used to identify the Entity.
-
-![image entity](./images/EntityDependencyGraph.jpg)
+Individuals and organization can register themselves as entities of either Creator, Distributor, or End User type. Each Entity is assigned a unique index within the Ecosystem upon creation. This index, as well as the Entity Ethereum wallet address, can be used to uniquely identify the Entity. This smart contract has an interface for the resale of tokens as well as the configuration of an ETH bank account as well as acts as an ENS resolver for the immutablesoft.eth ENS domain.
 
 The full public API documentation for this smart contract is available in the docs folder, [ImmutableEntity](./docs/ImmutableEntity.md).
 
+The function dependency graph for the ImmutableEntity smart contract is below.
+
+![image entity](./images/EntityDependencyGraph.jpg)
+
 ## ImmutableProduct
+
+The ImmutableProduct smart contract has interfaces to allow registered entities to create new products and product releases, funding those releases with an escrow holding tokens. Nonprofit creators have this escrow minted for them while commercial creators must transfer tokens to the product release escrow. This contract also handles end user download and authentication verification interfaces as well product release challenges. End users can use this contract to ensure authentic installation of products and to report any discovered file hash mismatch and be rewarded one half of the outstanding escrow.
+
+The full public API documentation for this smart contract is available in the docs folder for [ImmutableProduct](./docs/ImmutableProduct.md).
+
+The function dependency graph for the ImmutableProduct smart contract is below.
 
 ![image product](./images/ProductDependencyGraph.jpg)
 
-The full public API documentation for this smart contract is available in the docs folder, [ImmutableProduct](./docs/ImmutableProduct.md).
-
 ## ImmutableLicense
 
-![image license](./images/LicenseDependencyGraph.jpg)
+The ImmutableLicense smart contract provides interfaces for purchasing product license activations as well as verifying said activations. Each product can be listed for sale at a price set by the creator and end users can directly purchase activation licenses to automate the sales process. There is also the capability to move a product activation license to a new system (new computer, etc.) as well as resell the product activation license to a third party (if allowed by the creator). This full service interface gives the end user control while automating the sales process for creators.
 
-The full public API documentation for this smart contract is available in the docs folder, [ImmutableLicense](./docs/ImmutableLicense.md).
+The full public API documentation for this smart contract is available in the docs folder for [ImmutableLicense](./docs/ImmutableLicense.md).
+
+The function dependency graph for the ImmutableLicense smart contract is below.
+
+![image license](./images/LicenseDependencyGraph.jpg)
