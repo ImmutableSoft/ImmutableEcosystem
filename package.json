@@ -29,7 +29,7 @@
     "@truffle/hdwallet-provider": "^1.0.28"
   },
   "dependencies": {
-    "@ensdomains/ens": "^0.3.11",
+    "@ensdomains/ens": "^0.4.0",
     "@ensdomains/resolver": "^0.1.13",
     "@openzeppelin/cli": "^2.6.0",
     "@openzeppelin/contracts": "^2.4.0",
