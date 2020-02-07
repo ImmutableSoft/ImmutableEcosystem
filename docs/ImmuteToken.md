@@ -25,6 +25,7 @@ struct Promo {
 ```js
 //internal members
 uint256 internal constant MaxPromos;
+contract ImmutableEntity internal entityInterface;
 
 //private members
 address payable private bank;
@@ -54,7 +55,8 @@ struct ImmuteToken.Promo[5] private promos;
 
 ### 
 
-contract initializer/constructor
+Token contract initializer/constructor.
+ Executed on contract creation only.
 
 ```js
 function (uint256 initialSupply) public nonpayable ERC20Detailed ERC20Mintable ERC20Pausable PullPayment 
@@ -68,7 +70,8 @@ function (uint256 initialSupply) public nonpayable ERC20Detailed ERC20Mintable E
 
 ### bankChange
 
-Change bank that contract pays ETH out too
+Change bank that contract pays ETH out too.
+ Administrator only.
 
 ```js
 function bankChange(address payable newBank) external nonpayable onlyOwner 
@@ -82,7 +85,8 @@ function bankChange(address payable newBank) external nonpayable onlyOwner
 
 ### rateChange
 
-Change exchange rate (ETH to token multiplier)
+Change exchange rate (ETH to token multiplier).
+ Administrator only.
 
 ```js
 function rateChange(uint256 newRate) external nonpayable onlyOwner 
@@ -96,7 +100,8 @@ function rateChange(uint256 newRate) external nonpayable onlyOwner
 
 ### promoSet
 
-Set/Change promotion rate (token bonus calculator)
+Set/Change promotion rate (token bonus calculator).
+ Administrator only.
 
 ```js
 function promoSet(uint256 index, uint256 algoX, uint256 algoY, uint256 base) public nonpayable onlyOwner 
@@ -113,7 +118,7 @@ function promoSet(uint256 index, uint256 algoX, uint256 algoY, uint256 base) pub
 
 ### currentRate
 
-Retrieve the current ETH to Immute token multiplier (rate)
+Retrieve current ETH to Immute token multiplier (rate).
 
 ```js
 function currentRate() external view
@@ -131,7 +136,8 @@ The ETH to token multiplier rate for new purchases
 
 ### restrictTransferToContracts
 
-Restrict transfers to ecosystem contract only
+Restrict transfers/minting to ecosystem contract only.
+ Administrator only.
 
 ```js
 function restrictTransferToContracts(address entityContract, address productContract, address licenseContract) external nonpayable onlyOwner 
@@ -149,7 +155,8 @@ function restrictTransferToContracts(address entityContract, address productCont
 
 ⤾ overrides [ERC20Pausable.transfer](ERC20Pausable.md#transfer)
 
-ImmuteToken transfer must check for restrictions
+ImmuteToken transfer must check for restrictions.
+ If ecosystem restricted auto-approve ecosystem transfers.
 
 ```js
 function transfer(address recipient, uint256 amount) public nonpayable
@@ -171,7 +178,8 @@ true if transfer success, false if failed
 
 ⤾ overrides [ERC20Pausable.transferFrom](ERC20Pausable.md#transferfrom)
 
-ImmuteToken transferFrom must check for restrictions
+ImmuteToken transferFrom must check for restrictions.
+ If ecosystem restricted auto-approve ecosystem transfers.
 
 ```js
 function transferFrom(address sender, address recipient, uint256 amount) public nonpayable
@@ -192,7 +200,8 @@ true if transfer success, false if failed
 
 ### checkPayments
 
-Check payment (ETH) due ecosystem bank
+Check payment (ETH) due ecosystem bank.
+ Uses OpenZeppelin PullPayment interface.
 
 ```js
 function checkPayments() external view
@@ -210,7 +219,7 @@ the entity status as maintained by Immutable
 
 ### calculateBonus
 
-Calculate the promotional bonus
+Calculate the promotional bonus.
 
 ```js
 function calculateBonus(uint256 numTokens) public view
@@ -229,7 +238,8 @@ the amount of bonus tokens
 
 ### transferToBank
 
-Transfer ecosystem funds to the configured bank address
+Transfer ecosystem funds to the configured bank address.
+ Uses OpenZeppelin PullPayment interface.
 
 ```js
 function transferToBank() external nonpayable onlyOwner 
@@ -242,7 +252,8 @@ function transferToBank() external nonpayable onlyOwner
 
 ### transferToEscrow
 
-Transfer ETH funds to the configured bank address
+Transfer ETH funds to the configured bank address.
+ Uses OpenZeppelin PullPayment interface.
 
 ```js
 function transferToEscrow() external payable
@@ -255,7 +266,8 @@ function transferToEscrow() external payable
 
 ### tokenPurchase
 
-Purcahse tokens in exchange for an ETH transfer
+Purcahse tokens in exchange for an ETH transfer.
+ Uses OpenZeppelin PullPayment interface.
 
 ```js
 function tokenPurchase() external payable
@@ -283,6 +295,7 @@ function tokenPurchase() external payable
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
+* [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)

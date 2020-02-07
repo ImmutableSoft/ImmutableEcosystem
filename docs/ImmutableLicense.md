@@ -1,4 +1,4 @@
-# The Immutable License - authentic software from the source (ImmutableLicense.sol)
+# The Immutable License - automated software sales (ImmutableLicense.sol)
 
 View Source: [contracts/ImmutableLicense.sol](../contracts/ImmutableLicense.sol)
 
@@ -72,7 +72,8 @@ event licensePurchaseEvent(uint256  entityIndex, uint256  productIndex);
 
 ### 
 
-contract initializer/constructor
+License contract initializer/constructor.
+ Executed on contract creation only.
 
 ```js
 function (address productAddr, address entityAddr, address tokenAddr) public nonpayable
@@ -88,7 +89,8 @@ function (address productAddr, address entityAddr, address tokenAddr) public non
 
 ### licenseOffer
 
-Offer a software product license for sale
+Offer a software product license for sale.
+ mes.sender must have a valid entity and product.
 
 ```js
 function licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 resellMinTokens) external nonpayable
@@ -105,7 +107,8 @@ function licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 resel
 
 ### licenseTransferEscrow
 
-Transfer tokens to a product offer escrow
+Transfer tokens to a product offer escrow.
+ Not public, called internally. msg.sender is the purchaser.
 
 ```js
 function licenseTransferEscrow(uint256 entityIndex, uint256 productIndex) private nonpayable
@@ -121,7 +124,8 @@ returns(bool)
 
 ### license_product
 
-Create a product license
+Create a product license.
+ Not public, called internally. msg.sender is the license owner.
 
 ```js
 function license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value) private nonpayable
@@ -139,7 +143,8 @@ returns(uint256)
 
 ### licenseCreate
 
-Create manual product activation license for end user
+Create manual product activation license for end user.
+ mes.sender must own the entity and product.
 
 ```js
 function licenseCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue) external nonpayable
@@ -155,7 +160,8 @@ function licenseCreate(uint256 productIndex, uint256 licenseHash, uint256 licens
 
 ### licensePurchase
 
-Purchase a software product activation license
+Purchase a software product activation license.
+ mes.sender is the purchaser.
 
 ```js
 function licensePurchase(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external nonpayable
@@ -171,7 +177,8 @@ function licensePurchase(uint256 entityIndex, uint256 productIndex, uint256 lice
 
 ### licensePurchaseInETH
 
-Purchase a software product activation license in ETH
+Purchase a software product activation license in ETH.
+ mes.sender is the purchaser.
 
 ```js
 function licensePurchaseInETH(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external payable
@@ -187,7 +194,9 @@ function licensePurchaseInETH(uint256 entityIndex, uint256 productIndex, uint256
 
 ### licenseMove
 
-Move a software product activation license
+Move a software product activation license.
+ Costs 1 IuT token if sender not registered as automatic.
+ mes.sender must be the activation license owner.
 
 ```js
 function licenseMove(uint256 entityIndex, uint256 productIndex, uint256 oldLicenseHash, uint256 newLicenseHash) external nonpayable
@@ -204,7 +213,8 @@ function licenseMove(uint256 entityIndex, uint256 productIndex, uint256 oldLicen
 
 ### licenseOfferResale
 
-Offer a software product license for resale
+Offer a software product license for resale.
+ mes.sender must own the activation license.
 
 ```js
 function licenseOfferResale(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 priceInTokens) external nonpayable
@@ -225,7 +235,9 @@ The product license offer identifier
 
 ### licenseTransfer
 
-Transfer/Resell a software product activation license
+Transfer/Resell a software product activation license.
+ License must be 'for sale' and mes.sender is new owner.
+ Does NOT change current activation.
 
 ```js
 function licenseTransfer(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external nonpayable
@@ -241,7 +253,8 @@ function licenseTransfer(uint256 entityIndex, uint256 productIndex, uint256 lice
 
 ### licenseTokensWithdraw
 
-Withdraw tokens in escrow (accumulated product license sales)
+Withdraw tokens in escrow (accumulated license sales).
+ Withdraws all license escrow amounts.
 
 ```js
 function licenseTokensWithdraw() external nonpayable
@@ -254,7 +267,8 @@ function licenseTokensWithdraw() external nonpayable
 
 ### licenseTokenEscrow
 
-Check balance of escrowed product licenses
+Check balance of escrowed product licenses.
+ Counts all available product license escrow amounts.
 
 ```js
 function licenseTokenEscrow() external view
@@ -268,7 +282,8 @@ returns(uint256)
 
 ### licenseValid
 
-Check if end user is activated for use of a product
+Check if end user is activated for use of a product.
+ Entity and product must be valid.
 
 ```js
 function licenseValid(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external view
@@ -289,7 +304,8 @@ the license value (> 0 is valid)
 
 ### licenseOfferDetails
 
-Return the price of a product activation license
+Return the price of a product activation license.
+ Entity and Product must exist.
 
 ```js
 function licenseOfferDetails(uint256 entityIndex, uint256 productIndex) public view
@@ -309,7 +325,8 @@ the price in tokens for the activation license
 
 ### licenseLookupHash
 
-Return the internal activation license hash
+Return the internal activation license hash.
+ Entity and Product must exist. Private. Called internally only.
 
 ```js
 function licenseLookupHash(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) private view
@@ -345,6 +362,7 @@ the internal activation license hash
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
+* [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)

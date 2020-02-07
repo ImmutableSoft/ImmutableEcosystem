@@ -1,4 +1,4 @@
-# The Immutable Product - authentic software from the source (ImmutableProduct.sol)
+# The Immutable Product - authentic product distribution (ImmutableProduct.sol)
 
 View Source: [contracts/ImmutableProduct.sol](../contracts/ImmutableProduct.sol)
 
@@ -38,6 +38,10 @@ struct Release {
 **Constants & Variables**
 
 ```js
+//internal members
+uint256 internal constant ReferralProductBonus;
+
+//private members
 mapping(uint256 => struct ImmutableProduct.Product[]) private Products;
 contract ImmutableEntity private entityInterface;
 contract ImmuteToken private tokenInterface;
@@ -71,7 +75,8 @@ event productReleaseChallengeAwardEvent(address indexed challenger, uint256  ent
 
 ### 
 
-contract initializer/constructor
+Product contract initializer/constructor.
+ Executed on contract creation only.
 
 ```js
 function (address entityAddr, address tokenAddr, address commonAddr) public nonpayable
@@ -87,7 +92,8 @@ function (address entityAddr, address tokenAddr, address commonAddr) public nonp
 
 ### productCreate
 
-Create a new product for an entity
+Create a new product for an entity.
+ Entity must exist and be validated by Immutable.
 
 ```js
 function productCreate(string productName, string productURL, string logoURL, uint256 productDetails) external nonpayable
@@ -105,7 +111,8 @@ returns(uint256)
 
 ### productRelease
 
-Create a new release of an existing product
+Create a new release of an existing product.
+ Entity and Product must exist.
 
 ```js
 function productRelease(uint256 productIndex, uint256 newVersion, uint256 newHash, string newFileUri, uint256 escrow) external nonpayable
@@ -123,7 +130,8 @@ function productRelease(uint256 productIndex, uint256 newVersion, uint256 newHas
 
 ### productReleaseChallenge
 
-Challenge an existing product product release
+Challenge an existing product product release.
+ Entity, Product and Release must exist, hash must differ.
 
 ```js
 function productReleaseChallenge(uint256 entityIndex, uint256 productIndex, uint256 releaseIndex, uint256 newHash) external nonpayable
@@ -140,7 +148,8 @@ function productReleaseChallenge(uint256 entityIndex, uint256 productIndex, uint
 
 ### productTokensWithdraw
 
-Withdraw expired product release escrows
+Withdraw expired product release escrows.
+ Withdraws all expired product release escrows amounts.
 
 ```js
 function productTokensWithdraw() external nonpayable
@@ -153,7 +162,8 @@ function productTokensWithdraw() external nonpayable
 
 ### productChallengeReward
 
-Administrator (onlyOwner) reward previous user challenge
+Administrator (onlyOwner) reward previous user challenge.
+ Product release must exist with an escrow and different hash.
 
 ```js
 function productChallengeReward(address challengerAddress, uint256 entityIndex, uint256 productIndex, uint256 releaseIndex, uint256 newHash) external nonpayable onlyOwner 
@@ -171,7 +181,8 @@ function productChallengeReward(address challengerAddress, uint256 entityIndex, 
 
 ### productTokenEscrow
 
-Check balance of escrowed product releases/licenses
+Check balance of escrowed product releases.
+ Counts all expired/available product release escrows amounts.
 
 ```js
 function productTokenEscrow() external view
@@ -185,7 +196,8 @@ returns(uint256)
 
 ### productReleaseDetails
 
-Return version, URI and hash of existing product release
+Return version, URI and hash of existing product release.
+ Entity, Product and Release must exist.
 
 ```js
 function productReleaseDetails(uint256 entityIndex, uint256 productIndex, uint256 releaseIndex) external view
@@ -206,7 +218,8 @@ the version, architecture and language(s)
 
 ### productNumberOf
 
-Return the number of products maintained by an entity
+Return the number of products maintained by an entity.
+ Entity must exist.
 
 ```js
 function productNumberOf(uint256 entityIndex) external view
@@ -225,7 +238,8 @@ the current number of products for the entity
 
 ### productNumberOfReleases
 
-Return the number of product releases of a product
+Return the number of product releases of a product.
+ Entity and product must exist.
 
 ```js
 function productNumberOfReleases(uint256 entityIndex, uint256 productIndex) external view
@@ -245,7 +259,8 @@ the current number of releases for the product
 
 ### productDetails
 
-Retrieve existing product name, info and details
+Retrieve existing product name, info and details.
+ Entity and product must exist.
 
 ```js
 function productDetails(uint256 entityIndex, uint256 productIndex) external view
@@ -280,6 +295,7 @@ the name of the product
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
+* [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)

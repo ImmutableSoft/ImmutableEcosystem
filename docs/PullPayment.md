@@ -1,0 +1,150 @@
+# PullPayment.sol
+
+View Source: [@openzeppelin/contracts/payment/PullPayment.sol](../@openzeppelin/contracts/payment/PullPayment.sol)
+
+**↘ Derived Contracts: [ImmutableEntity](ImmutableEntity.md), [ImmuteToken](ImmuteToken.md)**
+
+**PullPayment**
+
+Simple implementation of a
+https://consensys.github.io/smart-contract-best-practices/recommendations/#favor-pull-over-push-for-external-calls[pull-payment]
+strategy, where the paying contract doesn't interact directly with the
+receiver account, which must withdraw its payments itself.
+ * Pull-payments are often considered the best practice when it comes to sending
+Ether, security-wise. It prevents recipients from blocking execution, and
+eliminates reentrancy concerns.
+ * To use, derive from the `PullPayment` contract, and use {_asyncTransfer}
+instead of Solidity's `transfer` function. Payees can query their due
+payments with {payments}, and retrieve them with {withdrawPayments}.
+
+## Contract Members
+**Constants & Variables**
+
+```js
+contract Escrow private _escrow;
+
+```
+
+## Functions
+
+- [()](#)
+- [withdrawPayments(address payable payee)](#withdrawpayments)
+- [withdrawPaymentsWithGas(address payable payee)](#withdrawpaymentswithgas)
+- [payments(address dest)](#payments)
+- [_asyncTransfer(address dest, uint256 amount)](#_asynctransfer)
+
+### 
+
+```js
+function () internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+
+### withdrawPayments
+
+Withdraw accumulated payments.
+     * Note that _any_ account can call this function, not just the `payee`.
+This means that contracts unaware of the `PullPayment` protocol can still
+receive funds this way, by having a separate account call
+{withdrawPayments}.
+     * NOTE: This function has been deprecated, use {withdrawPaymentsWithGas}
+instead. Calling contracts with fixed gas limits is an anti-pattern and
+may break contract interactions in network upgrades (hardforks).
+https://diligence.consensys.net/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more.]
+     *
+
+```js
+function withdrawPayments(address payable payee) public nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| payee | address payable | Whose payments will be withdrawn. | 
+
+### withdrawPaymentsWithGas
+
+Same as {withdrawPayments}, but forwarding all gas to the recipient.
+     * WARNING: Forwarding all gas opens the door to reentrancy vulnerabilities.
+Make sure you trust the recipient, or are either following the
+checks-effects-interactions pattern or using {ReentrancyGuard}.
+     * _Available since v2.4.0._
+
+```js
+function withdrawPaymentsWithGas(address payable payee) external nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| payee | address payable |  | 
+
+### payments
+
+Returns the payments owed to an address.
+
+```js
+function payments(address dest) public view
+returns(uint256)
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| dest | address | The creditor's address. | 
+
+### _asyncTransfer
+
+Called by the payer to store the sent amount as credit to be pulled.
+Funds sent in this way are stored in an intermediate {Escrow} contract, so
+there is no danger of them being spent before withdrawal.
+     *
+
+```js
+function _asyncTransfer(address dest, uint256 amount) internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| dest | address | The destination address of the funds. | 
+| amount | uint256 | The amount to transfer. | 
+
+## Contracts
+
+* [Address](Address.md)
+* [AddrResolver](AddrResolver.md)
+* [Context](Context.md)
+* [CustomToken](CustomToken.md)
+* [ENS](ENS.md)
+* [ERC20](ERC20.md)
+* [ERC20Detailed](ERC20Detailed.md)
+* [ERC20Mintable](ERC20Mintable.md)
+* [ERC20Pausable](ERC20Pausable.md)
+* [Escrow](Escrow.md)
+* [IERC20](IERC20.md)
+* [ImmutableConstants](ImmutableConstants.md)
+* [ImmutableEntity](ImmutableEntity.md)
+* [ImmutableLicense](ImmutableLicense.md)
+* [ImmutableProduct](ImmutableProduct.md)
+* [ImmutableResolver](ImmutableResolver.md)
+* [ImmuteToken](ImmuteToken.md)
+* [Migrations](Migrations.md)
+* [MinterRole](MinterRole.md)
+* [Ownable](Ownable.md)
+* [Pausable](Pausable.md)
+* [PauserRole](PauserRole.md)
+* [PullPayment](PullPayment.md)
+* [ResolverBase](ResolverBase.md)
+* [Roles](Roles.md)
+* [SafeMath](SafeMath.md)
+* [Secondary](Secondary.md)
+* [StringCommon](StringCommon.md)

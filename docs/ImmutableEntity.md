@@ -1,8 +1,8 @@
-# Immutable Entity - authentic software from the source (ImmutableEntity.sol)
+# Immutable Entity - managed trust zone for the ecosystem (ImmutableEntity.sol)
 
 View Source: [contracts/ImmutableEntity.sol](../contracts/ImmutableEntity.sol)
 
-**↗ Extends: [Ownable](Ownable.md), [PullPayment](PullPayment.md), [ImmutableConstants](ImmutableConstants.md), [AddrResolver](AddrResolver.md)**
+**↗ Extends: [Ownable](Ownable.md), [PullPayment](PullPayment.md), [ImmutableConstants](ImmutableConstants.md)**
 
 **ImmutableEntity**
 
@@ -23,6 +23,8 @@ struct Entity {
  uint256 numberOfLicenses,
  uint256 escrow,
  address erc20Token,
+ uint256 referral,
+ uint256 createTime,
  mapping(uint256 => struct ImmutableEntity.TokenBlockOffer) offers
 }
 ```
@@ -41,11 +43,10 @@ struct TokenBlockOffer {
 **Constants & Variables**
 
 ```js
-//public members
-bytes32 public constant TLD_NODE;
-uint256 public constant COIN_TYPE_ETH;
-
 //internal members
+uint256 internal constant ReferralEntityBonus;
+uint256 internal constant ReferralSubscriptionBonus;
+uint256 internal constant EntitySubscriptionBonus;
 string internal constant EntityNotValid;
 string internal constant EntityIsZero;
 string internal constant EntityNotValidated;
@@ -58,9 +59,7 @@ address[] private EntityArray;
 struct ImmutableEntity.Entity[] private Entities;
 contract ImmuteToken private tokenInterface;
 contract StringCommon private commonInterface;
-contract ENS private ens;
-address private ensAddress;
-bytes32 private rootNode;
+contract ImmutableResolver private resolver;
 
 ```
 
@@ -74,11 +73,11 @@ event entityTokenBlockPurchaseEvent(address indexed purchaserAddress, uint256  e
 
 ## Functions
 
-- [(address immuteToken, address commonAddr, address ensAddr)](#)
-- [isAuthorised(bytes32 )](#isauthorised)
+- [(address immuteToken, address commonAddr)](#)
+- [entityResolver(address resolverAddr, bytes32 rootNode)](#entityresolver)
 - [entityStatusUpdate(uint256 entityIndex, uint256 status)](#entitystatusupdate)
 - [entityCustomToken(uint256 entityIndex, address tokenAddress)](#entitycustomtoken)
-- [entityCreate(string entityName, string entityURL)](#entitycreate)
+- [entityCreate(string entityName, string entityURL, uint256 referralEntityIndex)](#entitycreate)
 - [entityUpdate(string entityName, string entityURL)](#entityupdate)
 - [entityBankChange(address payable newBank)](#entitybankchange)
 - [entityAddressNext(address nextAddress, uint256 numTokens)](#entityaddressnext)
@@ -94,6 +93,7 @@ event entityTokenBlockPurchaseEvent(address indexed purchaserAddress, uint256  e
 - [entityAddressStatus(address entityAddress)](#entityaddressstatus)
 - [entityAddressToIndex(address entityAddress)](#entityaddresstoindex)
 - [entityDetailsByIndex(uint256 entityIndex)](#entitydetailsbyindex)
+- [entityReferralByIndex(uint256 entityIndex)](#entityreferralbyindex)
 - [entityNumberOf()](#entitynumberof)
 - [entityNumberOfOffers(uint256 entityIndex)](#entitynumberofoffers)
 - [entityOfferDetails(uint256 entityIndex, uint256 offerId)](#entityofferdetails)
@@ -103,10 +103,11 @@ event entityTokenBlockPurchaseEvent(address indexed purchaserAddress, uint256  e
 
 ### 
 
-contract initializer/constructor
+Contract initializer/constructor.
+ Executed on contract creation only.
 
 ```js
-function (address immuteToken, address commonAddr, address ensAddr) public nonpayable PullPayment 
+function (address immuteToken, address commonAddr) public nonpayable PullPayment 
 ```
 
 **Arguments**
@@ -115,28 +116,28 @@ function (address immuteToken, address commonAddr, address ensAddr) public nonpa
 | ------------- |------------- | -----|
 | immuteToken | address | the address of the IuT token contract | 
 | commonAddr | address | the address of the CommonString contract | 
-| ensAddr | address | the address of the ENS contract | 
 
-### isAuthorised
+### entityResolver
 
-⤾ overrides [ResolverBase.isAuthorised](ResolverBase.md#isauthorised)
-
-ENS authorization check
+Set ImmutableSoft ENS resolver. A zero address disables resolver.
+ Administrator (onlyOwner)
 
 ```js
-function isAuthorised(bytes32 ) internal view
-returns(bool)
+function entityResolver(address resolverAddr, bytes32 rootNode) external nonpayable onlyOwner 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-|  | bytes32 |  | 
+| resolverAddr | address | the address of the immutable resolver | 
+| rootNode | bytes32 |  | 
 
 ### entityStatusUpdate
 
-Administrator (onlyOwner) update an entity status
+Update an entity status, non-zero value is approval.
+ See ImmutableConstants.sol for status values and flags.
+ Administrator (onlyOwner)
 
 ```js
 function entityStatusUpdate(uint256 entityIndex, uint256 status) external nonpayable onlyOwner 
@@ -151,7 +152,10 @@ function entityStatusUpdate(uint256 entityIndex, uint256 status) external nonpay
 
 ### entityCustomToken
 
-Administrator (onlyOwner) update entity with custom ERC20
+Update entity with custom ERC20.
+ Must NOT be called if entity has existing product sales escrow.
+ Entity requires prior approval with custom token status.
+ Administrator (onlyOwner)
 
 ```js
 function entityCustomToken(uint256 entityIndex, address tokenAddress) external nonpayable onlyOwner 
@@ -166,10 +170,11 @@ function entityCustomToken(uint256 entityIndex, address tokenAddress) external n
 
 ### entityCreate
 
-Create an organization
+Create an organization.
+ Entities require approval (entityStatusUpdate) after create.
 
 ```js
-function entityCreate(string entityName, string entityURL) public nonpayable
+function entityCreate(string entityName, string entityURL, uint256 referralEntityIndex) public nonpayable
 returns(uint256)
 ```
 
@@ -179,10 +184,12 @@ returns(uint256)
 | ------------- |------------- | -----|
 | entityName | string | The legal name of the entity | 
 | entityURL | string | The valid URL of the entity | 
+| referralEntityIndex | uint256 |  | 
 
 ### entityUpdate
 
-Update an organization
+Update an organization.
+ Entities require reapproval (entityStatusUpdate) after update.
 
 ```js
 function entityUpdate(string entityName, string entityURL) external nonpayable
@@ -197,7 +204,8 @@ function entityUpdate(string entityName, string entityURL) external nonpayable
 
 ### entityBankChange
 
-Change bank address that contract pays out to
+Change bank address that contract pays out to.
+ msg.sender must be a registered entity.
 
 ```js
 function entityBankChange(address payable newBank) external nonpayable
@@ -211,7 +219,9 @@ function entityBankChange(address payable newBank) external nonpayable
 
 ### entityAddressNext
 
-Propose to move an entity (change addresses)
+Propose to move an entity (change addresses).
+ To complete move, call entityMoveAddress with new address.
+ msg.sender must be a registered entity.
 
 ```js
 function entityAddressNext(address nextAddress, uint256 numTokens) external nonpayable
@@ -226,7 +236,9 @@ function entityAddressNext(address nextAddress, uint256 numTokens) external nonp
 
 ### entityAdminAddressNext
 
-Admin override for moving an entity (change addresses)
+Admin override for moving an entity (change addresses).
+ To complete move call entityMoveAddress with new address.
+ msg.sender must be Administrator (owner).
 
 ```js
 function entityAdminAddressNext(address entityAddress, address nextAddress, uint256 numTokens) external nonpayable onlyOwner 
@@ -242,7 +254,9 @@ function entityAdminAddressNext(address entityAddress, address nextAddress, uint
 
 ### entityAddressMove
 
-Finish moving an entity (change addresses)
+Finish moving an entity (change addresses).
+ First call entityNextAddress with previous address.
+ msg.sender must be new entity address set with entityNextAddress.
 
 ```js
 function entityAddressMove(address oldAddress) external nonpayable
@@ -256,7 +270,8 @@ function entityAddressMove(address oldAddress) external nonpayable
 
 ### entityPaymentsWithdraw
 
-Withdraw all payments (ETH) into entity bank
+Withdraw all payments (ETH) into entity bank.
+ Uses OpenZeppelin PullPayment interface.
 
 ```js
 function entityPaymentsWithdraw() external nonpayable
@@ -269,7 +284,10 @@ function entityPaymentsWithdraw() external nonpayable
 
 ### entityTokenBlockOffer
 
-Offer a block of tokens in exchange for ETH
+Offer a block of tokens in exchange for ETH.
+ Purchasers can buy any multiple of 'tokens' up to 'count'.
+ 'tokens' multipled by 'count' will be escrowed in offer.
+ msg.sender must be a registered entity.
 
 ```js
 function entityTokenBlockOffer(uint256 rate, uint256 tokens, uint256 count) external nonpayable
@@ -285,7 +303,8 @@ function entityTokenBlockOffer(uint256 rate, uint256 tokens, uint256 count) exte
 
 ### entityTokenBlockOfferRevoke
 
-Revoke a previous offer of a block of tokens
+Revoke a previous offer of a block of tokens.
+ Offer must already exist and owned by msg.sender.
 
 ```js
 function entityTokenBlockOfferRevoke(uint256 offerIndex) external nonpayable
@@ -299,7 +318,10 @@ function entityTokenBlockOfferRevoke(uint256 offerIndex) external nonpayable
 
 ### entityTransfer
 
-Transfer ETH to an entity
+Transfer ETH to an entity.
+ Entity must exist and have bank configured.
+ Payable, requires ETH transfer.
+ msg.sender is the payee
 
 ```js
 function entityTransfer(uint256 entityIndex) public payable
@@ -313,7 +335,9 @@ function entityTransfer(uint256 entityIndex) public payable
 
 ### entityTokenBlockPurchase
 
-Purchase an block of tokens offered for ETH
+Purchase an block of tokens offered for ETH.
+ Offer must already exist. Payable, requires ETH transfer.
+ msg.sender is the purchaser.
 
 ```js
 function entityTokenBlockPurchase(uint256 entityIndex, uint256 offerIndex, uint256 count) external payable
@@ -329,7 +353,8 @@ function entityTokenBlockPurchase(uint256 entityIndex, uint256 offerIndex, uint2
 
 ### entityIdToLocalId
 
-Return the local entity ID (index)
+Return the local entity ID (index).
+ Entity must exist and id be valid.
 
 ```js
 function entityIdToLocalId(uint256 entityIndex) public view
@@ -348,7 +373,8 @@ The local index of the entity
 
 ### entityIndexStatus
 
-Retrieve official entity status
+Retrieve official entity status.
+ Status of zero (0) return if entity not found.
 
 ```js
 function entityIndexStatus(uint256 entityIndex) public view
@@ -367,7 +393,8 @@ the entity status as maintained by Immutable
 
 ### entityAddressStatus
 
-Retrieve official entity status
+Retrieve official entity status.
+ Status of zero (0) return if entity not found.
 
 ```js
 function entityAddressStatus(address entityAddress) public view
@@ -386,7 +413,8 @@ the entity status as maintained by Immutable
 
 ### entityAddressToIndex
 
-Retrieve official global entity index
+Retrieve official global entity index.
+ Return index of zero (0) is not found.
 
 ```js
 function entityAddressToIndex(address entityAddress) public view
@@ -405,7 +433,7 @@ the entity index as maintained by Immutable
 
 ### entityDetailsByIndex
 
-Retrieve entity details from index
+Retrieve entity details from index.
 
 ```js
 function entityDetailsByIndex(uint256 entityIndex) public view
@@ -422,9 +450,28 @@ the entity name
 | ------------- |------------- | -----|
 | entityIndex | uint256 | The index of the entity | 
 
+### entityReferralByIndex
+
+Retrieve entity referral details.
+
+```js
+function entityReferralByIndex(uint256 entityIndex) public view
+returns(address, uint256)
+```
+
+**Returns**
+
+the entity referral
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The index of the entity | 
+
 ### entityNumberOf
 
-Retrieve number of entities
+Retrieve number of entities.
 
 ```js
 function entityNumberOf() public view
@@ -442,7 +489,8 @@ the number of entities
 
 ### entityNumberOfOffers
 
-Return the number of token offers for an entity
+Return the number of token offers for an entity.
+ Entity must exist and index be valid.
 
 ```js
 function entityNumberOfOffers(uint256 entityIndex) external view
@@ -461,7 +509,8 @@ the current number of token offers
 
 ### entityOfferDetails
 
-Retrieve details of a token offer
+Retrieve details of a token offer.
+ Returns empty name and URL if not found.
 
 ```js
 function entityOfferDetails(uint256 entityIndex, uint256 offerId) external view
@@ -481,7 +530,8 @@ the ETH to token exchange rate
 
 ### entityPaymentsCheck
 
-Check payment (ETH) due entity bank
+Check payment (ETH) due entity bank.
+ Uses OpenZeppelin PullPayment interface.
 
 ```js
 function entityPaymentsCheck() external view
@@ -499,7 +549,7 @@ the amount of ETH in the entity escrow
 
 ### entityCustomTokenAddress
 
-Return the entity custom ERC20 contract address
+Return the entity custom ERC20 contract address.
 
 ```js
 function entityCustomTokenAddress(uint256 entityIndex) external view
@@ -518,10 +568,10 @@ the entity custom ERC20 token or zero address
 
 ### entityRootNode
 
-Return ENS immutablesoft root node
+Return ENS immutablesoft root node.
 
 ```js
-function entityRootNode() external view
+function entityRootNode() public view
 returns(bytes32)
 ```
 
@@ -551,6 +601,7 @@ the bytes32 ENS root node for immutablesoft.eth
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
+* [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)

@@ -6,11 +6,13 @@ The Immutable Ecosystem is a hardware and language agnostic Ethereum based appli
 
 A bug bounty is in effect for the smart contracts within the Immutable Ecosystem. If any bug (or suspected bug) is identified in the smart contract source code, please open a Git pull request (PR) identifying the error or vulnerability.
 
-To receive the maximum payout the PR should fix the problem and include a unit test that demonstrates the problem and the solution (test should fail without the PR, and pass with the PR). Specific payouts to the bug bounty depend on the severity of the bug as well as the general impact of the bug. In general, the theft of ETH, tokens or Entity accounts is considered the highest severity. Bugs in the Solidity compiler, third party contracts (ERC20, ENS, etc.), or Ethereum and/or EVM in general are explicitly not permissible within this bug bounty unless the bug is directly caused by ImmutableSoft's use of these third party tools. Also, bugs in the Dapp (once available) are not part of this bug bounty (but please report them if you find them ;-)
+To receive the maximum payout the PR should fix the problem and include a unit test that demonstrates the problem and the solution (test should fail without the PR, and pass with the PR). Specific payouts to the bug bounty depend on the severity of the bug as well as the general impact of the bug. In general, the theft of ETH, tokens or Entity accounts is considered the highest severity.
 
-The procedure to participate in the bug bounty is to first email Sean at ImmutableSoft dot org and identify the general problem. We will notify you if the problem is still open (another has not already identified this issue). If the issue has not already been identified you will be encouraged to prepare a formal report/PR, required within 15 days. Please do not forget this first step so you can ensure your effort will be rewarded.
+Exemptions: The ImmutableResolver and ENS integration in general is a WIP and not part of this bug bounty at this time. Additionally, bugs in the Solidity compiler, third party contracts (ERC20, ENS, etc.), or Ethereum and/or EVM in general are explicitly not permissible within this bug bounty unless the bug is directly caused by ImmutableSoft's use of these third party components. Also, bugs in the Dapp (once available) are not part of this bug bounty (but please report them if you find them ;-)
 
-If you do not have time to develop a formal PR, or wish to remain anonymous, you can submit your report through email. Send your submission directly to Sean at ImmutableSoft dot org. Any submission that is acted upon by ImmutableSoft is eligable for a payout. If you wish to decline payment or receive your reward with tokens, please mention this in email.
+The procedure to participate in the bug bounty is to first email Security at ImmutableSoft dot org and identify the general problem. We will notify you if the problem has already been identified or not. If the issue has not already been identified you will be encouraged to prepare a formal report/PR, required within 15 days. Please do not forget this first step so you can ensure your effort will be rewarded.
+
+If you do not have time to develop a formal PR, or wish to remain anonymous, you can submit your report through email. Send your submission directly to Security at ImmutableSoft dot org. Any submission that is acted upon by ImmutableSoft is eligable for a payout. If you wish to decline payment or receive your reward with tokens, please mention this in email.
 
 ## Overview
 
@@ -19,6 +21,25 @@ The Immutable Ecosystem is split into four Smart Contracts. The ImmuteToken is t
 Below is the inheritance graph of the various Immutable Ecosystem smart contracts.
 
 ![image inheritance](./images/InheritanceGraph.jpg)
+
+This project utilizes 'truffle' to build and test the solidity smart contracts. Typical usage after cloning the project includes the following commands issued in the base of the cloned directory. See https://www.trufflesuite.com/ for more information on truffle.
+
+### npm install
+### truffle compile --all
+### truffle deploy --all
+### truffle test
+
+After contract deployment the following ImmuteToken contract initialization procedures are taken by the contract owner to make the Ecosystem operation. The first step configures and restrict the token to transfers only to or from the Ecosystem contracts. See the first and third javascript tests in the file test/TestImmutableEcosystem.js.
+
+### restrictTransferToContracts(ImmutableEntity.address,
+###                             ImmutableProduct.address,
+###                             ImmutableLicense.address);
+
+The last step configures the bank payable address paid on token purchases. Any use of the Ecosystem before these two steps are taken is not allowed.
+
+### bankChange(ownerBank);
+
+After these two steps the Ecosystem is ready for use.
 
 ## ImmutableToken
 

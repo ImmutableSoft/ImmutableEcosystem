@@ -92,6 +92,7 @@ string internal constant OfferNotFound;
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
+* [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)

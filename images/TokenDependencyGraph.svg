@@ -1,167 +1,196 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [  <!ENTITY quot "&#34;">  <!ENTITY amp "&#38;">  <!ENTITY apos "&#39;">  <!ENTITY lt "&#60;">  <!ENTITY gt "&#62;">  <!ENTITY nbsp "&#160;">  <!ENTITY iexcl "&#161;">  <!ENTITY cent "&#162;">  <!ENTITY pound "&#163;">  <!ENTITY curren "&#164;">  <!ENTITY yen "&#165;">  <!ENTITY brvbar "&#166;">  <!ENTITY sect "&#167;">  <!ENTITY uml "&#168;">  <!ENTITY copy "&#169;">  <!ENTITY ordf "&#170;">  <!ENTITY laquo "&#171;">  <!ENTITY not "&#172;">  <!ENTITY shy "&#173;">  <!ENTITY reg "&#174;">  <!ENTITY macr "&#175;">  <!ENTITY deg "&#176;">  <!ENTITY plusmn "&#177;">  <!ENTITY sup2 "&#178;">  <!ENTITY sup3 "&#179;">  <!ENTITY acute "&#180;">  <!ENTITY micro "&#181;">  <!ENTITY para "&#182;">  <!ENTITY middot "&#183;">  <!ENTITY cedil "&#184;">  <!ENTITY sup1 "&#185;">  <!ENTITY ordm "&#186;">  <!ENTITY raquo "&#187;">  <!ENTITY frac14 "&#188;">  <!ENTITY frac12 "&#189;">  <!ENTITY frac34 "&#190;">  <!ENTITY iquest "&#191;">  <!ENTITY Agrave "&#192;">  <!ENTITY Aacute "&#193;">  <!ENTITY Acirc "&#194;">  <!ENTITY Atilde "&#195;">  <!ENTITY Auml "&#196;">  <!ENTITY Aring "&#197;">  <!ENTITY AElig "&#198;">  <!ENTITY Ccedil "&#199;">  <!ENTITY Egrave "&#200;">  <!ENTITY Eacute "&#201;">  <!ENTITY Ecirc "&#202;">  <!ENTITY Euml "&#203;">  <!ENTITY Igrave "&#204;">  <!ENTITY Iacute "&#205;">  <!ENTITY Icirc "&#206;">  <!ENTITY Iuml "&#207;">  <!ENTITY ETH "&#208;">  <!ENTITY Ntilde "&#209;">  <!ENTITY Ograve "&#210;">  <!ENTITY Oacute "&#211;">  <!ENTITY Ocirc "&#212;">  <!ENTITY Otilde "&#213;">  <!ENTITY Ouml "&#214;">  <!ENTITY times "&#215;">  <!ENTITY Oslash "&#216;">  <!ENTITY Ugrave "&#217;">  <!ENTITY Uacute "&#218;">  <!ENTITY Ucirc "&#219;">  <!ENTITY Uuml "&#220;">  <!ENTITY Yacute "&#221;">  <!ENTITY THORN "&#222;">  <!ENTITY szlig "&#223;">  <!ENTITY agrave "&#224;">  <!ENTITY aacute "&#225;">  <!ENTITY acirc "&#226;">  <!ENTITY atilde "&#227;">  <!ENTITY auml "&#228;">  <!ENTITY aring "&#229;">  <!ENTITY aelig "&#230;">  <!ENTITY ccedil "&#231;">  <!ENTITY egrave "&#232;">  <!ENTITY eacute "&#233;">  <!ENTITY ecirc "&#234;">  <!ENTITY euml "&#235;">  <!ENTITY igrave "&#236;">  <!ENTITY iacute "&#237;">  <!ENTITY icirc "&#238;">  <!ENTITY iuml "&#239;">  <!ENTITY eth "&#240;">  <!ENTITY ntilde "&#241;">  <!ENTITY ograve "&#242;">  <!ENTITY oacute "&#243;">  <!ENTITY ocirc "&#244;">  <!ENTITY otilde "&#245;">  <!ENTITY ouml "&#246;">  <!ENTITY divide "&#247;">  <!ENTITY oslash "&#248;">  <!ENTITY ugrave "&#249;">  <!ENTITY uacute "&#250;">  <!ENTITY ucirc "&#251;">  <!ENTITY uuml "&#252;">  <!ENTITY yacute "&#253;">  <!ENTITY thorn "&#254;">  <!ENTITY yuml "&#255;">  <!ENTITY OElig "&#338;">  <!ENTITY oelig "&#339;">  <!ENTITY Scaron "&#352;">  <!ENTITY scaron "&#353;">  <!ENTITY Yuml "&#376;">  <!ENTITY fnof "&#402;">  <!ENTITY circ "&#710;">  <!ENTITY tilde "&#732;">  <!ENTITY Alpha "&#913;">  <!ENTITY Beta "&#914;">  <!ENTITY Gamma "&#915;">  <!ENTITY Delta "&#916;">  <!ENTITY Epsilon "&#917;">  <!ENTITY Zeta "&#918;">  <!ENTITY Eta "&#919;">  <!ENTITY Theta "&#920;">  <!ENTITY Iota "&#921;">  <!ENTITY Kappa "&#922;">  <!ENTITY Lambda "&#923;">  <!ENTITY Mu "&#924;">  <!ENTITY Nu "&#925;">  <!ENTITY Xi "&#926;">  <!ENTITY Omicron "&#927;">  <!ENTITY Pi "&#928;">  <!ENTITY Rho "&#929;">  <!ENTITY Sigma "&#931;">  <!ENTITY Tau "&#932;">  <!ENTITY Upsilon "&#933;">  <!ENTITY Phi "&#934;">  <!ENTITY Chi "&#935;">  <!ENTITY Psi "&#936;">  <!ENTITY Omega "&#937;">  <!ENTITY alpha "&#945;">  <!ENTITY beta "&#946;">  <!ENTITY gamma "&#947;">  <!ENTITY delta "&#948;">  <!ENTITY epsilon "&#949;">  <!ENTITY zeta "&#950;">  <!ENTITY eta "&#951;">  <!ENTITY theta "&#952;">  <!ENTITY iota "&#953;">  <!ENTITY kappa "&#954;">  <!ENTITY lambda "&#955;">  <!ENTITY mu "&#956;">  <!ENTITY nu "&#957;">  <!ENTITY xi "&#958;">  <!ENTITY omicron "&#959;">  <!ENTITY pi "&#960;">  <!ENTITY rho "&#961;">  <!ENTITY sigmaf "&#962;">  <!ENTITY sigma "&#963;">  <!ENTITY tau "&#964;">  <!ENTITY upsilon "&#965;">  <!ENTITY phi "&#966;">  <!ENTITY chi "&#967;">  <!ENTITY psi "&#968;">  <!ENTITY omega "&#969;">  <!ENTITY thetasym "&#977;">  <!ENTITY upsih "&#978;">  <!ENTITY piv "&#982;">  <!ENTITY ensp "&#8194;">  <!ENTITY emsp "&#8195;">  <!ENTITY thinsp "&#8201;">  <!ENTITY zwnj "&#8204;">  <!ENTITY zwj "&#8205;">  <!ENTITY lrm "&#8206;">  <!ENTITY rlm "&#8207;">  <!ENTITY ndash "&#8211;">  <!ENTITY mdash "&#8212;">  <!ENTITY lsquo "&#8216;">  <!ENTITY rsquo "&#8217;">  <!ENTITY sbquo "&#8218;">  <!ENTITY ldquo "&#8220;">  <!ENTITY rdquo "&#8221;">  <!ENTITY bdquo "&#8222;">  <!ENTITY dagger "&#8224;">  <!ENTITY Dagger "&#8225;">  <!ENTITY bull "&#8226;">  <!ENTITY hellip "&#8230;">  <!ENTITY permil "&#8240;">  <!ENTITY prime "&#8242;">  <!ENTITY Prime "&#8243;">  <!ENTITY lsaquo "&#8249;">  <!ENTITY rsaquo "&#8250;">  <!ENTITY oline "&#8254;">  <!ENTITY frasl "&#8260;">  <!ENTITY euro "&#8364;">  <!ENTITY image "&#8465;">  <!ENTITY weierp "&#8472;">  <!ENTITY real "&#8476;">  <!ENTITY trade "&#8482;">  <!ENTITY alefsym "&#8501;">  <!ENTITY larr "&#8592;">  <!ENTITY uarr "&#8593;">  <!ENTITY rarr "&#8594;">  <!ENTITY darr "&#8595;">  <!ENTITY harr "&#8596;">  <!ENTITY crarr "&#8629;">  <!ENTITY lArr "&#8656;">  <!ENTITY uArr "&#8657;">  <!ENTITY rArr "&#8658;">  <!ENTITY dArr "&#8659;">  <!ENTITY hArr "&#8660;">  <!ENTITY forall "&#8704;">  <!ENTITY part "&#8706;">  <!ENTITY exist "&#8707;">  <!ENTITY empty "&#8709;">  <!ENTITY nabla "&#8711;">  <!ENTITY isin "&#8712;">  <!ENTITY notin "&#8713;">  <!ENTITY ni "&#8715;">  <!ENTITY prod "&#8719;">  <!ENTITY sum "&#8721;">  <!ENTITY minus "&#8722;">  <!ENTITY lowast "&#8727;">  <!ENTITY radic "&#8730;">  <!ENTITY prop "&#8733;">  <!ENTITY infin "&#8734;">  <!ENTITY ang "&#8736;">  <!ENTITY and "&#8743;">  <!ENTITY or "&#8744;">  <!ENTITY cap "&#8745;">  <!ENTITY cup "&#8746;">  <!ENTITY int "&#8747;">  <!ENTITY there4 "&#8756;">  <!ENTITY sim "&#8764;">  <!ENTITY cong "&#8773;">  <!ENTITY asymp "&#8776;">  <!ENTITY ne "&#8800;">  <!ENTITY equiv "&#8801;">  <!ENTITY le "&#8804;">  <!ENTITY ge "&#8805;">  <!ENTITY sub "&#8834;">  <!ENTITY sup "&#8835;">  <!ENTITY nsub "&#8836;">  <!ENTITY sube "&#8838;">  <!ENTITY supe "&#8839;">  <!ENTITY oplus "&#8853;">  <!ENTITY otimes "&#8855;">  <!ENTITY perp "&#8869;">  <!ENTITY sdot "&#8901;">  <!ENTITY lceil "&#8968;">  <!ENTITY rceil "&#8969;">  <!ENTITY lfloor "&#8970;">  <!ENTITY rfloor "&#8971;">  <!ENTITY lang "&#9001;">  <!ENTITY rang "&#9002;">  <!ENTITY loz "&#9674;">  <!ENTITY spades "&#9824;">  <!ENTITY clubs "&#9827;">  <!ENTITY hearts "&#9829;">  <!ENTITY diams "&#9830;"> ]><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0.00 0.00 452.63 917.00">
-<g id="graph0" class="graph" transform="translate(-0.56597900390625,901.5850524902344) scale(1)" data-name="G">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [  <!ENTITY quot "&#34;">  <!ENTITY amp "&#38;">  <!ENTITY apos "&#39;">  <!ENTITY lt "&#60;">  <!ENTITY gt "&#62;">  <!ENTITY nbsp "&#160;">  <!ENTITY iexcl "&#161;">  <!ENTITY cent "&#162;">  <!ENTITY pound "&#163;">  <!ENTITY curren "&#164;">  <!ENTITY yen "&#165;">  <!ENTITY brvbar "&#166;">  <!ENTITY sect "&#167;">  <!ENTITY uml "&#168;">  <!ENTITY copy "&#169;">  <!ENTITY ordf "&#170;">  <!ENTITY laquo "&#171;">  <!ENTITY not "&#172;">  <!ENTITY shy "&#173;">  <!ENTITY reg "&#174;">  <!ENTITY macr "&#175;">  <!ENTITY deg "&#176;">  <!ENTITY plusmn "&#177;">  <!ENTITY sup2 "&#178;">  <!ENTITY sup3 "&#179;">  <!ENTITY acute "&#180;">  <!ENTITY micro "&#181;">  <!ENTITY para "&#182;">  <!ENTITY middot "&#183;">  <!ENTITY cedil "&#184;">  <!ENTITY sup1 "&#185;">  <!ENTITY ordm "&#186;">  <!ENTITY raquo "&#187;">  <!ENTITY frac14 "&#188;">  <!ENTITY frac12 "&#189;">  <!ENTITY frac34 "&#190;">  <!ENTITY iquest "&#191;">  <!ENTITY Agrave "&#192;">  <!ENTITY Aacute "&#193;">  <!ENTITY Acirc "&#194;">  <!ENTITY Atilde "&#195;">  <!ENTITY Auml "&#196;">  <!ENTITY Aring "&#197;">  <!ENTITY AElig "&#198;">  <!ENTITY Ccedil "&#199;">  <!ENTITY Egrave "&#200;">  <!ENTITY Eacute "&#201;">  <!ENTITY Ecirc "&#202;">  <!ENTITY Euml "&#203;">  <!ENTITY Igrave "&#204;">  <!ENTITY Iacute "&#205;">  <!ENTITY Icirc "&#206;">  <!ENTITY Iuml "&#207;">  <!ENTITY ETH "&#208;">  <!ENTITY Ntilde "&#209;">  <!ENTITY Ograve "&#210;">  <!ENTITY Oacute "&#211;">  <!ENTITY Ocirc "&#212;">  <!ENTITY Otilde "&#213;">  <!ENTITY Ouml "&#214;">  <!ENTITY times "&#215;">  <!ENTITY Oslash "&#216;">  <!ENTITY Ugrave "&#217;">  <!ENTITY Uacute "&#218;">  <!ENTITY Ucirc "&#219;">  <!ENTITY Uuml "&#220;">  <!ENTITY Yacute "&#221;">  <!ENTITY THORN "&#222;">  <!ENTITY szlig "&#223;">  <!ENTITY agrave "&#224;">  <!ENTITY aacute "&#225;">  <!ENTITY acirc "&#226;">  <!ENTITY atilde "&#227;">  <!ENTITY auml "&#228;">  <!ENTITY aring "&#229;">  <!ENTITY aelig "&#230;">  <!ENTITY ccedil "&#231;">  <!ENTITY egrave "&#232;">  <!ENTITY eacute "&#233;">  <!ENTITY ecirc "&#234;">  <!ENTITY euml "&#235;">  <!ENTITY igrave "&#236;">  <!ENTITY iacute "&#237;">  <!ENTITY icirc "&#238;">  <!ENTITY iuml "&#239;">  <!ENTITY eth "&#240;">  <!ENTITY ntilde "&#241;">  <!ENTITY ograve "&#242;">  <!ENTITY oacute "&#243;">  <!ENTITY ocirc "&#244;">  <!ENTITY otilde "&#245;">  <!ENTITY ouml "&#246;">  <!ENTITY divide "&#247;">  <!ENTITY oslash "&#248;">  <!ENTITY ugrave "&#249;">  <!ENTITY uacute "&#250;">  <!ENTITY ucirc "&#251;">  <!ENTITY uuml "&#252;">  <!ENTITY yacute "&#253;">  <!ENTITY thorn "&#254;">  <!ENTITY yuml "&#255;">  <!ENTITY OElig "&#338;">  <!ENTITY oelig "&#339;">  <!ENTITY Scaron "&#352;">  <!ENTITY scaron "&#353;">  <!ENTITY Yuml "&#376;">  <!ENTITY fnof "&#402;">  <!ENTITY circ "&#710;">  <!ENTITY tilde "&#732;">  <!ENTITY Alpha "&#913;">  <!ENTITY Beta "&#914;">  <!ENTITY Gamma "&#915;">  <!ENTITY Delta "&#916;">  <!ENTITY Epsilon "&#917;">  <!ENTITY Zeta "&#918;">  <!ENTITY Eta "&#919;">  <!ENTITY Theta "&#920;">  <!ENTITY Iota "&#921;">  <!ENTITY Kappa "&#922;">  <!ENTITY Lambda "&#923;">  <!ENTITY Mu "&#924;">  <!ENTITY Nu "&#925;">  <!ENTITY Xi "&#926;">  <!ENTITY Omicron "&#927;">  <!ENTITY Pi "&#928;">  <!ENTITY Rho "&#929;">  <!ENTITY Sigma "&#931;">  <!ENTITY Tau "&#932;">  <!ENTITY Upsilon "&#933;">  <!ENTITY Phi "&#934;">  <!ENTITY Chi "&#935;">  <!ENTITY Psi "&#936;">  <!ENTITY Omega "&#937;">  <!ENTITY alpha "&#945;">  <!ENTITY beta "&#946;">  <!ENTITY gamma "&#947;">  <!ENTITY delta "&#948;">  <!ENTITY epsilon "&#949;">  <!ENTITY zeta "&#950;">  <!ENTITY eta "&#951;">  <!ENTITY theta "&#952;">  <!ENTITY iota "&#953;">  <!ENTITY kappa "&#954;">  <!ENTITY lambda "&#955;">  <!ENTITY mu "&#956;">  <!ENTITY nu "&#957;">  <!ENTITY xi "&#958;">  <!ENTITY omicron "&#959;">  <!ENTITY pi "&#960;">  <!ENTITY rho "&#961;">  <!ENTITY sigmaf "&#962;">  <!ENTITY sigma "&#963;">  <!ENTITY tau "&#964;">  <!ENTITY upsilon "&#965;">  <!ENTITY phi "&#966;">  <!ENTITY chi "&#967;">  <!ENTITY psi "&#968;">  <!ENTITY omega "&#969;">  <!ENTITY thetasym "&#977;">  <!ENTITY upsih "&#978;">  <!ENTITY piv "&#982;">  <!ENTITY ensp "&#8194;">  <!ENTITY emsp "&#8195;">  <!ENTITY thinsp "&#8201;">  <!ENTITY zwnj "&#8204;">  <!ENTITY zwj "&#8205;">  <!ENTITY lrm "&#8206;">  <!ENTITY rlm "&#8207;">  <!ENTITY ndash "&#8211;">  <!ENTITY mdash "&#8212;">  <!ENTITY lsquo "&#8216;">  <!ENTITY rsquo "&#8217;">  <!ENTITY sbquo "&#8218;">  <!ENTITY ldquo "&#8220;">  <!ENTITY rdquo "&#8221;">  <!ENTITY bdquo "&#8222;">  <!ENTITY dagger "&#8224;">  <!ENTITY Dagger "&#8225;">  <!ENTITY bull "&#8226;">  <!ENTITY hellip "&#8230;">  <!ENTITY permil "&#8240;">  <!ENTITY prime "&#8242;">  <!ENTITY Prime "&#8243;">  <!ENTITY lsaquo "&#8249;">  <!ENTITY rsaquo "&#8250;">  <!ENTITY oline "&#8254;">  <!ENTITY frasl "&#8260;">  <!ENTITY euro "&#8364;">  <!ENTITY image "&#8465;">  <!ENTITY weierp "&#8472;">  <!ENTITY real "&#8476;">  <!ENTITY trade "&#8482;">  <!ENTITY alefsym "&#8501;">  <!ENTITY larr "&#8592;">  <!ENTITY uarr "&#8593;">  <!ENTITY rarr "&#8594;">  <!ENTITY darr "&#8595;">  <!ENTITY harr "&#8596;">  <!ENTITY crarr "&#8629;">  <!ENTITY lArr "&#8656;">  <!ENTITY uArr "&#8657;">  <!ENTITY rArr "&#8658;">  <!ENTITY dArr "&#8659;">  <!ENTITY hArr "&#8660;">  <!ENTITY forall "&#8704;">  <!ENTITY part "&#8706;">  <!ENTITY exist "&#8707;">  <!ENTITY empty "&#8709;">  <!ENTITY nabla "&#8711;">  <!ENTITY isin "&#8712;">  <!ENTITY notin "&#8713;">  <!ENTITY ni "&#8715;">  <!ENTITY prod "&#8719;">  <!ENTITY sum "&#8721;">  <!ENTITY minus "&#8722;">  <!ENTITY lowast "&#8727;">  <!ENTITY radic "&#8730;">  <!ENTITY prop "&#8733;">  <!ENTITY infin "&#8734;">  <!ENTITY ang "&#8736;">  <!ENTITY and "&#8743;">  <!ENTITY or "&#8744;">  <!ENTITY cap "&#8745;">  <!ENTITY cup "&#8746;">  <!ENTITY int "&#8747;">  <!ENTITY there4 "&#8756;">  <!ENTITY sim "&#8764;">  <!ENTITY cong "&#8773;">  <!ENTITY asymp "&#8776;">  <!ENTITY ne "&#8800;">  <!ENTITY equiv "&#8801;">  <!ENTITY le "&#8804;">  <!ENTITY ge "&#8805;">  <!ENTITY sub "&#8834;">  <!ENTITY sup "&#8835;">  <!ENTITY nsub "&#8836;">  <!ENTITY sube "&#8838;">  <!ENTITY supe "&#8839;">  <!ENTITY oplus "&#8853;">  <!ENTITY otimes "&#8855;">  <!ENTITY perp "&#8869;">  <!ENTITY sdot "&#8901;">  <!ENTITY lceil "&#8968;">  <!ENTITY rceil "&#8969;">  <!ENTITY lfloor "&#8970;">  <!ENTITY rfloor "&#8971;">  <!ENTITY lang "&#9001;">  <!ENTITY rang "&#9002;">  <!ENTITY loz "&#9674;">  <!ENTITY spades "&#9824;">  <!ENTITY clubs "&#9827;">  <!ENTITY hearts "&#9829;">  <!ENTITY diams "&#9830;"> ]><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0.00 0.00 508.40 1056.00">
+<g id="graph0" class="graph" transform="translate(21.04217181847028,951.0430711262698) scale(0.8705505632961241)" data-name="G">
 
-<polygon fill="#2e3e56" stroke="transparent" points="-4,4 -4,-913 448.6288,-913 448.6288,4 -4,4" style=""></polygon>
+<polygon fill="#2e3e56" stroke="transparent" points="-4,4 -4,-1052 504.3977,-1052 504.3977,4 -4,4" style=""></polygon>
 <g id="clust1" class="cluster">
 <title style="">clusterImmuteToken</title>
-<path fill="#445773" stroke="#445773" d="M20,-147C20,-147 424.6288,-147 424.6288,-147 430.6288,-147 436.6288,-153 436.6288,-159 436.6288,-159 436.6288,-752 436.6288,-752 436.6288,-758 430.6288,-764 424.6288,-764 424.6288,-764 20,-764 20,-764 14,-764 8,-758 8,-752 8,-752 8,-159 8,-159 8,-153 14,-147 20,-147" style=""></path>
-<text text-anchor="middle" x="222.3144" y="-747.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmuteToken</text>
+<path fill="#445773" stroke="#445773" d="M20,-286C20,-286 452.5133,-286 452.5133,-286 458.5133,-286 464.5133,-292 464.5133,-298 464.5133,-298 464.5133,-891 464.5133,-891 464.5133,-897 458.5133,-903 452.5133,-903 452.5133,-903 20,-903 20,-903 14,-903 8,-897 8,-891 8,-891 8,-298 8,-298 8,-292 14,-286 20,-286" style=""></path>
+<text text-anchor="middle" x="236.2566" y="-886.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmuteToken</text>
 </g>
 <g id="clust2" class="cluster">
 <title style="">clusterERC20</title>
-<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M301.1523,-8C301.1523,-8 416.0438,-8 416.0438,-8 422.0438,-8 428.0438,-14 428.0438,-20 428.0438,-20 428.0438,-127 428.0438,-127 428.0438,-133 422.0438,-139 416.0438,-139 416.0438,-139 301.1523,-139 301.1523,-139 295.1523,-139 289.1523,-133 289.1523,-127 289.1523,-127 289.1523,-20 289.1523,-20 289.1523,-14 295.1523,-8 301.1523,-8" style=""></path>
-<text text-anchor="middle" x="358.5981" y="-122.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC20</text>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M329.0367,-147C329.0367,-147 443.9282,-147 443.9282,-147 449.9282,-147 455.9282,-153 455.9282,-159 455.9282,-159 455.9282,-266 455.9282,-266 455.9282,-272 449.9282,-278 443.9282,-278 443.9282,-278 329.0367,-278 329.0367,-278 323.0367,-278 317.0367,-272 317.0367,-266 317.0367,-266 317.0367,-159 317.0367,-159 317.0367,-153 323.0367,-147 329.0367,-147" style=""></path>
+<text text-anchor="middle" x="386.4825" y="-261.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC20</text>
 </g>
 <g id="clust3" class="cluster">
+<title style="">clusterImmutableEntity</title>
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M292.5673,-8C292.5673,-8 480.3977,-8 480.3977,-8 486.3977,-8 492.3977,-14 492.3977,-20 492.3977,-20 492.3977,-127 492.3977,-127 492.3977,-133 486.3977,-139 480.3977,-139 480.3977,-139 292.5673,-139 292.5673,-139 286.5673,-139 280.5673,-133 280.5673,-127 280.5673,-127 280.5673,-20 280.5673,-20 280.5673,-14 286.5673,-8 292.5673,-8" style=""></path>
+<text text-anchor="middle" x="386.4825" y="-122.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ImmutableEntity</text>
+</g>
+<g id="clust4" class="cluster">
 <title style="">cluster_01</title>
-<polygon fill="#2e3e56" stroke="#000000" points="61.2836,-772 61.2836,-901 393.5981,-901 393.5981,-772 61.2836,-772" style=""></polygon>
-<text text-anchor="middle" x="227.4408" y="-884.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Legend</text>
+<polygon fill="#2e3e56" stroke="#000000" points="61.2836,-911 61.2836,-1040 421.4825,-1040 421.4825,-911 61.2836,-911" style=""></polygon>
+<text text-anchor="middle" x="241.3831" y="-1023.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Legend</text>
 </g>
 <!-- ImmuteToken.&lt;Constructor&gt; -->
 <g id="node1" class="node" data-name="ImmuteToken.&lt;Constructor&gt;">
 
-<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="134.2836" cy="-713" rx="63.4794" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-708.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&lt;Constructor&gt;</text>
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="134.2836" cy="-852" rx="63.4794" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-847.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&lt;Constructor&gt;</text>
 </g>
 <!-- ImmuteToken.promoSet -->
 <g id="node4" class="node" data-name="ImmuteToken.promoSet">
 
-<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="358.5981" cy="-713" rx="44.6127" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="358.5981" y="-708.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">promoSet</text>
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="386.4825" cy="-852" rx="44.6127" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="386.4825" y="-847.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">promoSet</text>
 </g>
 <!-- ImmuteToken.&lt;Constructor&gt;&#45;&gt;ImmuteToken.promoSet -->
 <g id="edge1" class="edge" data-name="ImmuteToken.&lt;Constructor&gt;->ImmuteToken.promoSet">
 
-<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M201.8896,-713C233.046,-713 269.6794,-713 299.6894,-713" style=""></path>
-<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="300.0083,-716.5001 310.0083,-713 300.0083,-709.5001 300.0083,-716.5001" style=""></polygon>
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M201.8683,-852C240.9451,-852 289.6549,-852 327.2277,-852" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="327.5126,-855.5001 337.5125,-852 327.5125,-848.5001 327.5126,-855.5001" style=""></polygon>
 </g>
 <!-- ImmuteToken.bankChange -->
 <g id="node2" class="node" data-name="ImmuteToken.bankChange">
 
-<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-659" rx="55.0535" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-654.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">bankChange</text>
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-798" rx="55.0535" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-793.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">bankChange</text>
 </g>
 <!-- ImmuteToken.rateChange -->
 <g id="node3" class="node" data-name="ImmuteToken.rateChange">
 
-<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-605" rx="50.9524" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-600.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">rateChange</text>
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-744" rx="50.9524" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-739.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">rateChange</text>
 </g>
 <!-- ImmuteToken.currentRate -->
 <g id="node5" class="node" data-name="ImmuteToken.currentRate">
 
-<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-551" rx="52.0925" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-546.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">currentRate</text>
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-690" rx="52.0925" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-685.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">currentRate</text>
 </g>
 <!-- ImmuteToken.restrictTransferToContracts -->
 <g id="node6" class="node" data-name="ImmuteToken.restrictTransferToContracts">
 
-<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-497" rx="114.0052" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-492.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">restrictTransferToContracts</text>
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-636" rx="114.0052" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-631.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">restrictTransferToContracts</text>
 </g>
 <!-- ImmuteToken.transfer -->
 <g id="node7" class="node" data-name="ImmuteToken.transfer">
 
-<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="134.2836" cy="-389" rx="36.4816" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-384.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transfer</text>
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="134.2836" cy="-582" rx="36.4816" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-577.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transfer</text>
 </g>
 <!-- ERC20.transfer -->
 <g id="node14" class="node" data-name="ERC20.transfer">
 
-<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="358.5981" cy="-88" rx="36.4816" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="358.5981" y="-83.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transfer</text>
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="386.4825" cy="-227" rx="36.4816" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="386.4825" y="-222.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transfer</text>
 </g>
 <!-- ImmuteToken.transfer&#45;&gt;ERC20.transfer -->
 <g id="edge2" class="edge" data-name="ImmuteToken.transfer->ERC20.transfer">
 
-<path fill="none" stroke="#ffffff" stroke-width="2" d="M174.6678,-390.5351C200.5506,-389.2313 232.8713,-382.946 252.5673,-362 320.1389,-290.14 238.363,-227.9077 288.5673,-143 297.0872,-128.5907 310.9287,-116.531 324.0658,-107.4112" style=""></path>
-<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="326.0982,-110.2638 332.5339,-101.8476 322.2544,-104.4135 326.0982,-110.2638" style=""></polygon>
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M174.8032,-583.9319C200.9154,-582.826 233.4464,-576.6131 252.5673,-555 292.9762,-509.3242 246.2825,-332.4353 280.5673,-282 294.7726,-261.103 319.4798,-247.6343 341.4594,-239.2587" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="342.7459,-242.516 350.9951,-235.8675 340.4003,-235.9207 342.7459,-242.516" style=""></polygon>
 </g>
 <!-- ImmuteToken.transferFrom -->
 <g id="node8" class="node" data-name="ImmuteToken.transferFrom">
 
-<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="134.2836" cy="-173" rx="57.3291" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-168.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferFrom</text>
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="134.2836" cy="-312" rx="57.3291" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-307.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferFrom</text>
 </g>
 <!-- ERC20.transferFrom -->
 <g id="node15" class="node" data-name="ERC20.transferFrom">
 
-<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="358.5981" cy="-34" rx="57.3291" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="358.5981" y="-29.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferFrom</text>
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="386.4825" cy="-173" rx="57.3291" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="386.4825" y="-168.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferFrom</text>
 </g>
 <!-- ImmuteToken.transferFrom&#45;&gt;ERC20.transferFrom -->
 <g id="edge3" class="edge" data-name="ImmuteToken.transferFrom->ERC20.transferFrom">
 
-<path fill="none" stroke="#ffffff" stroke-width="2" d="M154.5883,-155.5796C183.046,-131.8108 237.0965,-88.9819 288.5673,-61 294.8637,-57.577 301.6871,-54.3785 308.5204,-51.4661" style=""></path>
-<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="309.8618,-54.699 317.7962,-47.6778 307.2151,-48.2186 309.8618,-54.699" style=""></polygon>
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M152.0431,-294.4779C178.058,-269.7857 229.0511,-224.9818 280.5673,-200 293.8853,-193.5417 308.9203,-188.5124 323.3895,-184.6408" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="324.449,-187.9832 333.2883,-182.1421 322.7357,-181.1961 324.449,-187.9832" style=""></polygon>
 </g>
 <!-- ImmuteToken.checkPayments -->
 <g id="node9" class="node" data-name="ImmuteToken.checkPayments">
 
-<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-335" rx="67.145" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-330.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">checkPayments</text>
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-474" rx="67.145" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-469.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">checkPayments</text>
 </g>
 <!-- ImmuteToken.calculateBonus -->
 <g id="node10" class="node" data-name="ImmuteToken.calculateBonus">
 
-<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="358.5981" cy="-443" rx="65.9991" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="358.5981" y="-438.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">calculateBonus</text>
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="386.4825" cy="-528" rx="65.9991" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="386.4825" y="-523.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">calculateBonus</text>
 </g>
 <!-- ImmuteToken.transferToBank -->
 <g id="node11" class="node" data-name="ImmuteToken.transferToBank">
 
-<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-281" rx="67.7054" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-276.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferToBank</text>
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="134.2836" cy="-420" rx="67.7054" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-415.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferToBank</text>
 </g>
 <!-- ImmuteToken.transferToEscrow -->
 <g id="node12" class="node" data-name="ImmuteToken.transferToEscrow">
 
-<ellipse fill="#ffbdb9" stroke="#a52a2a" stroke-width="3" cx="134.2836" cy="-227" rx="76.3506" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-222.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferToEscrow</text>
+<ellipse fill="#ffbdb9" stroke="#a52a2a" stroke-width="3" cx="134.2836" cy="-366" rx="76.3506" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-361.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">transferToEscrow</text>
 </g>
 <!-- ImmuteToken.tokenPurchase -->
 <g id="node13" class="node" data-name="ImmuteToken.tokenPurchase">
 
-<ellipse fill="#ffbdb9" stroke="#a52a2a" stroke-width="3" cx="134.2836" cy="-443" rx="63.134" ry="13.9375" style=""></ellipse>
-<text text-anchor="middle" x="134.2836" y="-438.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">tokenPurchase</text>
+<ellipse fill="#ffbdb9" stroke="#a52a2a" stroke-width="3" cx="134.2836" cy="-528" rx="63.134" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="134.2836" y="-523.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">tokenPurchase</text>
 </g>
 <!-- ImmuteToken.tokenPurchase&#45;&gt;ImmuteToken.calculateBonus -->
 <g id="edge4" class="edge" data-name="ImmuteToken.tokenPurchase->ImmuteToken.calculateBonus">
 
-<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M201.8896,-443C225.9258,-443 253.2218,-443 278.2215,-443" style=""></path>
-<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="278.4095,-446.5001 288.4095,-443 278.4095,-439.5001 278.4095,-446.5001" style=""></polygon>
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M201.8683,-528C233.8675,-528 272.3262,-528 305.8394,-528" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="306.0687,-531.5001 316.0687,-528 306.0686,-524.5001 306.0687,-531.5001" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityAddressToIndex -->
+<g id="node16" class="node" data-name="ImmutableEntity.entityAddressToIndex">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="386.4825" cy="-34" rx="93.2116" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="386.4825" y="-29.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityAddressToIndex</text>
+</g>
+<!-- ImmuteToken.tokenPurchase&#45;&gt;ImmutableEntity.entityAddressToIndex -->
+<g id="edge5" class="edge" data-name="ImmuteToken.tokenPurchase->ImmutableEntity.entityAddressToIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M201.6396,-527.2468C220.7922,-523.5627 239.8734,-515.9198 252.5673,-501 316.056,-426.3784 218.0232,-136.4152 280.5673,-61 284.7011,-56.0155 289.6148,-51.8801 295.0271,-48.456" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="296.7814,-51.4862 303.9021,-43.641 293.4432,-45.3334 296.7814,-51.4862" style=""></polygon>
+</g>
+<!-- ImmutableEntity.entityReferralByIndex -->
+<g id="node17" class="node" data-name="ImmutableEntity.entityReferralByIndex">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="386.4825" cy="-88" rx="93.768" ry="13.9375" style=""></ellipse>
+<text text-anchor="middle" x="386.4825" y="-83.8" font-family="Times,serif" font-size="14.00" fill="#000000" style="">entityReferralByIndex</text>
+</g>
+<!-- ImmuteToken.tokenPurchase&#45;&gt;ImmutableEntity.entityReferralByIndex -->
+<g id="edge6" class="edge" data-name="ImmuteToken.tokenPurchase->ImmutableEntity.entityReferralByIndex">
+
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M201.8172,-527.0745C220.8601,-523.3628 239.8344,-515.7476 252.5673,-501 304.7166,-440.5992 236.5061,-209.5313 280.5673,-143 290.9923,-127.2584 307.4157,-115.7547 324.2461,-107.4664" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="325.9651,-110.5289 333.6027,-103.1861 323.0531,-104.1634 325.9651,-110.5289" style=""></polygon>
 </g>
 <!-- key -->
-<g id="node16" class="node" data-name="key">
+<g id="node18" class="node" data-name="key">
 
-<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="195.22109999084472,-863.9375 73.34609999084473,-863.9375 73.34609999084473,-784.0625 195.22109999084472,-784.0625 195.22109999084472,-863.9375 " style=""></polygon>
-<text text-anchor="start" x="118.9196" y="-849.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Internal Call</text>
-<text text-anchor="start" x="115.0276" y="-829.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">External Call</text>
-<text text-anchor="start" x="92.489" y="-809.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Defined Contract</text>
-<text text-anchor="start" x="78.8863" y="-789.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Undefined Contract</text>
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="195.22109999084472,-1002.9375 73.34609999084473,-1002.9375 73.34609999084473,-923.0625 195.22109999084472,-923.0625 195.22109999084472,-1002.9375 " style=""></polygon>
+<text text-anchor="start" x="118.9196" y="-988.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Internal Call</text>
+<text text-anchor="start" x="115.0276" y="-968.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">External Call</text>
+<text text-anchor="start" x="92.489" y="-948.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Defined Contract</text>
+<text text-anchor="start" x="78.8863" y="-928.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">Undefined Contract</text>
 </g>
 <!-- key2 -->
-<g id="node17" class="node" data-name="key2">
+<g id="node19" class="node" data-name="key2">
 
-<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="381.53560210853857,-863.9375 335.66060210853857,-863.9375 335.66060210853857,-784.0625 381.53560210853857,-784.0625 381.53560210853857,-863.9375 " style=""></polygon>
-<text text-anchor="start" x="346.3572" y="-849.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
-<text text-anchor="start" x="346.3572" y="-829.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
-<polygon fill="#445773" stroke="transparent" points="348.6606040664673,-808.0625 348.6606040664673,-819.9375 368.5356040664673,-819.9375 368.5356040664673,-808.0625 348.6606040664673,-808.0625 " style=""></polygon>
-<text text-anchor="start" x="346.3572" y="-809.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
-<polygon fill="none" stroke="#e8726d" points="350.6606047442118,-790.0625 350.6606047442118,-797.9375 366.5356047442118,-797.9375 366.5356047442118,-790.0625 350.6606047442118,-790.0625 " style=""></polygon>
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="409.4200020203767,-1002.9375 363.5450020203767,-1002.9375 363.5450020203767,-923.0625 409.4200020203767,-923.0625 409.4200020203767,-1002.9375 " style=""></polygon>
+<text text-anchor="start" x="374.2416" y="-988.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<text text-anchor="start" x="374.2416" y="-968.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<polygon fill="#445773" stroke="transparent" points="376.5450038964408,-947.0625 376.5450038964408,-958.9375 396.4200038964408,-958.9375 396.4200038964408,-947.0625 376.5450038964408,-947.0625 " style=""></polygon>
+<text text-anchor="start" x="374.2416" y="-948.4" font-family="Times,serif" font-size="14.00" fill="#000000" style="">&nbsp;&nbsp;&nbsp;</text>
+<polygon fill="none" stroke="#e8726d" points="378.5450045458476,-929.0625 378.5450045458476,-936.9375 394.4200045458476,-936.9375 394.4200045458476,-929.0625 378.5450045458476,-929.0625 " style=""></polygon>
 </g>
 <!-- key&#45;&gt;key2 -->
-<g id="edge5" class="edge" data-name="key->key2">
+<g id="edge7" class="edge" data-name="key->key2">
 
-<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M191.2836,-854C255.8301,-854 274.5195,-854 334.2295,-854" style=""></path>
-<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="334.5981,-857.5001 344.5981,-854 334.598,-850.5001 334.5981,-857.5001" style=""></polygon>
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M191.2836,-993C268.3561,-993 290.108,-993 362.4263,-993" style=""></path>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="362.4825,-996.5001 372.4825,-993 362.4825,-989.5001 362.4825,-996.5001" style=""></polygon>
 </g>
 <!-- key&#45;&gt;key2 -->
-<g id="edge6" class="edge" data-name="key->key2">
+<g id="edge8" class="edge" data-name="key->key2">
 
-<path fill="none" stroke="#ffffff" stroke-width="2" d="M191.2836,-834C255.8301,-834 274.5195,-834 334.2295,-834" style=""></path>
-<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="334.5981,-837.5001 344.5981,-834 334.598,-830.5001 334.5981,-837.5001" style=""></polygon>
+<path fill="none" stroke="#ffffff" stroke-width="2" d="M191.2836,-973C268.3561,-973 290.108,-973 362.4263,-973" style=""></path>
+<polygon fill="#ffffff" stroke="#ffffff" stroke-width="2" points="362.4825,-976.5001 372.4825,-973 362.4825,-969.5001 362.4825,-976.5001" style=""></polygon>
 </g>
 </g>
 </svg>
