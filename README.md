@@ -31,15 +31,12 @@ This project utilizes 'truffle' to build and test the solidity smart contracts. 
 ### truffle deploy --all
 ### truffle test
 
-After contract deployment the following ImmuteToken contract initialization procedures are taken by the contract owner to make the Ecosystem operation. The first step configures and restrict the token to transfers only to or from the Ecosystem contracts. See the first and third javascript tests in the file test/TestImmutableEcosystem.js.
+After contract deployment the following ImmuteToken contract initialization procedures are taken by the contract owner to make the Ecosystem operational. The first step configures and restricts token transfers to or from the Ecosystem contracts only. The second step configures the contract owner bank which is necessary to allow the purchase of tokens. See the first and third javascript tests in the file test/TestImmutableEcosystem.js for examples of how to do this.
 
 ### restrictTransferToContracts(ImmutableEntity.address, ImmutableProduct.address, ImmutableLicense.address);
-
-The last step configures the bank payable address paid on token purchases. Any use of the Ecosystem before these two steps are taken is not allowed.
-
 ### bankChange(ownerBank);
 
-After these two steps the Ecosystem is ready for use.
+Any use of the Ecosystem before these two steps are taken is limited. After these two steps the Ecosystem is ready for use.
 
 ## ImmutableToken
 
