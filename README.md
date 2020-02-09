@@ -2,7 +2,7 @@
 
 The Immutable Ecosystem is a hardware and language agnostic Ethereum based application store. This decentralized ecosystem has two main components, the Solidity smart contracts and the Distributed Application (Dapp). This repository is for the Smart Contracts only. The generated API documentation for the smart contracts is located in the 'docs' directory. The unit tests of the smart contracts are located in the 'tests' directory.
 
-## Bug Bounty <img src="./images/disclosure-logo-outline-black.png" alt="disclosure" width="200" height="200"/>
+## <img src="./images/disclosure-logo-outline-black.png" alt="disclosure" width="100" height="100"/> Bug Bounty 
 
 A bug bounty is in effect for the smart contracts within the Immutable Ecosystem. Adopting vulnerability disclosure best practices we have followed the disclose.io [framework](./docs/core-terms-USA.md) to safeguard security researchers.
 
