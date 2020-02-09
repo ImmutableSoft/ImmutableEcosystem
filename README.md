@@ -2,13 +2,13 @@
 
 The Immutable Ecosystem is a hardware and language agnostic Ethereum based application store. This decentralized ecosystem has two main components, the Solidity smart contracts and the Distributed Application (Dapp). This repository is for the Smart Contracts only. The generated API documentation for the smart contracts is located in the 'docs' directory. The unit tests of the smart contracts are located in the 'tests' directory.
 
-## Bug Bounty ![image inheritance](./images/disclosure-logo-outline-black.png)
+## Bug Bounty ![image disclose](./images/disclosure-logo-outline-black.png)
 
 A bug bounty is in effect for the smart contracts within the Immutable Ecosystem. Adopting vulnerability disclosure best practices we have followed the disclose.io [framework](./docs/core-terms-USA.md) to safeguard security researchers.
 
 To receive the maximum payout the report should include a fix to the problem if possible. Specific payouts to the bug bounty depend on the severity of the bug as well as the general impact of the bug. In general, the theft of ETH, tokens or Entity accounts are considered of the highest impact. When calculating the severity and thus payout for report bugs we will utilize the common impact vs. likelihood chart below.
 
-![image inheritance](./images/ImpactVSLikelihood.png)
+![image impact](./images/ImpactVSLikelihood.png)
 
 Exemptions: The ImmutableResolver and ENS smart contract integration is a WIP and not part of this bug bounty at this time. Additionally, bugs in the Solidity compiler, third party contracts (ERC20, ENS, etc.), or Ethereum and/or EVM in general are explicitly not permissible within this bug bounty unless the bug is directly caused by ImmutableSoft's use of these third party components. Also, bugs in the Dapp (once available) are not part of this bug bounty (but please report them if you find them ;-)
 
