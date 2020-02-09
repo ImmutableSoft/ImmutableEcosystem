@@ -6,7 +6,7 @@ The Immutable Ecosystem is a hardware and language agnostic Ethereum based appli
 
 A bug bounty is in effect for the smart contracts within the Immutable Ecosystem. Adopting vulnerability disclosure best practices we have followed the disclose.io [framework](./core-terms-USA.md) to safeguard security researchers.
 
-To receive the maximum payout the report should include a fix to the problem if possible. Specific payouts to the bug bounty depend on the severity of the bug as well as the general impact of the bug. In general, the theft of ETH, tokens or Entity accounts are considered of the highest impact. When calculating the severity and thus payout for reported issues we will utilize the common impact vs. likelihood chart below.
+To receive the maximum payout the report should include a fix to the problem if possible. Specific payouts to the bug bounty depend on the impact of the bug as well as the general likelihood of the bug. In general, the theft of ETH, tokens or Entity accounts are considered of the highest impact. When calculating the severity and thus payout for reported issues we will utilize the common impact vs. likelihood chart below.
 
 ![image impact](./images/ImpactVSLikelihood.png)
 
