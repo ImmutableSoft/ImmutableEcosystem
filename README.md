@@ -1,6 +1,6 @@
 # ImmutableEcosystem
 
-The Immutable Ecosystem is a hardware and language agnostic Ethereum based application store. This decentralized ecosystem has two main components, the Solidity smart contracts and the Distributed Application (Dapp). This repository is for the Smart Contracts only. The generated API documentation for the smart contracts is located in the 'docs' directory. The unit tests of the smart contracts are located in the 'tests' directory.
+The [Immutable Ecosystem](https://immutablesoft.org) is a hardware and language agnostic Ethereum based application store. This decentralized ecosystem has two main components, the Solidity smart contracts and the Distributed Application (Dapp). This repository is for the Smart Contracts only. The generated API documentation for the smart contracts is located in the 'docs' directory. The unit tests of the smart contracts are located in the 'tests' directory.
 
 ## <img src="./images/disclosure-logo-outline-black.png" alt="disclosure" width="100" height="100"/> Bug Bounty 
 
