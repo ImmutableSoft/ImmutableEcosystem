@@ -38,9 +38,9 @@ After contract deployment the following ImmuteToken contract initialization proc
 
 Any use of the Ecosystem before these two steps are taken is limited. After these two steps the Ecosystem is ready for use.
 
-## ImmutableToken
+## ImmuteToken
 
-The ERC20 token used for the Immutable Ecosystem monetization of both product release escrows as well as product activation license escrows. To avoid persecution under ambiguous US securities laws, this token is restricted to transfers to and from the Immutable Ecosystem smart contracts only. No direct transfer of these tokens is allowed between third parties. This token is minted on demand with no hard cap and available for purchase in exchange for ETH at a fixed price.
+The ImmuteToken is an ERC20 token used for the monetization of both product release escrows as well as product activation license escrows. To avoid legal costs and/or potential persecution under ambiguous US securities laws regarding blockchain based tokens, this token is technologically restricted to transfers to and from the Immutable Ecosystem smart contracts only. No direct transfer of these tokens is allowed between third parties. This token is minted on demand with no hard cap and available for purchase in exchange for ETH at a fixed price by calling the tokenPurchase() smart contract method.
 
 The full public API documentation for this smart contract is available in the docs folder for [ImmuteToken](./docs/ImmuteToken.md).
 
@@ -50,7 +50,7 @@ The function dependency graph for the ImmuteToken smart contract is below.
 
 ## ImmutableEntity
 
-Individuals and organization can register themselves as entities of either Creator, Distributor, or End User type. Each Entity is assigned a unique index within the Ecosystem upon creation. This index, as well as the Entity Ethereum wallet address, can be used to uniquely identify the Entity. This smart contract has an interface for the resale of tokens as well as the configuration of an ETH bank account that will be paid out too. It also acts as an ENS resolver for the immutablesoft.eth ENS domain.
+Individuals and organization can register themselves as entities of either Creator, Distributor, or End User type. Each Entity is assigned a unique index within the Ecosystem upon creation. This index, as well as the Ethereum wallet address used to create the Entity, are thus forth used to uniquely identify the Entity. This smart contract has an interface for the resale of tokens as well as the configuration of an ETH bank account that will be paid out too.
 
 The full public API documentation for this smart contract is available in the docs folder for [ImmutableEntity](./docs/ImmutableEntity.md).
 
