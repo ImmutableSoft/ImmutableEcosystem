@@ -2,17 +2,19 @@
 
 The Immutable Ecosystem is a hardware and language agnostic Ethereum based application store. This decentralized ecosystem has two main components, the Solidity smart contracts and the Distributed Application (Dapp). This repository is for the Smart Contracts only. The generated API documentation for the smart contracts is located in the 'docs' directory. The unit tests of the smart contracts are located in the 'tests' directory.
 
-## Bug Bounty
+## Bug Bounty ![image inheritance](./images/disclosure-logo-outline-black.png)
 
-A bug bounty is in effect for the smart contracts within the Immutable Ecosystem. If any bug (or suspected bug) is identified in the smart contract source code, please open a Git pull request (PR) identifying the error or vulnerability.
+A bug bounty is in effect for the smart contracts within the Immutable Ecosystem. Adopting vulnerability disclosure best practices we have followed the disclose.io [framework](./docs/core-terms-USA.md) to safeguard security researchers.
 
-To receive the maximum payout the PR should fix the problem and include a unit test that demonstrates the problem and the solution (test should fail without the PR, and pass with the PR). Specific payouts to the bug bounty depend on the severity of the bug as well as the general impact of the bug. In general, the theft of ETH, tokens or Entity accounts is considered the highest severity.
+To receive the maximum payout the report should include a fix to the problem if possible. Specific payouts to the bug bounty depend on the severity of the bug as well as the general impact of the bug. In general, the theft of ETH, tokens or Entity accounts are considered of the highest impact. When calculating the severity and thus payout for report bugs we will utilize the common impact vs. likelihood chart below.
 
-Exemptions: The ImmutableResolver and ENS integration in general is a WIP and not part of this bug bounty at this time. Additionally, bugs in the Solidity compiler, third party contracts (ERC20, ENS, etc.), or Ethereum and/or EVM in general are explicitly not permissible within this bug bounty unless the bug is directly caused by ImmutableSoft's use of these third party components. Also, bugs in the Dapp (once available) are not part of this bug bounty (but please report them if you find them ;-)
+![image inheritance](./images/ImpactVSLikelihood.png)
 
-The procedure to participate in the bug bounty is to first email Security at ImmutableSoft dot org and identify the general problem. We will notify you if the problem has already been identified or not. If the issue has not already been identified you will be encouraged to prepare a formal report/PR, required within 15 days. Please do not forget this first step so you can ensure your effort will be rewarded.
+Exemptions: The ImmutableResolver and ENS smart contract integration is a WIP and not part of this bug bounty at this time. Additionally, bugs in the Solidity compiler, third party contracts (ERC20, ENS, etc.), or Ethereum and/or EVM in general are explicitly not permissible within this bug bounty unless the bug is directly caused by ImmutableSoft's use of these third party components. Also, bugs in the Dapp (once available) are not part of this bug bounty (but please report them if you find them ;-)
 
-If you do not have time to develop a formal PR, or wish to remain anonymous, you can submit your report through email. Send your submission directly to Security at ImmutableSoft dot org. Any submission that is acted upon by ImmutableSoft is eligable for a payout. If you wish to decline payment or receive your reward with tokens, please mention this in email.
+The procedure for reporting a bug is to create a Github issue and identify the general problem. To maximize your paybout you then have 15 days to further expand on and discuss the problem and/or develop a solution.  Please do not forget this first step so you can ensure your effort will be rewarded. Bugs discovered during the bounty are awarded in a first come, first served basis. No duplicate bugs will be rewarded, however additional explanations and/or solutions by others may result in the sharing of a particular bounty.
+
+If you do not have time to write up a formal issue report, or wish to remain anonymous, you can submit your report through email. Send your submission directly to Security at ImmutableSoft dot org. Any submission that is acted upon by ImmutableSoft is eligable for a payout. If you wish to decline payment or receive your reward with tokens, please mention this in email.
 
 ## Overview
 
