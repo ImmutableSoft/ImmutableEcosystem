@@ -99,4 +99,5 @@ contract ImmutableConstants
 
   // Error strings
   string constant OfferNotFound = "Offer not found";
+  string constant EntityNotValidated = "Entity not validated";
 }
