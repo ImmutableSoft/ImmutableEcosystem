@@ -20,7 +20,6 @@ struct Entity {
  string entityEnsName,
  string infoURL,
  uint256 numberOfOffers,
- uint256 numberOfLicenses,
  uint256 escrow,
  address erc20Token,
  uint256 referral,
@@ -47,9 +46,7 @@ struct TokenBlockOffer {
 uint256 internal constant ReferralEntityBonus;
 uint256 internal constant ReferralSubscriptionBonus;
 uint256 internal constant EntitySubscriptionBonus;
-string internal constant EntityNotValid;
 string internal constant EntityIsZero;
-string internal constant EntityNotValidated;
 string internal constant BankNotConfigured;
 
 //private members
@@ -92,6 +89,7 @@ event entityTokenBlockPurchaseEvent(address indexed purchaserAddress, uint256  e
 - [entityIndexStatus(uint256 entityIndex)](#entityindexstatus)
 - [entityAddressStatus(address entityAddress)](#entityaddressstatus)
 - [entityAddressToIndex(address entityAddress)](#entityaddresstoindex)
+- [entityIndexToAddress(uint256 entityIndex)](#entityindextoaddress)
 - [entityDetailsByIndex(uint256 entityIndex)](#entitydetailsbyindex)
 - [entityReferralByIndex(uint256 entityIndex)](#entityreferralbyindex)
 - [entityNumberOf()](#entitynumberof)
@@ -430,6 +428,26 @@ the entity index as maintained by Immutable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 | entityAddress | address | The address of the entity | 
+
+### entityIndexToAddress
+
+Retrieve current global entity address.
+ Return address of zero (0) is not found.
+
+```js
+function entityIndexToAddress(uint256 entityIndex) public view
+returns(address)
+```
+
+**Returns**
+
+the current entity address as maintained by Immutable
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The global index of the entity | 
 
 ### entityDetailsByIndex
 

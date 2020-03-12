@@ -41,6 +41,7 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
   address private productAddr;
   address private licenseAddr;
   uint256 private ethRate;
+  bool private restricted;
   Promo[MaxPromos] private promos;
   ImmutableEntity entityInterface;
 
@@ -60,12 +61,24 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
     ERC20Pausable.initialize(msg.sender);
     PullPayment.initialize();
 */
-    ethRate = 500; // $.25 if ETH $125
+    ethRate = 800; // $.25 if ETH $200
 
-    // Set the default (primary 0) promotion at 20%
+    // Set primary (0) promotion at 10% after 400 ($100)
+    //   (10x = 1y) 1/10 (10%)
+    promoSet(0, 10, 1, 400 * 1000000000000000000);
+
+    // Set additional (1) promotion at another 10% after 2000 ($500)
+    //   (10x = 1y) 1/10 (10%) bonus after 1000 tokens
+    promoSet(1, 10, 1, 2000 * 1000000000000000000);
+
+    // Set additional (2) promotion at 20% after 4000 ($1000)
     //   (5x = 1y) 1/5 (20%) bonus after 1000 tokens
-    promoSet(0, 5, 1, 1000 * 100000000000000000);
+    promoSet(2, 5, 1, 4000 * 1000000000000000000);
+
+    // Mint the initial supply of tokens for the owner
     _mint(msg.sender, initialSupply);
+
+    restricted = true;
   }
 
   /// @notice Change bank that contract pays ETH out too.
@@ -122,18 +135,46 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
                                        address licenseContract)
     external onlyOwner
   {
-    // Assign contract addresses token will be restricted to
-    entityAddr = entityContract;
-    productAddr = productContract;
-    licenseAddr = licenseContract;
+    // Pre-approve owner tokens for use in all three contracts
+    if ((entityContract != address(0)) && (productContract != address(0)) &&
+        (licenseContract != address(0)))
+    {
+      // Assign contract addresses token will be restricted to
+      entityAddr = entityContract;
+      productAddr = productContract;
+      licenseAddr = licenseContract;
 
-    // Product and entity contracts are minters, renounce owner
-    addMinter(productContract);
-    addMinter(entityContract);
-    renounceMinter();
+      // Initialize the entity contract interface
+      entityInterface = ImmutableEntity(entityAddr);
+      addMinter(entityAddr);
+      _approve(msg.sender, entityAddr, balanceOf(msg.sender));
 
-    // Initialize the entity contract interface
-    entityInterface = ImmutableEntity(entityContract);
+      // Add minter and approve product contract
+      addMinter(productAddr);
+      _approve(msg.sender, productAddr, balanceOf(msg.sender));
+
+      // Approve license contract
+      _approve(msg.sender, licenseAddr, balanceOf(msg.sender));
+
+      // If owner is minter, renounce mintership
+      if (isMinter(owner()))
+        renounceMinter();
+
+      // Define token as restricted
+      restricted = true;
+    }
+
+    // Otherwise disable all contracts if zero address
+    else
+    {
+      require(((entityContract == address(0)) && (productContract == address(0)) &&
+              (licenseContract == address(0))), "To disable, all zero or nothing");
+      require(((entityAddr != address(0)) && (productAddr != address(0)) &&
+              (licenseAddr != address(0))), "Must restrict before disabling");
+
+      // Define token as now unrestricted
+      restricted = false;
+    }
   }
 
   /// @notice ImmuteToken transfer must check for restrictions.
@@ -145,26 +186,21 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
     public returns (bool)
   {
     // Restrict token transfer to ecosystem contracts if configured
-    if ((((productAddr == address(0)) || (recipient == productAddr)) ||
-         (msg.sender == productAddr)) ||
-        (((entityAddr == address(0)) || (recipient == entityAddr)) ||
-         (msg.sender == entityAddr)) ||
-        (((licenseAddr == address(0)) || (recipient == licenseAddr)) ||
-         (msg.sender == licenseAddr)))
+    if ((restricted == false) ||
+         ((recipient == productAddr) ||
+          (msg.sender == productAddr)) ||
+         ((recipient == entityAddr) ||
+          (msg.sender == entityAddr)) ||
+         ((recipient == licenseAddr) ||
+          (msg.sender == licenseAddr)))
     {
       // Transfer the tokens
       ERC20.transfer(recipient, amount);
 
-      // If tokens purchased from entity, pre-approve for use
-      if (msg.sender == entityAddr)
-      {
-        _approve(recipient, licenseAddr, balanceOf(recipient));
-        _approve(recipient, productAddr, balanceOf(recipient));
-      }
-
-      // Otherwise if tokens from product or license approve for resale
-      else if ((msg.sender == productAddr) || (msg.sender == licenseAddr))
-        _approve(recipient, entityAddr, allowance(recipient, entityAddr) + amount);
+      // Pre-approve tokens for use in any ecosystem contract
+      _approve(recipient, licenseAddr, balanceOf(recipient));
+      _approve(recipient, productAddr, balanceOf(recipient));
+      _approve(recipient, entityAddr, balanceOf(recipient));
 
       return true;
     }
@@ -183,26 +219,21 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
     public returns (bool)
   {
     // Restrict token transfer to ecosystem contracts if configured
-    if ((((productAddr == address(0)) || (recipient == productAddr)) ||
-         (msg.sender == productAddr)) ||
-        (((entityAddr == address(0)) || (recipient == entityAddr)) ||
-         (msg.sender == entityAddr)) ||
-        (((licenseAddr == address(0)) || (recipient == licenseAddr)) ||
-         (msg.sender == licenseAddr)))
+    if ((restricted == false) ||
+         ((recipient == productAddr) ||
+          (msg.sender == productAddr)) ||
+         ((recipient == entityAddr) ||
+          (msg.sender == entityAddr)) ||
+         ((recipient == licenseAddr) ||
+          (msg.sender == licenseAddr)))
     {
       // Transfer the tokens
       ERC20.transferFrom(sender, recipient, amount);
 
-      // If tokens purchased from entity, pre-approve for use
-      if (msg.sender == entityAddr)
-      {
-        _approve(recipient, licenseAddr, balanceOf(recipient));
-        _approve(recipient, productAddr, balanceOf(recipient));
-      }
-
-      // Otherwise if tokens from product or license approve for resale
-      else if ((msg.sender == productAddr) || (msg.sender == licenseAddr))
-        _approve(recipient, entityAddr, allowance(recipient, entityAddr) + amount);
+      // Pre-approve tokens for use in any ecosystem contract
+      _approve(recipient, licenseAddr, balanceOf(recipient));
+      _approve(recipient, productAddr, balanceOf(recipient));
+      _approve(recipient, entityAddr, balanceOf(recipient));
 
       return true;
     }
@@ -246,6 +277,7 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
 
   /// @notice Transfer ecosystem funds to the configured bank address.
   /// Uses OpenZeppelin PullPayment interface.
+  /// Administrator only.
   function transferToBank()
     external onlyOwner
   {
@@ -290,6 +322,7 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
     // Purchased tokens are pre-approved for use
     _approve(msg.sender, licenseAddr, balanceOf(msg.sender));
     _approve(msg.sender, productAddr, balanceOf(msg.sender));
+    _approve(msg.sender, entityAddr, balanceOf(msg.sender));
 
     // Check if entity is registered with token
     if (address(entityInterface) != address(0))
@@ -314,6 +347,7 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
           // Bonus tokens are pre-approved for use
           _approve(referralAddress, licenseAddr, balanceOf(referralAddress));
           _approve(referralAddress, productAddr, balanceOf(referralAddress));
+          _approve(referralAddress, entityAddr, balanceOf(referralAddress));
         }
       }
     }

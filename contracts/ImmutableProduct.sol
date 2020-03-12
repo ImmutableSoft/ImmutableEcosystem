@@ -19,7 +19,7 @@ contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
     string logoURL;
     uint256 details; // category, flags/restrictions, languages
     uint256 numberOfReleases;
-    mapping(uint => Release) releases;
+    mapping(uint256 => Release) releases;
   }
 
   struct Release
@@ -88,7 +88,7 @@ contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
                          string calldata productURL,
                          string calldata logoURL,
                          uint256 productDetails)
-    external returns (uint)
+    external returns (uint256)
   {
     uint256 entityIndex = entityInterface.entityIdToLocalId(
                      entityInterface.entityAddressToIndex(msg.sender));
@@ -212,15 +212,15 @@ contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
   {
     // Only a validated entity can withdraw
     uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
-    require(entityStatus > 0, "Entity not validated");
+    require(entityStatus > 0, EntityNotValidated);
     uint256 entityIndex = entityInterface.entityIdToLocalId(
                      entityInterface.entityAddressToIndex(msg.sender));
     uint256 releaseEscrowAmount = 0;
 
     // Search all product releases for expired releases.
-    for (uint id = 0; id < Products[entityIndex].length; ++id)
+    for (uint256 id = 0; id < Products[entityIndex].length; ++id)
     {
-      for (uint rel = 0; rel < Products[entityIndex][id].numberOfReleases;
+      for (uint256 rel = 0; rel < Products[entityIndex][id].numberOfReleases;
            ++rel)
       {
         // If time is expired and an escrow amount is present
@@ -304,15 +304,15 @@ contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
   {
     // Only a validated entity can withdraw
     uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
-    require(entityStatus > 0, "Entity not validated");
+    require(entityStatus > 0, EntityNotValidated);
     uint256 entityIndex = entityInterface.entityIdToLocalId(
                      entityInterface.entityAddressToIndex(msg.sender));
     uint256 releaseEscrowAmount = 0;
 
     // Search all product releases and offers for expired releases.
-    for (uint id = 0; id < Products[entityIndex].length; ++id)
+    for (uint256 id = 0; id < Products[entityIndex].length; ++id)
     {
-      for (uint rel = 0; rel < Products[entityIndex][id].numberOfReleases;
+      for (uint256 rel = 0; rel < Products[entityIndex][id].numberOfReleases;
            ++rel)
       {
         // If time is expired and an escrow amount is present
@@ -358,7 +358,7 @@ contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
   /// @param entityIndex The index of the entity
   /// @return the current number of products for the entity
   function productNumberOf(uint256 entityIndex)
-    external view returns (uint)
+    external view returns (uint256)
   {
     entityIndex = entityInterface.entityIdToLocalId(entityIndex);
 
@@ -376,7 +376,7 @@ contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
   /// @return the current number of releases for the product
   function productNumberOfReleases(uint256 entityIndex,
                                    uint256 productIndex)
-    external view returns (uint)
+    external view returns (uint256)
   {
     entityIndex = entityInterface.entityIdToLocalId(entityIndex);
 

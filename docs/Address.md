@@ -15,12 +15,17 @@ Collection of functions related to the address type
 ### isContract
 
 Returns true if `account` is a contract.
-     * This test is non-exhaustive, and there may be false-negatives: during the
-execution of a contract's constructor, its address will be reported as
-not containing a contract.
-     * IMPORTANT: It is unsafe to assume that an address for which this
-function returns false is an externally-owned account (EOA) and not a
-contract.
+     * [IMPORTANT]
+====
+It is unsafe to assume that an address for which this function returns
+false is an externally-owned account (EOA) and not a contract.
+     * Among others, `isContract` will return false for the following 
+types of addresses:
+     *  - an externally-owned account
+ - a contract in construction
+ - an address where a contract will be created
+ - an address where a contract lived, but was destroyed
+====
 
 ```js
 function isContract(address account) internal view

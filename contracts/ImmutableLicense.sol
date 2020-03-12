@@ -10,11 +10,14 @@ import "./ImmutableProduct.sol";
 /// @dev License elements and methods
 contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
 {
+  string constant HashCannotBeZero = "Hash cannot be zero";
+
   struct LicenseOffer
   {
     uint256 priceInTokens;
-    uint256 resellMinTokens;
-    uint256 escrow;
+    uint256 duration;
+    uint256 promoPriceInTokens;
+    uint256 promoDuration;
   }
 
   struct License
@@ -24,23 +27,37 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
     uint256 licenseValue;
     uint256 entityOwner;
     address owner;
+    uint256 expiration;
     uint256 priceInTokens;
+  }
+
+  struct LicenseReference
+  {
+    uint256 entityID;
+    uint256 productID;
+    uint256 hashIndex;
   }
 
   // Mapping of activation hash to License
   mapping (uint256 => License) private Licenses;
+
+  // Mapping between external entity id and array of license hashes
+  mapping (uint256 => LicenseReference[]) private LicenseReferences;
 
   // Mapping from entity to mapping of per product license offers
   mapping (uint256 => mapping (uint256 => LicenseOffer)) private LicenseOffers;
 
   // License interface events
   event licenseOfferEvent(uint256 entityIndex, uint256 productIndex,
-                          string entityName, uint256 priceInTokens);
+                          string entityName, uint256 priceInTokens,
+                          uint256 duration, uint256 promoPriceInTokens,
+                          uint256 promoDuration);
   event licenseOfferResaleEvent(address seller, uint256 sellerIndex,
                                 uint256 entityIndex, uint256 productIndex,
-                                uint256 licenseHash, uint256 priceInTokens);
-  event licensePurchaseEvent(uint256 entityIndex,
-                             uint256 productIndex);
+                                uint256 licenseHash, uint256 priceInTokens,
+                                uint256 duration);
+  event licensePurchaseEvent(uint256 entityIndex, uint256 productIndex,
+                             uint256 expireTime);
 
   // External contract interfaces
   ImmutableProduct private productInterface;
@@ -73,10 +90,11 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
   /// mes.sender must have a valid entity and product.
   /// @param productIndex The specific ID of the product
   /// @param priceInTokens The token cost to purchase activation
-  /// @param resellMinTokens The minimum token cost to resell license
+  /// @param duration The minimum token cost to resell license
   ///                        zero (0) prevents resale
   function licenseOffer(uint256 productIndex, uint256 priceInTokens,
-                        uint256 resellMinTokens)
+                        uint256 duration, uint256 promoPriceInTokens,
+                        uint256 promoDuration)
     external
   {
     uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
@@ -84,16 +102,16 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
                      entityInterface.entityAddressToIndex(msg.sender));
 
     // Only a validated commercial entity can create an offer
-    require(entityStatus > 0, "Entity not validated");
+    require(entityStatus > 0, EntityNotValidated);
     require((entityStatus & Nonprofit) != Nonprofit, "Nonprofit prohibited");
     require(productInterface.productNumberOf(entityIndex + 1) > productIndex,
             "Product not found");
     require(priceInTokens >= 0);
-    require(resellMinTokens <= priceInTokens);
 
     // Allocate the offer for the product
     LicenseOffers[entityIndex][productIndex] =
-                       LicenseOffer(priceInTokens, resellMinTokens, 0);
+                    LicenseOffer(priceInTokens, duration,
+                                 promoPriceInTokens, promoDuration);
 
     string memory productName;
     string memory unused;
@@ -102,7 +120,8 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
          productInterface.productDetails(entityIndex + 1, productIndex);
 
     emit licenseOfferEvent(entityIndex + 1, productIndex,
-                                  productName, priceInTokens);
+                           productName, priceInTokens, duration,
+                           promoPriceInTokens, promoDuration);
   }
 
   /// @notice Transfer tokens to a product offer escrow.
@@ -110,12 +129,13 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
   /// @param entityIndex The entity offering the product license
   /// @param productIndex The specific ID of the product
   function licenseTransferEscrow(uint256 entityIndex,
-                                 uint256 productIndex)
+                                 uint256 productIndex,
+                                 uint256 promotional)
     private returns (bool)
   {
     // Ensure vendor is registered and product exists
     uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
-    require(entityStatus > 0, "Entity not validated");
+    require(entityStatus > 0, EntityNotValidated);
     entityIndex = entityInterface.entityIdToLocalId(entityIndex);
     require(productInterface.productNumberOf(entityIndex + 1) > productIndex,
             "Product not found");
@@ -124,6 +144,13 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
 
     bool transferResult;
     address customToken = address(0);
+    uint256 price;
+
+    // Set price based on promotion
+    if (promotional > 0)
+      price = theOffer.promoPriceInTokens;
+    else
+      price = theOffer.priceInTokens;
 
     // If custom token entity get the address
     if ((entityStatus & CustomToken) == CustomToken)
@@ -134,19 +161,33 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
     {
       ERC20 erc20Token = ERC20(customToken);
       transferResult = erc20Token.transferFrom(msg.sender,
-                                address(this), theOffer.priceInTokens);
+          entityInterface.entityIndexToAddress(entityIndex + 1), price);
     }
 
-    // Otherwise transfer immute tokens to the smart contract
+    // Otherwise transfer immute tokens to the creator //smart contract
     else
     {
-      transferResult = tokenInterface.transferFrom(msg.sender,
-                                address(this), theOffer.priceInTokens);
-    }
+      // If manual, transfer 95% of sale to entity, 5% to Immutable
+      if ((entityStatus & Automatic) != Automatic)
+      {
+        uint256 feeAmount = (price * 5) / 100;
+        price -= feeAmount;
 
-    // Update the escrow of the offer to match what was transferred
-    if (transferResult)
-      theOffer.escrow += theOffer.priceInTokens;
+        // Transfer tokens to the sender and revert if failure
+        if (tokenInterface.transferFrom(msg.sender,
+            entityInterface.entityIndexToAddress(entityIndex + 1), price) == false)
+          revert("Entity transfer failed");
+
+        // Transfer fee to Immutable owner and revert if failure
+        transferResult = tokenInterface.transferFrom(msg.sender,
+                                                   owner(), feeAmount);
+      }
+
+      // Otherwise an automatic account, transfer entire amount
+      else
+        transferResult = tokenInterface.transferFrom(msg.sender,
+          entityInterface.entityIndexToAddress(entityIndex + 1), price);
+    }
     return transferResult;
   }
 
@@ -156,23 +197,118 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
   /// @param productIndex The specific ID of the product
   /// @param hash The external license activation hash
   /// @param value The activation value
+  /// @param expiration The activation expiration
+  /// @param oldHash The previous identifier or 0
 function license_product(uint256 entityIndex, uint256 productIndex,
-                         uint256 hash, uint256 value)
+                         uint256 hash, uint256 value,
+                         uint256 expiration, uint256 oldHash)
     private returns (uint256)
   {
     uint256 newHash;
+    uint256 i;
 
     // Rehash the license hash to ensure uniqueness across products
     newHash = licenseLookupHash(entityIndex + 1, productIndex, hash);
 
-    Licenses[newHash].licenseValue = value;
-    Licenses[newHash].owner = msg.sender;
-    Licenses[newHash].entityOwner = entityInterface.entityAddressToIndex(msg.sender);
-    Licenses[newHash].entityID = entityIndex + 1;
-    Licenses[newHash].productID = productIndex;
-    Licenses[newHash].priceInTokens = 0;
+    if (Licenses[newHash].licenseValue == 0)
+    {
+      Licenses[newHash].licenseValue = value;
+      Licenses[newHash].owner = msg.sender;
+      Licenses[newHash].entityOwner = entityInterface.entityAddressToIndex(msg.sender);
+      Licenses[newHash].entityID = entityIndex + 1;
+      Licenses[newHash].productID = productIndex;
+      Licenses[newHash].expiration = expiration;
+      Licenses[newHash].priceInTokens = 0;
+
+      // If an old hash then find and update or revert
+      if (oldHash > 0)
+      {
+        if (Licenses[newHash].entityOwner > 0)
+        {
+          for (i = 0; i < LicenseReferences[Licenses[newHash].entityOwner - 1].length;
+               ++i)
+          {
+            // If this reference does not match entity/product, skip it
+            if ((LicenseReferences[Licenses[newHash].entityOwner - 1][i].entityID != entityIndex + 1) ||
+                (LicenseReferences[Licenses[newHash].entityOwner - 1][i].productID != productIndex))
+              continue;
+
+            // If this matches then update it and break out
+            if (LicenseReferences[Licenses[newHash].entityOwner - 1][i].hashIndex == oldHash)
+            {
+              LicenseReferences[Licenses[newHash].entityOwner - 1][i].hashIndex = hash;
+              break;
+            }
+          }
+          require((i < LicenseReferences[Licenses[newHash].entityOwner - 1].length),
+                  "license reference failed to update");
+        }
+
+      }
+
+      // If purchaser registered, add the license reference information
+      else if (Licenses[newHash].entityOwner > 0)
+      {
+        for (i = 0; i < LicenseReferences[Licenses[newHash].entityOwner - 1].length;
+             ++i)
+        {
+          // If an empty reference, use it
+          if (LicenseReferences[Licenses[newHash].entityOwner - 1][i].entityID == 0)
+          {
+            LicenseReferences[Licenses[newHash].entityOwner - 1][i].hashIndex = hash;
+            LicenseReferences[Licenses[newHash].entityOwner - 1][i].entityID = entityIndex + 1;
+            LicenseReferences[Licenses[newHash].entityOwner - 1][i].productID = productIndex;
+            return newHash;
+          }
+        }
+
+        // If an empty reference, use it
+        LicenseReferences[Licenses[newHash].entityOwner - 1].push(
+                  LicenseReference(entityIndex + 1, productIndex, hash));
+      }
+    }
+
+    // Otherwise license already exists so extend the expiration
+    else
+    {
+      // Require the old license to be owned by the sender
+      require((Licenses[newHash].owner == msg.sender) ||
+              ((Licenses[newHash].entityOwner > 0) &&
+               (Licenses[newHash].entityOwner ==
+                entityInterface.entityAddressToIndex(msg.sender))),
+              "Sender does not own license2");
+
+      require(Licenses[newHash].licenseValue == value, "Update requires same value");
+      require(Licenses[newHash].entityID == entityIndex + 1, "Entity ID does not match");
+      require(Licenses[newHash].productID == productIndex, "Product ID does not match");
+
+      Licenses[newHash].owner = msg.sender;
+      Licenses[newHash].entityOwner = entityInterface.entityAddressToIndex(msg.sender);
+
+      // Extend the activation expiration if not yet expired
+      if (Licenses[newHash].expiration > now)
+        Licenses[newHash].expiration = expiration + (Licenses[newHash].expiration - now);
+      else
+        Licenses[newHash].expiration = expiration;
+    }
 
     return newHash;
+  }
+
+  /// @notice Check if a license can be resold.
+  /// Not public, called internally.
+  /// @param entityIndex The local entity index of the license
+  /// @param productIndex The specific ID of the product
+  /// @return true if licenses are resellable
+function license_resellable(uint256 entityIndex, uint256 productIndex)
+    internal view returns (bool)
+  {
+    LicenseOffer storage theOffer = LicenseOffers[entityIndex][productIndex];
+
+    if (theOffer.duration > 0)
+      return true;
+    else
+      return false;
   }
 
   /// @notice Create manual product activation license for end user.
@@ -180,19 +316,20 @@ function license_product(uint256 entityIndex, uint256 productIndex,
   /// @param productIndex The specific ID of the product
   /// @param licenseHash the activation license hash from end user
   /// @param licenseValue the value of the license (0 is unlicensed)
+  /// @param expiration the date/time the license is valid for
   function licenseCreate(uint256 productIndex, uint256 licenseHash,
-                         uint256 licenseValue)
+                         uint256 licenseValue, uint256 expiration)
     external
   {
     uint256 entityIndex = entityInterface.entityIdToLocalId(
                      entityInterface.entityAddressToIndex(msg.sender));
     // Only a validated commercial entity can create an offer
     uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
-    require(entityStatus > 0, "Entity not validated");
+    require(entityStatus > 0, EntityNotValidated);
     require((entityStatus & Nonprofit) != Nonprofit, "Nonprofit prohibited");
 
     license_product(entityIndex, productIndex, licenseHash,
-                    licenseValue);
+                    licenseValue, expiration, 0);
   }
 
   /// @notice Purchase a software product activation license.
@@ -200,23 +337,36 @@ function license_product(uint256 entityIndex, uint256 productIndex,
   /// @param entityIndex The entity offering the product license
   /// @param productIndex The specific ID of the product
   /// @param licenseHash the end user unique identifier to activate
-  function licensePurchase(uint256 entityIndex,
-                           uint256 productIndex,
-                           uint256 licenseHash)
+  /// @param promotional whether promotional offer purchased
+  function licensePurchase(uint256 entityIndex, uint256 productIndex,
+                           uint256 licenseHash, uint256 promotional)
     external
   {
     // Ensure vendor is registered and product exists
     uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
-    require(entityStatus > 0, "Entity not validated");
+    require(entityStatus > 0, EntityNotValidated);
+    entityIndex = entityInterface.entityIdToLocalId(entityIndex);
+    require(productInterface.productNumberOf(entityIndex + 1) > productIndex,
+            "Product not found");
+    LicenseOffer storage theOffer = LicenseOffers[entityIndex][productIndex];
+    require(theOffer.priceInTokens > 0, OfferNotFound);
+    require(licenseHash > 0, HashCannotBeZero);
 
-    if (licenseTransferEscrow(entityIndex, productIndex))
+    if (licenseTransferEscrow(entityIndex + 1, productIndex, promotional))
     {
-      entityIndex = entityInterface.entityIdToLocalId(entityIndex);
+      uint256 duration;
+
+      if (promotional > 0)
+        duration = theOffer.promoDuration;
+      else
+        duration = theOffer.duration;
 
       // Udpate the product license for this end user
-      license_product(entityIndex, productIndex, licenseHash, 1);
+      license_product(entityIndex, productIndex, licenseHash, 1,
+                      now + duration, 0);
 
-      emit licensePurchaseEvent(entityIndex + 1, productIndex);
+      emit licensePurchaseEvent(entityIndex + 1, productIndex,
+                                now + duration);
     }
     else
       revert("Transfer failed");
@@ -227,20 +377,36 @@ function license_product(uint256 entityIndex, uint256 productIndex,
   /// @param entityIndex The entity offering the product license
   /// @param productIndex The specific ID of the product
   /// @param licenseHash the end user unique identifier to activate
+  /// @param promotional whether promotional offer purchased
   function licensePurchaseInETH(uint256 entityIndex,
                                 uint256 productIndex,
-                                uint256 licenseHash)
+                                uint256 licenseHash,
+                                uint256 promotional)
     external payable
   {
     // Ensure vendor is registered and product exists
     uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
-    require(entityStatus > 0, "Entity not validated");
+    require(entityStatus > 0, EntityNotValidated);
     entityIndex = entityInterface.entityIdToLocalId(entityIndex);
 
     require(productInterface.productNumberOf(entityIndex + 1) > productIndex,
             "Product not found");
-    uint256 priceInTokens = LicenseOffers[entityIndex][productIndex].priceInTokens;
-    require(priceInTokens > 0, "Offer not found");
+    uint256 priceInTokens;
+    uint256 duration;
+
+    // Set price and duration based on promotion
+    if (promotional > 0)
+    {
+      priceInTokens = LicenseOffers[entityIndex][productIndex].promoPriceInTokens;
+      duration =  LicenseOffers[entityIndex][productIndex].promoDuration;
+    }
+    else
+    {
+      priceInTokens = LicenseOffers[entityIndex][productIndex].priceInTokens;
+      duration =  LicenseOffers[entityIndex][productIndex].duration;
+    }
+    require(priceInTokens > 0, OfferNotFound);
+    require(licenseHash > 0, HashCannotBeZero);
 
     // Transfer the ETH to the entity bank address
     require(msg.value * tokenInterface.currentRate() >=
@@ -248,9 +414,11 @@ function license_product(uint256 entityIndex, uint256 productIndex,
     entityInterface.entityTransfer.value(msg.value)(entityIndex + 1);
 
     // Udpate the product license for this end user
-    license_product(entityIndex, productIndex, licenseHash, 1);
+    license_product(entityIndex, productIndex, licenseHash, 1,
+                    now + duration, 0);
 
-    emit licensePurchaseEvent(entityIndex + 1, productIndex);
+    emit licensePurchaseEvent(entityIndex + 1, productIndex,
+                              now + duration);
   }
 
   /// @notice Move a software product activation license.
@@ -271,6 +439,7 @@ function license_product(uint256 entityIndex, uint256 productIndex,
     require(entityStatus > 0);
     entityIndex = entityInterface.entityIdToLocalId(entityIndex);
     uint256 licenseValue;
+    uint256 expiration;
     uint256 oldHash;
 
     // Rehash the license hash to ensure uniqueness across products
@@ -285,12 +454,16 @@ function license_product(uint256 entityIndex, uint256 productIndex,
 
     // Save old activation license value and ensure valid
     licenseValue = Licenses[oldHash].licenseValue;
+    expiration = Licenses[oldHash].expiration;
     require(licenseValue > 0, "Old license not valid");
+    require((expiration == 0) || (expiration > now),
+            "Resale of expired license invalid");
+    require(newLicenseHash > 0, HashCannotBeZero);
 
     // If entity not automatic, charge 1 IuT token to move license
     if ((entityInterface.entityAddressStatus(msg.sender) & Automatic) != Automatic)
     {
-      // Transfer one token from msg.sender to Immutable
+      // Transfer one token from msg.sender to Immutable owner
       if (tokenInterface.transferFrom(msg.sender, owner(), 1000000000000000000) == false)
         revert("Owner transfer failed");
     }
@@ -302,10 +475,11 @@ function license_product(uint256 entityIndex, uint256 productIndex,
     Licenses[oldHash].owner = address(0);
     Licenses[oldHash].entityOwner = 0;
     Licenses[oldHash].priceInTokens = 0;
+    Licenses[oldHash].expiration = 0;
 
     // Create the new activation license
     license_product(entityIndex, productIndex, newLicenseHash,
-                    licenseValue);
+                    licenseValue, expiration, oldLicenseHash);
   }
 
   /// @notice Offer a software product license for resale.
@@ -329,6 +503,8 @@ function license_product(uint256 entityIndex, uint256 productIndex,
     oldHash = licenseLookupHash(entityIndex + 1, productIndex, licenseHash);
 
     require(Licenses[oldHash].licenseValue > 0, "License not valid");
+    require((Licenses[oldHash].expiration == 0) ||
+            (Licenses[oldHash].expiration > now), "Resale of expired license invalid");
 
     uint256 ownerIndex = entityInterface.entityAddressToIndex(msg.sender);
     require((msg.sender == Licenses[oldHash].owner) ||
@@ -339,31 +515,28 @@ function license_product(uint256 entityIndex, uint256 productIndex,
       require(Licenses[oldHash].entityOwner == entityInterface.entityAddressToIndex(msg.sender),
               "Owner stale (entity moved after activation) - move license before resale");
 
-    // Ensure license can be resold and price within bounds defined by creator
-    require(priceInTokens >= 0);
-    uint256 price;
-    uint256 resellMinTokens;
-    (price, resellMinTokens) = licenseOfferDetails(entityIndex + 1, productIndex);
-    require(resellMinTokens > 0, "Resale of product not allowed");
-    require(priceInTokens >= resellMinTokens, "Resale price invalid");
+    // Ensure license can be resold
+    require(license_resellable(entityIndex, productIndex) == true, "Resale of product not allowed");
 
     // Set the activation license as "for sale"
     Licenses[oldHash].priceInTokens = priceInTokens;
 
     // Emit an event notifying the ecosystem that license is for sale
     emit licenseOfferResaleEvent(msg.sender, ownerIndex, entityIndex + 1, productIndex,
-                                 licenseHash, priceInTokens);
+                                 licenseHash, priceInTokens, Licenses[oldHash].expiration);
   }
 
   /// @notice Transfer/Resell a software product activation license.
-  /// License must be 'for sale' and mes.sender is new owner.
+  /// License must be 'for sale' and msg.sender is new owner.
   /// Does NOT change current activation.
   /// @param entityIndex The entity who owns the product
   /// @param productIndex The specific ID of the product
   /// @param licenseHash the existing activation identifier to purchase
+  /// @param newLicenseHash the new activation identifier after purchase
   function licenseTransfer(uint256 entityIndex,
                            uint256 productIndex,
-                           uint256 licenseHash)
+                           uint256 licenseHash,
+                           uint256 newLicenseHash)
     external
   {
     // Ensure vendor is registered and product exists
@@ -377,20 +550,15 @@ function license_product(uint256 entityIndex, uint256 productIndex,
     oldHash = licenseLookupHash(entityIndex + 1, productIndex, licenseHash);
 
     // Ensure resale is allowed and price is valid
-    uint256 priceInTokens;
-    uint256 resellMinTokens;
-    (priceInTokens, resellMinTokens) = licenseOfferDetails(entityIndex + 1, productIndex);
-    require(resellMinTokens > 0, "Resale of product not allowed");
+    require(license_resellable(entityIndex, productIndex) == true, "Resale of product not allowed");
     // Require the license is offered for sale and price valid
-    require(Licenses[oldHash].priceInTokens > 0, "License not for resale");
-    require(Licenses[oldHash].priceInTokens >= resellMinTokens, "Resale price invalid");
+    require(Licenses[oldHash].priceInTokens > 0, "License not for sale");
+    require((Licenses[oldHash].expiration == 0) ||
+            (Licenses[oldHash].expiration > now), "Resale of expired license invalid");
 
     // Get the old activation license value and ensure it is valid
     licenseValue = Licenses[oldHash].licenseValue;
     require(licenseValue > 0, "Old license not valid");
-
-    // Get the global entity index of the new owner
-    uint256 newOwnerIndex = entityInterface.entityAddressToIndex(msg.sender);
 
     // Look up the license owner and their entity status
     uint256 fee = 0;
@@ -416,7 +584,7 @@ function license_product(uint256 entityIndex, uint256 productIndex,
         fee = (Licenses[oldHash].priceInTokens * 5) / 100;
 
       // Transfer 5% fee from msg.sender to Immutable contract
-      if (tokenInterface.transferFrom(msg.sender, address(this), fee) == false)
+      if (tokenInterface.transferFrom(msg.sender, owner(), fee) == false)
         revert("Owner transfer failed");
     }
 
@@ -433,128 +601,115 @@ function license_product(uint256 entityIndex, uint256 productIndex,
     {
       // Transfer tokens from the new owner (purchaser) to the seller
       //   Requires the new owner has pre-approved the token transfer
-      if (tokenInterface.transferFrom(msg.sender, licenseOwner, Licenses[oldHash].priceInTokens - fee) == false)
+      if (tokenInterface.transferFrom(msg.sender, licenseOwner,
+                       Licenses[oldHash].priceInTokens - fee) == false)
         revert("Resell transfer failed");
     }
 
-    // Change the owner of the activation license
-    Licenses[oldHash].entityOwner = newOwnerIndex;
-    Licenses[oldHash].owner = msg.sender;
-  }
-
-  /// @notice Withdraw tokens in escrow (accumulated license sales).
-  /// Withdraws all license escrow amounts.
-  function licenseTokensWithdraw()
-    external
-  {
-    // Only a validated entity can withdraw
-    uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
-    require(entityStatus > 0, "Entity not validated");
-    uint256 entityIndex = entityInterface.entityIdToLocalId(
-                            entityInterface.entityAddressToIndex(msg.sender));
-    uint256 offerEscrowAmount = 0;
-
-    // Search all product license offers and sum escrow amounts
-    uint256 numProducts = productInterface.productNumberOf(entityIndex + 1);
-    for (uint id = 0; id < numProducts; ++id)
+    // If an old hash then find and remove reference or revert
+    if (Licenses[oldHash].entityOwner > 0)
     {
-      // If an escrow amount is present
-      if (LicenseOffers[entityIndex][id].escrow > 0)
+      uint256 i;
+
+      for (i = 0; i < LicenseReferences[Licenses[oldHash].entityOwner - 1].length;
+           ++i)
       {
-        // Add escrow amount before zeroing escrow value
-        offerEscrowAmount += LicenseOffers[entityIndex][id].escrow;
-        LicenseOffers[entityIndex][id].escrow = 0;
-      }
-    }
+        // If this reference does not match entity/product, skip it
+        if ((LicenseReferences[Licenses[oldHash].entityOwner - 1][i].entityID != entityIndex + 1) ||
+            (LicenseReferences[Licenses[oldHash].entityOwner - 1][i].productID != productIndex))
+          continue;
 
-    // If any escrow is available, withdraw (transfer) tokens
-    if (offerEscrowAmount > 0)
-    {
-      address customToken = address(0);
-
-      // If custom token entity get the address
-      if ((entityStatus & CustomToken) == CustomToken)
-        customToken = entityInterface.entityCustomTokenAddress(entityIndex + 1);
-
-      // If entity has custom token configured, transfer these tokens
-      if (customToken != address(0))
-      {
-        // Custom tokens only used for license activation sales
-        ERC20 erc20Token = ERC20(customToken);
-
-        // Transfer tokens from escrow (contract) to sender, revert if failure
-        if (erc20Token.transfer(msg.sender, offerEscrowAmount) == false)
-          revert("Custom token transfer failed");
-      }
-      else
-      {
-        // If an automatic account, transfer all the escrow amount
-        if ((entityStatus & Automatic) == Automatic)
+        // If this matches then clear it and break out
+        if (LicenseReferences[Licenses[oldHash].entityOwner - 1][i].hashIndex == licenseHash)
         {
-          if (tokenInterface.transfer(msg.sender, offerEscrowAmount) == false)
-            revert("Automatic transfer failed");
-        }  
-
-        // Otherwise transfer 95% of sale in escrow to entity, 5% to Immutable
-        else
-        {
-          uint256 feeEscrowAmount = (offerEscrowAmount * 5) / 100;
-          offerEscrowAmount -= feeEscrowAmount;
-
-          // Transfer tokens to the sender and revert if failure
-          if (tokenInterface.transfer(msg.sender, offerEscrowAmount) == false)
-            revert("Entity transfer failed");
-
-          // Transfer fee to Immutable and revert if failure
-          if (tokenInterface.transfer(owner(), feeEscrowAmount) == false)
-              revert("Owner transfer failed");
+          LicenseReferences[Licenses[oldHash].entityOwner - 1][i].entityID = 0;
+          LicenseReferences[Licenses[oldHash].entityOwner - 1][i].productID = 0;
+          LicenseReferences[Licenses[oldHash].entityOwner - 1][i].hashIndex = 0;
+          break;
         }
       }
+      require((i < LicenseReferences[Licenses[oldHash].entityOwner - 1].length),
+              "license reference failed to clear");
     }
+
+    // Create the new activation license and reference
+    license_product(Licenses[oldHash].entityID - 1, Licenses[oldHash].productID, newLicenseHash,
+                    Licenses[oldHash].licenseValue, Licenses[oldHash].expiration, 0);
+
+    // Clear/Deactivate old activation license
+    Licenses[oldHash].entityID = 0;
+    Licenses[oldHash].productID = 0;
+    Licenses[oldHash].licenseValue = 0;
+    Licenses[oldHash].owner = address(0);
+    Licenses[oldHash].entityOwner = 0;
+    Licenses[oldHash].priceInTokens = 0;
+    Licenses[oldHash].expiration = 0;
   }
 
   /// All product license functions below are view type (read only)
 
-  /// @notice Check balance of escrowed product licenses.
-  /// Counts all available product license escrow amounts.
-  function licenseTokenEscrow()
+  /// @notice Return the number of license activations for an entity
+  /// Entity and product must be valid.
+  /// @param entityIndex The entity the product license is for
+  /// @return the length of the license reference array
+  function licenseNumberOf(uint256 entityIndex)
     external view returns (uint256)
   {
-    // Only a validated entity can withdraw
-    uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
-    require(entityStatus > 0, "Entity not validated");
-    uint256 entityIndex = entityInterface.entityIdToLocalId(
-                     entityInterface.entityAddressToIndex(msg.sender));
-    uint256 offerEscrowAmount = 0;
+    // Only a validated entity can have licenses
+    uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
+    require(entityStatus > 0, EntityNotValidated);
+    entityIndex = entityInterface.entityIdToLocalId(entityIndex);
 
-    // Count all product license accumulated escrows
-    uint256 numProducts = productInterface.productNumberOf(entityIndex + 1);
-    for (uint id = 0; id < numProducts; ++id)
-    {
-      // Add escrow amount
-      offerEscrowAmount += LicenseOffers[entityIndex][id].escrow;
-    }
-
-    // If not an automatic account, decrement the 5 percent fee
-    if ((entityStatus & Automatic) != Automatic)
-      offerEscrowAmount -= (offerEscrowAmount * 5) / 100;
-    return offerEscrowAmount;
+    // Return the number of activations (length of array)
+    return LicenseReferences[entityIndex].length;
   }
 
-  /// @notice Check if end user is activated for use of a product.
+  /// @notice Return end user activation value and expiration for product
+  /// Entity and product must be valid.
+  /// @param entityIndex The entity the product license is for
+  /// @param licenseIndex The specific ID of the activation license
+  /// @return the entity identifier of product activated
+  /// @return the product identifier of product activated
+  /// @return the current end user identifier that is activated
+  function licenseDetails(uint256 entityIndex, uint256 licenseIndex)
+    external view returns (uint256, uint256, uint256)
+  {
+    // Only a validated entity can have licenses
+    uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
+    require(entityStatus > 0, EntityNotValidated);
+    entityIndex = entityInterface.entityIdToLocalId(entityIndex);
+    require(LicenseReferences[entityIndex].length > licenseIndex, "License not found");
+
+    // If purchaser registered, add the license reference information
+    return (LicenseReferences[entityIndex][licenseIndex].entityID,
+            LicenseReferences[entityIndex][licenseIndex].productID,
+            LicenseReferences[entityIndex][licenseIndex].hashIndex);
+  }
+
+  /// @notice Return end user activation value and expiration for product
   /// Entity and product must be valid.
   /// @param entityIndex The entity the product license is for
   /// @param productIndex The specific ID of the product
   /// @param licenseHash the external unique identifier to activate
   /// @return the license value (> 0 is valid)
-  function licenseValid(uint256 entityIndex, uint256 productIndex,
-                        uint256 licenseHash)
-    external view returns (uint)
+  /// @return the expiration value (seconds since epoch)
+  /// @return the price in tokens it is offered for resale
+  function licenseStatus(uint256 entityIndex, uint256 productIndex,
+                         uint256 licenseHash)
+    external view returns (uint256, uint256, uint256)
   {
     uint256 hash = licenseLookupHash(entityIndex, productIndex,
                                      licenseHash);
 
-    return Licenses[hash].licenseValue;
+    // If license is expired return not valid
+    if ((Licenses[hash].expiration > 0) &&
+        (Licenses[hash].expiration < now))
+      return (0, 0, 0);
+
+    // Otherwise return license value
+    else
+      return (Licenses[hash].licenseValue, Licenses[hash].expiration,
+              Licenses[hash].priceInTokens);
   }
 
   /// @notice Return the price of a product activation license.
@@ -562,19 +717,23 @@ function license_product(uint256 entityIndex, uint256 productIndex,
   /// @param entityIndex The index of the entity with offer
   /// @param productIndex The product ID of the new release
   /// @return the price in tokens for the activation license
-  /// @return the minimum resale price in tokens
+  /// @return the duration of the activation
+  /// @return the promotion price in tokens
+  /// @return the promotion duration
   function licenseOfferDetails(uint256 entityIndex,
                                uint256 productIndex)
-    public view returns (uint256, uint256)
+    public view returns (uint256, uint256, uint256, uint256)
   {
     entityIndex = entityInterface.entityIdToLocalId(entityIndex);
 
     require(productInterface.productNumberOf(entityIndex + 1) > productIndex,
             "Product not found");
 
-    // Return the price and minimum resale for this product offer
+    // Return price and duration of the product activation offer
     return (LicenseOffers[entityIndex][productIndex].priceInTokens,
-            LicenseOffers[entityIndex][productIndex].resellMinTokens);
+            LicenseOffers[entityIndex][productIndex].duration,
+            LicenseOffers[entityIndex][productIndex].promoPriceInTokens,
+            LicenseOffers[entityIndex][productIndex].promoDuration);
   }
 
   /// @notice Return the internal activation license hash.

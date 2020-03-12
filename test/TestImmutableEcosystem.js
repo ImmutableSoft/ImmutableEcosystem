@@ -42,7 +42,7 @@ contract("ImmutableEcosystem", accounts => {
   })
 
   it("Restrict ImmuteToken transfer to ImmutableEcosystem", async () => {
-    // Restrict the transfer of tokens to the contract
+    // Restrict the transfer of tokens to the contracts
     await immuteTokenInstance.restrictTransferToContracts(immutableEntityInstance.address,
              immutableProductInstance.address, immutableLicenseInstance.address, { from: accounts[0] });
   });
@@ -52,16 +52,33 @@ contract("ImmutableEcosystem", accounts => {
     await immutableProductInstance.transferOwnership(Owner, { from: accounts[0] });
     // Change the entity owner
     await immutableEntityInstance.transferOwnership(Owner, { from: accounts[0] });
+    // Change the owner
+    await immutableLicenseInstance.transferOwnership(Owner, { from: accounts[0] });
   });
 
   it("Change ImmuteToken owner", async () => {
+    // Add the new owner as a pauser
+    await immuteTokenInstance.addPauser(TokenOwner, { from: accounts[0] });
+
     // Change the owner
     await immuteTokenInstance.transferOwnership(TokenOwner, { from: accounts[0] });
+
+    // Renounce the old owner as pauser
+    await immuteTokenInstance.renouncePauser({ from: accounts[0] });
   });
   it("Change ImmuteToken bank", async () => {
     // Change the owner
     await immuteTokenInstance.bankChange(TokenOwner, { from: TokenOwner });
   });
+
+/* Uncomment to test ecosystem with unrestricted transfers
+  it("Unrestrict ImmuteToken transfer to ImmutableEcosystem", async () => {
+    // Unrestrict the transfer of tokens to the contracts
+    await immuteTokenInstance.restrictTransferToContracts('0x0000000000000000000000000000000000000000',
+             '0x0000000000000000000000000000000000000000',
+             '0x0000000000000000000000000000000000000000', { from: TokenOwner});
+  });
+*/
 
   it("Find or create new entity", async () => {
     // Get the organization name
@@ -138,6 +155,28 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(storedData[0], "Test Product0", "Failed! Name mismatch.");
   });
 
+  it("Purchase tokens", async () => {
+    // Purchase tokens (auto-approved for use in immutable ecosystem)
+    // TODO: Move from ERC20 to ERC777?
+    var bigPurchase = new BN(100000000)
+    bigPurchase = bigPurchase * 10000000000;
+    await immuteTokenInstance.tokenPurchase({ from: Account,
+                                            value: bigPurchase });
+  });
+
+  it("Pause token contract", async () => {
+    await immuteTokenInstance.pause({ from: TokenOwner });
+
+    // Attempt token transfer, ensure it reverts
+    var bigPurchase = new BN(100000000)
+    bigPurchase = bigPurchase * 10000000000;
+    await truffleAssert.reverts(immuteTokenInstance.transferFrom(Account,
+        immutableEntityInstance.address, 10000000000, { from: Account }));
+
+    await immuteTokenInstance.unpause({ from: TokenOwner });
+  });
+
+
   it("Create a new product release", async () => {
     // Get the number of products
     const numProducts = await immutableProductInstance.productNumberOf('1');
@@ -150,16 +189,12 @@ contract("ImmutableEcosystem", accounts => {
               "http://example.com/TestProduct0/favicon.ico", 0, { from: Account });
     }
 
-    // Purchase tokens (auto-approved for use in immutable ecosystem)
-    // TODO: Move from ERC20 to ERC777?
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 10000000000;
-    await immuteTokenInstance.tokenPurchase({ from: Account,
-                                            value: bigPurchase });
+    var bigEscrow = new BN(100000000)
+    bigEscrow = bigEscrow * 10000000000;
 
     // Create the release
     await immutableProductInstance.productRelease(0, 0, 0x900DF00D,
-            "http://example.com/releases/TestProduct.zip", '0x' + bigPurchase.toString(16),
+            "http://example.com/releases/TestProduct.zip", '0x' + bigEscrow.toString(16),
             { from: Account });
 
     // Read back the release hash
@@ -312,12 +347,12 @@ contract("ImmutableEcosystem", accounts => {
     }
 
     // Create the product license
-    await immutableLicenseInstance.licenseCreate(0, 0xFEED, 1, { from: Account });
+    await immutableLicenseInstance.licenseCreate(0, 0xFEEDBEEF, 1, 0, { from: Account });
 
     // Check validity of the license
-    const storedData = await immutableLicenseInstance.licenseValid(1, 0, 0xFEED);
+    const storedData = await immutableLicenseInstance.licenseStatus(1, 0, 0xFEEDBEEF);
     
-    assert.equal(storedData, 1, "Failed! License mismatch.");
+    assert.equal(storedData[0], 1, "Failed! License mismatch.");
   });
 
   it("Update an organization status", async () => {
@@ -414,37 +449,57 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(balanceAfter - balanceBefore, 0, "Failed, tokens were transferred!");
   });
 
+  it("Attempt to transfer from another to the ecosystem", async () => {
+    // Purchase tokens and approve them for use by accounts[9]
+    const balanceBefore = await immuteTokenInstance.balanceOf(EndUser);
+    var bigPurchase = new BN(100000000)
+    bigPurchase = bigPurchase * 20000000000; // 2 tokens
+
+    // Attemp transfer of tokens to pre-approved ecosystem contract
+    await truffleAssert.reverts(immuteTokenInstance.transferFrom(EndUser,
+        immutableEntityInstance.address, 10000000000, { from: Owner }));
+    const balanceAfter = await immuteTokenInstance.balanceOf(EndUser);
+    assert.equal(balanceAfter - balanceBefore, 0, "Failed, tokens were transferred!");
+  });
+
   it("Create a product license offer", async () => {
-    // Create the produce license offer
+    // Create the produce license offer for a one year activation
     await immutableLicenseInstance.licenseOffer(0,
-                                    10000000000, 5000000000, { from: Account });
+                                    10000000000, (365 * (24 * (60 * 60))),
+                                    20000000000, (3 * 365 * (24 * (60 * 60))), { from: Account });
 
     const offerPrice = await immutableLicenseInstance.licenseOfferDetails(1, 0, { from: Account });
     assert.equal(offerPrice[0], 10000000000, "Failed, product activation license price mismatch");
   });
 
   it("Purchase a product activation license", async () => {
-    const balance = await immuteTokenInstance.balanceOf(EndUser);
+    const origBalance = await immuteTokenInstance.balanceOf(Account);
 
-    var origBalance = await immuteTokenInstance.balanceOf(immutableLicenseInstance.address);
+    // Create an end user entity account
+    await immutableEntityInstance.entityCreate("John Smith",
+             "http://linkedin.com/john_smith", 0, { from: EndUser });
+    var entityIndex = await immutableEntityInstance.entityAddressToIndex(EndUser);
+
+    // Update the end user status to an EndUser (3)
+    await immutableEntityInstance.entityStatusUpdate(entityIndex, 3, { from: Owner });
 
     // Create the product activation license offer
     //  (entity, productID, activationHash)
     await immutableLicenseInstance.licensePurchase(
-              1, 0, 0xF00D, { from: EndUser });
+              1, 0, 0xF00D, 0, { from: EndUser });
 
     // Check the license. (entity, productID, activation hash)
-    const storedData = await immutableLicenseInstance.licenseValid(1, 0, 0xF00D);
+    const storedData = await immutableLicenseInstance.licenseStatus(1, 0, 0xF00D);
 
     // Value is the offerID, which is the offerIndex + 1.
     //   ie. The constant 1 below should match offerIndex + 1
     // match the purchased offerID above
-    assert.equal(storedData, 1, "Failed! License mismatch.");
+    assert.equal(storedData[0], 1, "Failed! License mismatch.");
 
-    const newBalance = await immuteTokenInstance.balanceOf(immutableLicenseInstance.address);
+    const newBalance = await immuteTokenInstance.balanceOf(Account);
 
-    assert.equal(newBalance - origBalance, 10000000000, "Failed, not enough tokens in the contract!");
-    assert.equal(newBalance, 10000000000, "Failed, additional tokens in the contract!");
+    assert.equal(newBalance - origBalance, 9499967488 /*(10000000000 * 95) / 100*/,
+                 "Failed, not enough tokens transferred to creator!");
   });
 
   it("Move a purchased activation license", async () => {
@@ -452,8 +507,8 @@ contract("ImmutableEcosystem", accounts => {
 
     // Check the license
     let result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xF00D);
-    assert.equal(result, 1, "Failed! Not license.");
+                                     licenseStatus(1, 0, 0xF00D);
+    assert.equal(result[0], 1, "Failed! Not license.");
 
     // Move the product activation license offer
     await immutableLicenseInstance.licenseMove(
@@ -461,21 +516,21 @@ contract("ImmutableEcosystem", accounts => {
 
     // Check the old license
     result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xF00D);
-    assert.equal(result, 0, "Failed! Old license is not invalid.");
+                                     licenseStatus(1, 0, 0xF00D);
+    assert.equal(result[0], 0, "Failed! Old license is not invalid.");
 
     // Check the new license
     result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xFEED);
-    assert.equal(result, 1, "Failed! New license is not valid.");
+                                     licenseStatus(1, 0, 0xFEED);
+    assert.equal(result[0], 1, "Failed! New license is not valid.");
 
     const newBalance = await immuteTokenInstance.balanceOf(EndUser);
 
     var bigEscrow = new BN(100000000)
     bigEscrow = bigEscrow * 10000000000; // two escrows
-    assert.equal(oldBalance - newBalance, bigEscrow, "Tokens not charged for moving license");
+    assert.equal(oldBalance - newBalance, bigEscrow + 262100, "Tokens not charged for moving license");
   });
-
+/*
   it("Withdraw tokens earned from product licenses", async () => {
     // Withdraw the license purchase tokens from previous test
     const balanceBefore = await immuteTokenInstance.balanceOf(Account);
@@ -484,12 +539,12 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(balanceAfter - balanceBefore, 9499967488,
                  "Failed, balance did not increase by expected amount");
   });
-
+*/
   it("Offer a product activation license for resale", async () => {
     await immutableLicenseInstance.licenseOfferResale(1, 0, 0xFEED, 5000000000, { from: EndUser });
   });
 
-  it("Purchase third party custom token activation license", async () => {
+  it("Purchase a second hand activation license", async () => {
 
     var rate = await immuteTokenInstance.currentRate();
     await immuteTokenInstance.tokenPurchase({ from: EndUser2,
@@ -499,21 +554,21 @@ contract("ImmutableEcosystem", accounts => {
 
     // Check the license
     let result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xFEED);
-    assert.equal(result, 1, "Failed! Not licensed.");
+                                     licenseStatus(1, 0, 0xFEED);
+    assert.equal(result[0], 1, "Failed! Not licensed.");
 
     // Approve tokens for transfer to EndUser
-    await customTokenInstance.approve(EndUser, 5000000000,
-                                      { from: EndUser2 });
+//    await customTokenInstance.approve(EndUser, 5000000000,
+//                                      { from: EndUser2 });
 
     // Transfer (resell) the product activation license
     await immutableLicenseInstance.licenseTransfer(
-              1, 0, 0xFEED, { from: EndUser2 });
+              1, 0, 0xFEED, 0xFEAD, { from: EndUser2 });
 
     // Check the new license
     result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xFEED);
-    assert.equal(result, 1, "Failed! New license is not valid.");
+                                     licenseStatus(1, 0, 0xFEAD);
+    assert.equal(result[0], 1, "Failed! New license is not valid.");
 
     const newBalance = await immuteTokenInstance.balanceOf(EndUser);
     const newUser2Balance = await immuteTokenInstance.balanceOf(EndUser2);
@@ -525,8 +580,8 @@ contract("ImmutableEcosystem", accounts => {
   it("Move a resold activation license", async () => {
     // Check the license
     let result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xFEED);
-    assert.equal(result, 1, "Failed! Not license.");
+                                     licenseStatus(1, 0, 0xFEAD);
+    assert.equal(result[0], 1, "Failed! Not licensed.");
 
     // Purchase tokens
     var bigPurchase = new BN(100000000)
@@ -536,17 +591,17 @@ contract("ImmutableEcosystem", accounts => {
 
     // Move the product activation license offer
     await immutableLicenseInstance.licenseMove(
-              1, 0, 0xFEED, 0xF00D, { from: EndUser2 });
+              1, 0, 0xFEAD, 0xF00D, { from: EndUser2 });
 
     // Check the old license
     result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xFEED);
-    assert.equal(result, 0, "Failed! Old license is not invalid.");
+                                     licenseStatus(1, 0, 0xFEED);
+    assert.equal(result[0], 0, "Failed! Old license is not invalid.");
 
     // Check the new license
     result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xF00D);
-    assert.equal(result, 1, "Failed! New license is not valid.");
+                                     licenseStatus(1, 0, 0xF00D);
+    assert.equal(result[0], 1, "Failed! New license is not valid.");
 
   });
 
@@ -556,30 +611,26 @@ contract("ImmutableEcosystem", accounts => {
   });
 
   it("Create a Token Offer", async () => {
-    const balanceBefore = await immuteTokenInstance.balanceOf(Account);
+    const balanceBefore = new BN(await immuteTokenInstance.balanceOf(Account));
 
     // Create a token block offer (rate, amount, block count)
-    await immutableEntityInstance.entityTokenBlockOffer(600,
+    await immutableEntityInstance.entityTokenBlockOffer(1200,
      1200000000, 2, { from: Account });
-
-    const balanceAfter = await immuteTokenInstance.balanceOf(Account);
 
     const offers = await immutableEntityInstance.entityNumberOfOffers(1, { from: Account });
     assert.equal(offers, 1, "Failed, product activation license offers is zero");
 
-    var bigSale = new BN(balanceBefore)
-    bigSale = bigSale - 2399900000; // Two blocks TODO rounding error
-
-    assert.equal(balanceAfter.toString(10), bigSale.toString(10), "Failed, not enough tokens transfered to contract!");
+    var balanceAfter = new BN(await immuteTokenInstance.balanceOf(Account));
+    assert.equal(balanceBefore - balanceAfter , 2399928320, "Failed, not enough tokens transfered to contract!");
 
   });
 
   it("Purchase a Token Offer", async () => {
     // Purchase the previous tests token offer
     const balanceBefore = await immuteTokenInstance.balanceOf(EndUser);
-    let tokenPurchase = await immutableEntityInstance.entityTokenBlockPurchase(1, 0, 1, { from: EndUser, value: 1200000000 / 600 });
+    let tokenPurchase = await immutableEntityInstance.entityTokenBlockPurchase(1, 0, 1, { from: EndUser, value: 1200000000 / 1200 });
     const balanceAfter = await immuteTokenInstance.balanceOf(EndUser);
-    assert.equal(balanceAfter - balanceBefore, 1199833088, "Failed, end user balance incorrect");
+    assert.equal(balanceAfter - balanceBefore, 1200095232, "Failed, end user balance incorrect");
 
 //    truffleAssert.eventEmitted(tokenPurchase, 'EntityTokenBlockPurchaseEvent', (ev) => {
 //        return ((ev.challenger == EndUser) && (ev.creator == Account) &&
@@ -588,7 +639,7 @@ contract("ImmutableEcosystem", accounts => {
 
   it("Withdraw ETH from the token purchase", async () => {
     var ethInEscrow = await immutableEntityInstance.entityPaymentsCheck({ from: Account});
-    assert.equal(ethInEscrow, 1200000000 / 600, "Failed, ETH in escrow incorrect amount");
+    assert.equal(ethInEscrow, 1200000000 / 1200, "Failed, ETH in escrow incorrect amount");
 
     // Withdraw the payments in escrow from previous test
     await immutableEntityInstance.entityPaymentsWithdraw({ from: Account} );
@@ -634,7 +685,7 @@ contract("ImmutableEcosystem", accounts => {
 
     var bigPurchase = new BN(100000000)
     bigPurchase = bigPurchase * 5000000000; // TODO whats with rounding errors?
-    assert.equal(balanceAfter - balanceBefore, bigPurchase + 131100, "Failed, end user balance delta incorrect");
+    assert.equal(balanceAfter - balanceBefore, bigPurchase - 131100, "Failed, end user balance delta incorrect");
   });
 
   it("Move an entity and all tokens to a new address", async () => {
@@ -678,7 +729,7 @@ contract("ImmutableEcosystem", accounts => {
     // Convert big purchase to ETH
     bigPurchase = bigPurchase / rate;
     await immutableLicenseInstance.licensePurchaseInETH(
-              1, 0, 0xBEEF, { from: EndUser, value: bigPurchase });
+              1, 0, 0xBEEF, 0, { from: EndUser, value: bigPurchase });
 
     var ethOutEscrow = await immutableEntityInstance.entityPaymentsCheck({ from: Account2});
     assert.equal(ethOutEscrow - ethInEscrow, bigPurchase, "Failed, ETH in escrow incorrect amount");
@@ -688,24 +739,16 @@ contract("ImmutableEcosystem", accounts => {
   it("Move a purchased activation license after entity move", async () => {
     var newAccountBalanceBefore = await immuteTokenInstance.balanceOf(EndUser2);
 
-    // Create an end user entity account
-    await immutableEntityInstance.entityCreate("John Smith",
-             "http://linkedin.com/john_smith", 0, { from: EndUser });
-    var entityIndex = await immutableEntityInstance.entityAddressToIndex(EndUser);
-
-    // Update the end user status to an EndUser (3)
-    await immutableEntityInstance.entityStatusUpdate(entityIndex, 3, { from: Owner });
-
     // Create the product activation license offer
     //  (entity, productID, offerIndex, activationHash)
     await immutableLicenseInstance.licensePurchase(
-              1, 0, 0xBEEF, { from: EndUser });
+              1, 0, 0xBEEF, 0, { from: EndUser });
 
     var oldAccountBalanceBefore = await immuteTokenInstance.balanceOf(EndUser);
 
     // Check the license. (entity, productID, activation hash)
-    const storedData = await immutableLicenseInstance.licenseValid(1, 0, 0xBEEF);
-    assert.equal(storedData, 1, "Failed! Old license should not be valid.");
+    const storedData = await immutableLicenseInstance.licenseStatus(1, 0, 0xBEEF);
+    assert.equal(storedData[0], 1, "Failed! Old license should not be valid.");
 
     // Approve the transfer of all tokens to escrow
     await immuteTokenInstance.approve(immutableEntityInstance.address,
@@ -721,8 +764,8 @@ contract("ImmutableEcosystem", accounts => {
 
     // Check the license after moving entity
     result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xBEEF);
-    assert.equal(result, 1, "Failed! No license found.");
+                                     licenseStatus(1, 0, 0xBEEF);
+    assert.equal(result[0], 1, "Failed! No license found.");
 
     // Move product activation license offer with new entity address
     await immutableLicenseInstance.licenseMove(
@@ -730,18 +773,18 @@ contract("ImmutableEcosystem", accounts => {
 
     // Check the old license
     result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xBEEF);
-    assert.equal(result, 0, "Failed! Old license should not be valid.");
+                                     licenseStatus(1, 0, 0xBEEF);
+    assert.equal(result[0], 0, "Failed! Old license should not be valid.");
 
     // Check the new license
     result = await immutableLicenseInstance.
-                                     licenseValid(1, 0, 0xDEED);
-    assert.equal(result, 1, "Failed! New license is not valid.");
+                                     licenseStatus(1, 0, 0xDEED);
+    assert.equal(result[0], 1, "Failed! New license is not valid.");
   });
 
   it("Revoke a product license offer", async () => {
     // Revoke the produce license offer
-    await immutableLicenseInstance.licenseOffer(0, 0, 0, { from: Account2 });
+    await immutableLicenseInstance.licenseOffer(0, 0, 0, 0, 0, { from: Account2 });
 
     // Create the product activation license offer
     //  (entity, productID, activationHash)
@@ -749,7 +792,7 @@ contract("ImmutableEcosystem", accounts => {
               1, 0);
     assert.equal(result[0], 0, "Failed! License offer not zero.");
     await truffleAssert.reverts(immutableLicenseInstance.licensePurchase(
-          1, 0, 0xF00D, { from: EndUser }), "Offer not found");
+          1, 0, 0xF00D, 0, { from: EndUser }), "Offer not found");
   });
 
   //////////////////////////////////////////////////////////
@@ -868,14 +911,16 @@ contract("ImmutableEcosystem", accounts => {
   
   it("Create a product license offer", async () => {
     // Create the produce license offer
-    await immutableLicenseInstance.licenseOffer(0, 10000000000,
-                                        5000000000, { from: Account });
+    await immutableLicenseInstance.licenseOffer(0, 10000000000, // standard 1 year
+                                        (365 * (24 * (60 * 60))),
+                                        20000000000, // 3 year promo for price of 2
+                                        (3 * 365 * (24 * (60 * 60))), { from: Account });
 
     const offerPrice = await immutableLicenseInstance.licenseOfferDetails(5, 0, { from: Account });
     assert.equal(offerPrice[0], 10000000000, "Failed, product activation license price mismatch");
   });
 
-  it("Purchase a product activation license", async () => {
+  it("Purchase a custom token product activation license", async () => {
     const beforeBalance = await customTokenInstance.balanceOf(accounts[0]);
 
     // Approve custom tokens for transfer
@@ -885,21 +930,21 @@ contract("ImmutableEcosystem", accounts => {
     // Create the product activation license offer
     //  (entity, productID, activationHash)
     await immutableLicenseInstance.licensePurchase(
-              5, 0, 0xFEAD, { from: accounts[0] });
+              5, 0, 0xFEAD, 0, { from: accounts[0] });
 
     // Check the license. (entity, productID, activation hash)
-    const storedData = await immutableLicenseInstance.licenseValid(5, 0, 0xFEAD);
+    const storedData = await immutableLicenseInstance.licenseStatus(5, 0, 0xFEAD);
 
     // Value is the offerID, which is the offerIndex + 1.
     //   ie. The constant 1 below should match offerIndex + 1
     // match the purchased offerID above
-    assert.equal(storedData, 1, "Failed! License mismatch.");
+    assert.equal(storedData[0], 1, "Failed! License mismatch.");
 
     const afterBalance = await customTokenInstance.balanceOf(accounts[0]);
 
     assert.equal(beforeBalance - afterBalance, 10000000000, "Failed, tokens not transferred.");
   });
-
+/*
   it("Withdraw custom tokens earned from product licenses", async () => {
     // Withdraw the license purchase tokens from previous test
     const balanceBefore = await customTokenInstance.balanceOf(Account);
@@ -908,7 +953,7 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(balanceAfter - balanceBefore, 10000000000,
                  "Failed, Account balance did not increase by expected amount");
   });
-
+*/
   it("Offer a product activation license for resale", async () => {
     await immutableLicenseInstance.licenseOfferResale(5, 0, 0xFEAD, 5000000000, { from: accounts[0] });
   });
@@ -931,8 +976,8 @@ contract("ImmutableEcosystem", accounts => {
 
     // Check the license
     let result = await immutableLicenseInstance.
-                                     licenseValid(5, 0, 0xFEAD);
-    assert.equal(result, 1, "Failed! Not license.");
+                                     licenseStatus(5, 0, 0xFEAD);
+    assert.equal(result[0], 1, "Failed! Not license.");
 
     // Approve custom tokens for transfer
     await customTokenInstance.approve(immutableLicenseInstance.address, 5000000000,
@@ -943,12 +988,12 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(newAllowance, 5000000000, "Allowance did not stick!");
 
     // Transfer (sell) the product activation license offer
-    await immutableLicenseInstance.licenseTransfer(5, 0, 0xFEAD, { from: EndUser });
+    await immutableLicenseInstance.licenseTransfer(5, 0, 0xFEAD, 0xFEED, { from: EndUser });
 
     // Check the new license
     result = await immutableLicenseInstance.
-                                     licenseValid(5, 0, 0xFEAD);
-    assert.equal(result, 1, "Failed! New license is not valid.");
+                                     licenseStatus(5, 0, 0xFEED);
+    assert.equal(result[0], 1, "Failed! New license is not valid.");
 
     const newBalance = await customTokenInstance.balanceOf(accounts[0]);
 
@@ -960,28 +1005,28 @@ contract("ImmutableEcosystem", accounts => {
 
     // Check the license
     let result = await immutableLicenseInstance.
-                                     licenseValid(5, 0, 0xFEAD);
-    assert.equal(result, 1, "Failed! Not license.");
+                                     licenseStatus(5, 0, 0xFEED);
+    assert.equal(result[0], 1, "Failed! Not license.");
 
     // Move the product activation license offer
     await immutableLicenseInstance.licenseMove(
-              5, 0, 0xFEAD, 0xF00D, { from: EndUser });
+              5, 0, 0xFEED, 0xF00D, { from: EndUser });
 
     // Check the old license
     result = await immutableLicenseInstance.
-                                     licenseValid(5, 0, 0xFEAD);
-    assert.equal(result, 0, "Failed! Old license is not invalid.");
+                                     licenseStatus(5, 0, 0xFEAD);
+    assert.equal(result[0], 0, "Failed! Old license is not invalid.");
 
     // Check the new license
     result = await immutableLicenseInstance.
-                                     licenseValid(5, 0, 0xF00D);
-    assert.equal(result, 1, "Failed! New license is not valid.");
+                                     licenseStatus(5, 0, 0xF00D);
+    assert.equal(result[0], 1, "Failed! New license is not valid.");
 
     const newBalance = await immuteTokenInstance.balanceOf(EndUser);
 
     var bigEscrow = new BN(100000000)
     bigEscrow = bigEscrow * 10000000000; // one token
-    assert.equal(oldBalance - newBalance, bigEscrow, "Tokens not charged for moving license");
+    assert.equal(oldBalance - newBalance, bigEscrow + 262100, "Tokens not charged for moving license");
   });
 
 

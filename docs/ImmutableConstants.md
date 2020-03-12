@@ -70,6 +70,7 @@ uint256 internal constant Agnostic;
 uint256 internal constant NotApplicable;
 uint256 internal constant Other;
 string internal constant OfferNotFound;
+string internal constant EntityNotValidated;
 
 ```
 

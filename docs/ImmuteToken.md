@@ -33,6 +33,7 @@ address private entityAddr;
 address private productAddr;
 address private licenseAddr;
 uint256 private ethRate;
+bool private restricted;
 struct ImmuteToken.Promo[5] private promos;
 
 ```
@@ -240,6 +241,7 @@ the amount of bonus tokens
 
 Transfer ecosystem funds to the configured bank address.
  Uses OpenZeppelin PullPayment interface.
+ Administrator only.
 
 ```js
 function transferToBank() external nonpayable onlyOwner 

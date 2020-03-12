@@ -14,8 +14,9 @@ License elements and methods
 ```js
 struct LicenseOffer {
  uint256 priceInTokens,
- uint256 resellMinTokens,
- uint256 escrow
+ uint256 duration,
+ uint256 promoPriceInTokens,
+ uint256 promoDuration
 }
 ```
 
@@ -28,7 +29,18 @@ struct License {
  uint256 licenseValue,
  uint256 entityOwner,
  address owner,
+ uint256 expiration,
  uint256 priceInTokens
+}
+```
+
+### LicenseReference
+
+```js
+struct LicenseReference {
+ uint256 entityID,
+ uint256 productID,
+ uint256 hashIndex
 }
 ```
 
@@ -36,7 +48,12 @@ struct License {
 **Constants & Variables**
 
 ```js
+//internal members
+string internal constant HashCannotBeZero;
+
+//private members
 mapping(uint256 => struct ImmutableLicense.License) private Licenses;
+mapping(uint256 => struct ImmutableLicense.LicenseReference[]) private LicenseReferences;
 mapping(uint256 => mapping(uint256 => struct ImmutableLicense.LicenseOffer)) private LicenseOffers;
 contract ImmutableProduct private productInterface;
 contract ImmutableEntity private entityInterface;
@@ -47,26 +64,27 @@ contract ImmuteToken private tokenInterface;
 **Events**
 
 ```js
-event licenseOfferEvent(uint256  entityIndex, uint256  productIndex, string  entityName, uint256  priceInTokens);
-event licenseOfferResaleEvent(address  seller, uint256  sellerIndex, uint256  entityIndex, uint256  productIndex, uint256  licenseHash, uint256  priceInTokens);
-event licensePurchaseEvent(uint256  entityIndex, uint256  productIndex);
+event licenseOfferEvent(uint256  entityIndex, uint256  productIndex, string  entityName, uint256  priceInTokens, uint256  duration, uint256  promoPriceInTokens, uint256  promoDuration);
+event licenseOfferResaleEvent(address  seller, uint256  sellerIndex, uint256  entityIndex, uint256  productIndex, uint256  licenseHash, uint256  priceInTokens, uint256  duration);
+event licensePurchaseEvent(uint256  entityIndex, uint256  productIndex, uint256  expireTime);
 ```
 
 ## Functions
 
 - [(address productAddr, address entityAddr, address tokenAddr)](#)
-- [licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 resellMinTokens)](#licenseoffer)
-- [licenseTransferEscrow(uint256 entityIndex, uint256 productIndex)](#licensetransferescrow)
-- [license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value)](#license_product)
-- [licenseCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue)](#licensecreate)
-- [licensePurchase(uint256 entityIndex, uint256 productIndex, uint256 licenseHash)](#licensepurchase)
-- [licensePurchaseInETH(uint256 entityIndex, uint256 productIndex, uint256 licenseHash)](#licensepurchaseineth)
+- [licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 duration, uint256 promoPriceInTokens, uint256 promoDuration)](#licenseoffer)
+- [licenseTransferEscrow(uint256 entityIndex, uint256 productIndex, uint256 promotional)](#licensetransferescrow)
+- [license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value, uint256 expiration, uint256 oldHash)](#license_product)
+- [license_resellable(uint256 entityIndex, uint256 productIndex)](#license_resellable)
+- [licenseCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue, uint256 expiration)](#licensecreate)
+- [licensePurchase(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 promotional)](#licensepurchase)
+- [licensePurchaseInETH(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 promotional)](#licensepurchaseineth)
 - [licenseMove(uint256 entityIndex, uint256 productIndex, uint256 oldLicenseHash, uint256 newLicenseHash)](#licensemove)
 - [licenseOfferResale(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 priceInTokens)](#licenseofferresale)
-- [licenseTransfer(uint256 entityIndex, uint256 productIndex, uint256 licenseHash)](#licensetransfer)
-- [licenseTokensWithdraw()](#licensetokenswithdraw)
-- [licenseTokenEscrow()](#licensetokenescrow)
-- [licenseValid(uint256 entityIndex, uint256 productIndex, uint256 licenseHash)](#licensevalid)
+- [licenseTransfer(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 newLicenseHash)](#licensetransfer)
+- [licenseNumberOf(uint256 entityIndex)](#licensenumberof)
+- [licenseDetails(uint256 entityIndex, uint256 licenseIndex)](#licensedetails)
+- [licenseStatus(uint256 entityIndex, uint256 productIndex, uint256 licenseHash)](#licensestatus)
 - [licenseOfferDetails(uint256 entityIndex, uint256 productIndex)](#licenseofferdetails)
 - [licenseLookupHash(uint256 entityIndex, uint256 productIndex, uint256 licenseHash)](#licenselookuphash)
 
@@ -93,7 +111,7 @@ Offer a software product license for sale.
  mes.sender must have a valid entity and product.
 
 ```js
-function licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 resellMinTokens) external nonpayable
+function licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 duration, uint256 promoPriceInTokens, uint256 promoDuration) external nonpayable
 ```
 
 **Arguments**
@@ -102,8 +120,10 @@ function licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 resel
 | ------------- |------------- | -----|
 | productIndex | uint256 | The specific ID of the product | 
 | priceInTokens | uint256 | The token cost to purchase activation | 
-| resellMinTokens | uint256 | The minimum token cost to resell license
+| duration | uint256 | The minimum token cost to resell license
                         zero (0) prevents resale | 
+| promoPriceInTokens | uint256 |  | 
+| promoDuration | uint256 |  | 
 
 ### licenseTransferEscrow
 
@@ -111,7 +131,7 @@ Transfer tokens to a product offer escrow.
  Not public, called internally. msg.sender is the purchaser.
 
 ```js
-function licenseTransferEscrow(uint256 entityIndex, uint256 productIndex) private nonpayable
+function licenseTransferEscrow(uint256 entityIndex, uint256 productIndex, uint256 promotional) private nonpayable
 returns(bool)
 ```
 
@@ -121,6 +141,7 @@ returns(bool)
 | ------------- |------------- | -----|
 | entityIndex | uint256 | The entity offering the product license | 
 | productIndex | uint256 | The specific ID of the product | 
+| promotional | uint256 |  | 
 
 ### license_product
 
@@ -128,7 +149,7 @@ Create a product license.
  Not public, called internally. msg.sender is the license owner.
 
 ```js
-function license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value) private nonpayable
+function license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value, uint256 expiration, uint256 oldHash) private nonpayable
 returns(uint256)
 ```
 
@@ -140,6 +161,29 @@ returns(uint256)
 | productIndex | uint256 | The specific ID of the product | 
 | hash | uint256 | The external license activation hash | 
 | value | uint256 | The activation value | 
+| expiration | uint256 | The activation expiration | 
+| oldHash | uint256 | The previous identifier or 0 | 
+
+### license_resellable
+
+Check if a license can be resold.
+ Not public, called internally.
+
+```js
+function license_resellable(uint256 entityIndex, uint256 productIndex) internal view
+returns(bool)
+```
+
+**Returns**
+
+true if licenses are resellable
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The local entity index of the license | 
+| productIndex | uint256 | The specific ID of the product | 
 
 ### licenseCreate
 
@@ -147,7 +191,7 @@ Create manual product activation license for end user.
  mes.sender must own the entity and product.
 
 ```js
-function licenseCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue) external nonpayable
+function licenseCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue, uint256 expiration) external nonpayable
 ```
 
 **Arguments**
@@ -157,6 +201,7 @@ function licenseCreate(uint256 productIndex, uint256 licenseHash, uint256 licens
 | productIndex | uint256 | The specific ID of the product | 
 | licenseHash | uint256 | the activation license hash from end user | 
 | licenseValue | uint256 | the value of the license (0 is unlicensed) | 
+| expiration | uint256 | the date/time the license is valid for | 
 
 ### licensePurchase
 
@@ -164,7 +209,7 @@ Purchase a software product activation license.
  mes.sender is the purchaser.
 
 ```js
-function licensePurchase(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external nonpayable
+function licensePurchase(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 promotional) external nonpayable
 ```
 
 **Arguments**
@@ -174,6 +219,7 @@ function licensePurchase(uint256 entityIndex, uint256 productIndex, uint256 lice
 | entityIndex | uint256 | The entity offering the product license | 
 | productIndex | uint256 | The specific ID of the product | 
 | licenseHash | uint256 | the end user unique identifier to activate | 
+| promotional | uint256 | whether promotional offer purchased | 
 
 ### licensePurchaseInETH
 
@@ -181,7 +227,7 @@ Purchase a software product activation license in ETH.
  mes.sender is the purchaser.
 
 ```js
-function licensePurchaseInETH(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external payable
+function licensePurchaseInETH(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 promotional) external payable
 ```
 
 **Arguments**
@@ -191,6 +237,7 @@ function licensePurchaseInETH(uint256 entityIndex, uint256 productIndex, uint256
 | entityIndex | uint256 | The entity offering the product license | 
 | productIndex | uint256 | The specific ID of the product | 
 | licenseHash | uint256 | the end user unique identifier to activate | 
+| promotional | uint256 | whether promotional offer purchased | 
 
 ### licenseMove
 
@@ -236,11 +283,11 @@ The product license offer identifier
 ### licenseTransfer
 
 Transfer/Resell a software product activation license.
- License must be 'for sale' and mes.sender is new owner.
+ License must be 'for sale' and msg.sender is new owner.
  Does NOT change current activation.
 
 ```js
-function licenseTransfer(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external nonpayable
+function licenseTransfer(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 newLicenseHash) external nonpayable
 ```
 
 **Arguments**
@@ -250,44 +297,57 @@ function licenseTransfer(uint256 entityIndex, uint256 productIndex, uint256 lice
 | entityIndex | uint256 | The entity who owns the product | 
 | productIndex | uint256 | The specific ID of the product | 
 | licenseHash | uint256 | the existing activation identifier to purchase | 
+| newLicenseHash | uint256 | the new activation identifier after purchase | 
 
-### licenseTokensWithdraw
+### licenseNumberOf
 
-Withdraw tokens in escrow (accumulated license sales).
- Withdraws all license escrow amounts.
-
-```js
-function licenseTokensWithdraw() external nonpayable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-
-### licenseTokenEscrow
-
-Check balance of escrowed product licenses.
- Counts all available product license escrow amounts.
-
-```js
-function licenseTokenEscrow() external view
-returns(uint256)
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-
-### licenseValid
-
-Check if end user is activated for use of a product.
+Return the number of license activations for an entity
  Entity and product must be valid.
 
 ```js
-function licenseValid(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external view
+function licenseNumberOf(uint256 entityIndex) external view
 returns(uint256)
+```
+
+**Returns**
+
+the length of the license reference array
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The entity the product license is for | 
+
+### licenseDetails
+
+Return end user activation value and expiration for product
+ Entity and product must be valid.
+
+```js
+function licenseDetails(uint256 entityIndex, uint256 licenseIndex) external view
+returns(uint256, uint256, uint256)
+```
+
+**Returns**
+
+the entity identifier of product activated
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The entity the product license is for | 
+| licenseIndex | uint256 | The specific ID of the activation license | 
+
+### licenseStatus
+
+Return end user activation value and expiration for product
+ Entity and product must be valid.
+
+```js
+function licenseStatus(uint256 entityIndex, uint256 productIndex, uint256 licenseHash) external view
+returns(uint256, uint256, uint256)
 ```
 
 **Returns**
@@ -309,7 +369,7 @@ Return the price of a product activation license.
 
 ```js
 function licenseOfferDetails(uint256 entityIndex, uint256 productIndex) public view
-returns(uint256, uint256)
+returns(uint256, uint256, uint256, uint256)
 ```
 
 **Returns**
