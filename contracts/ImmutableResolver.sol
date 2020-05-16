@@ -1,13 +1,12 @@
 pragma solidity 0.5.16;
 
 //For truffle testing
-import "@openzeppelin/contracts/ownership/Ownable.sol";
+//import "@openzeppelin/contracts/ownership/Ownable.sol";
 
-/*
+
 // For upgradable contracts
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
-*/
 
 import "@ensdomains/ens/contracts/ENS.sol";
 import "./AddrResolver.sol";
@@ -18,7 +17,7 @@ import "./ImmutableEntity.sol";
 /// @title Immutable Resolver- resolve immutablesoft.eth addresses
 /// @author Sean Lawless for ImmutableSoft Inc.
 /// @notice Inherits ENS example AddrResolver
-contract ImmutableResolver is Ownable, AddrResolver
+contract ImmutableResolver is Initializable, Ownable, AddrResolver
 {
   // Ethereum Name Service contract and variables
   ENS private ens;
@@ -32,12 +31,12 @@ contract ImmutableResolver is Ownable, AddrResolver
   /// Executed on contract creation only.
   /// @param entityAddr is address of ImmutableEntity contract
   /// @param ensAddr is address of the ENS contract
-  constructor(address entityAddr, address ensAddr) public
+/*  constructor(address entityAddr, address ensAddr) public
   {
-/*  function initialize(address entityAddr, address ensAddr) initializer public
+*/
+  function initialize(address entityAddr, address ensAddr) public initializer
   {
     Ownable.initialize(msg.sender);
-*/
 
     require(ensAddr != address(0));
     require(entityAddr != address(0));

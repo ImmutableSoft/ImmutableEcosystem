@@ -14,7 +14,7 @@ import "./ImmutableResolver.sol";
 /// @author Sean Lawless for ImmutableSoft Inc.
 /// @notice Token transfers use the ImmuteToken by default
 /// @dev Entity variables and methods
-contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
+contract ImmutableEntity is Initializable, Ownable, PullPayment,
                                ImmutableConstants
 {
   // Bonus token constants
@@ -78,19 +78,22 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
   event entityTokenBlockPurchaseEvent(address indexed purchaserAddress,
                               uint256 entityIndex, uint256 rate,
                               uint256 tokens, uint256 amount);
+  event entityTransferEvent(uint256 entityIndex, uint256 productIndex, uint256 amount);
+  event entityDonateEvent(uint256 entityIndex, uint256 productIndex, uint256 numTokens);
 
   /// @notice Contract initializer/constructor.
   /// Executed on contract creation only.
   /// @param immuteToken the address of the IuT token contract
   /// @param commonAddr the address of the CommonString contract
-  constructor(address immuteToken, address commonAddr)
+  /*constructor(address immuteToken, address commonAddr)
     public PullPayment()
   {
-/*  function initialize(address immuteToken, address commonAddr) initializer public
+*/
+  function initialize(address immuteToken, address commonAddr) public initializer
   {
     Ownable.initialize(msg.sender);
     PullPayment.initialize();
-*/
+
     // Initialize string and token contract interfaces
     commonInterface = StringCommon(commonAddr);
     tokenInterface = ImmuteToken(immuteToken);
@@ -148,13 +151,13 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
           ((status & CustomToken) == CustomToken))
       {
         // Subscription entities get a minted token bonus
-        tokenInterface.mint(EntityArray[entityIndex],
-                            EntitySubscriptionBonus);
+        tokenInterface.tokenMint(EntityArray[entityIndex],
+                                 EntitySubscriptionBonus);
 
         // Subscription referrals get a minted token bonus
         if (entity.referral > 0)
-          tokenInterface.mint(EntityArray[entity.referral - 1],
-                              ReferralSubscriptionBonus);
+          tokenInterface.tokenMint(EntityArray[entity.referral - 1],
+                                   ReferralSubscriptionBonus);
       }
 
       // Otherwise if referral mint standard entity bonus
@@ -162,8 +165,8 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
 
       {
         // Pay out 4 token escrow amount to the referral
-        tokenInterface.mint(EntityArray[entity.referral - 1],
-                            ReferralEntityBonus);
+        tokenInterface.tokenMint(EntityArray[entity.referral - 1],
+                                 ReferralEntityBonus);
       }
     }
   }
@@ -214,7 +217,7 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
               "Entity name already exists");
 
     // Push the entity to permenant storage on the blockchain
-    Entities.push(Entity(address(0),address(0), address(0), entityName,
+    Entities.push(Entity(msg.sender, address(0), address(0), entityName,
                          "", entityURL, 0, 0, address(0),
                          referralEntityIndex, now));
 
@@ -372,6 +375,10 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
     EntityArray[entityIndex] = msg.sender;
     entity.prevAddress = oldAddress;
 
+    // If old bank address was adminstrator, move bank to new address
+    if (entity.bank == oldAddress)
+      entity.bank = msg.sender;
+
     // All the products and releases are unchanged
 
     // Move tokens if any in escrow
@@ -380,8 +387,9 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
       // Transfer tokens out of escrow into the new account
       if (tokenInterface.transfer(msg.sender, entity.escrow))
         entity.escrow = 0;
-      else
-        revert("Token transfer failed");
+//    Don't revert as that might prevent recovery if transfer fails
+//      else
+//        revert("Token transfer failed");
     }
   }
 
@@ -445,10 +453,11 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
 
   }
 
-  /// @notice Revoke a previous offer of a block of tokens.
+  /// @notice Change rate and/or number of blocks of token offer.
   /// Offer must already exist and owned by msg.sender.
   /// @param offerIndex The identifier of the offer to revoke
-  function entityTokenBlockOfferRevoke(uint256 offerIndex)
+  function entityTokenBlockOfferChange(uint256 offerIndex, uint256 rate,
+                                       uint256 count)
     external
   {
     uint256 entityIndex = EntityIndex[msg.sender];
@@ -457,23 +466,53 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
 
     require(entityAddressStatus(msg.sender) > 0, EntityNotValidated);
     require(entity.numberOfOffers > offerIndex, OfferNotFound);
+    require((count == 0) || (rate >= tokenInterface.currentRate()),
+            "Rate less than currentRate");
 
-    // Transfer offer escrow tokens back to the entity
-    if (tokenInterface.transfer(msg.sender, entity.offers[offerIndex].escrow))
+    uint256 blockSize = entity.offers[offerIndex].blockSize;
+
+    // If we are increasing the escrow, transfer more tokens
+    if (count * blockSize > entity.offers[offerIndex].escrow)
     {
-      uint256 rate = entity.offers[offerIndex].rate;
-      uint256 blockSize = entity.offers[offerIndex].blockSize;
+      uint256 amount = (count * blockSize) - entity.offers[offerIndex].escrow;
 
-      // Zero out the token offer
-      entity.offers[offerIndex] = TokenBlockOffer(0, 0, 0);
-      if (offerIndex == entity.numberOfOffers - 1)
-        entity.numberOfOffers--;
-
-      // Event of zero number of blocks signifies a revoke
-      emit entityTokenBlockOfferEvent(entityIndex + 1, rate, blockSize, 0);
+      // Transfer additional tokens from entity into escrow
+      if (!tokenInterface.transferFrom(msg.sender, address(this), amount))
+        revert("Escrow increase failed");
     }
-    else
-      revert("Tranfer failed");
+
+    // If we are decreasing the escrow, transfer tokens out of escrow
+    else if (count * blockSize < entity.offers[offerIndex].escrow)
+    {
+      uint256 amount = entity.offers[offerIndex].escrow - (count * blockSize);
+
+      // Transfer excess offer escrow tokens back to the entity
+      if (tokenInterface.transfer(msg.sender, amount))
+      {
+        // Reduce number of offers if this is the last one in array
+        if ((count == 0) && (offerIndex == entity.numberOfOffers - 1))
+        {
+          entity.numberOfOffers--;
+
+          // Remove all stranded empty offers before this one
+          while ((entity.numberOfOffers > 0) &&
+                 (entity.offers[entity.numberOfOffers - 1].escrow == 0))
+            entity.numberOfOffers--;
+        }
+      }
+      else
+        revert("Escrow decrease failed");
+    }
+
+    // Update the token offer escrow amount
+    entity.offers[offerIndex].escrow = count * blockSize;
+
+    // Update the offer ETH rate multiplier
+    entity.offers[offerIndex].rate = rate;
+
+    // Send event for token offer, zero number of blocks revokes offer
+    emit entityTokenBlockOfferEvent(entityIndex + 1, rate, blockSize,
+                                    entity.offers[offerIndex].escrow);
   }
 
   /// @notice Transfer ETH to an entity.
@@ -481,7 +520,7 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
   /// Payable, requires ETH transfer.
   /// msg.sender is the payee
   /// @param entityIndex The index of entity recipient bank
-  function entityTransfer(uint256 entityIndex)
+  function entityTransfer(uint256 entityIndex, uint256 productIndex)
     public payable
   {
     uint256 entityStatus = entityIndexStatus(entityIndex);
@@ -493,9 +532,9 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
     require(msg.value > 0, "ETH value zero");
     require(entity.bank != address(0), BankNotConfigured);
 
-    // If not an Automation entity subtract the 5% fee
+    // If not an Automation entity subtract the 1% fee
     if ((entityStatus & Automatic) != Automatic)
-      fee = (msg.value * 5) / 100;
+      fee = (msg.value * 1) / 100;
 
     // Transfer ETH funds minus the fee if any
     _asyncTransfer(entity.bank, msg.value - fee);
@@ -503,6 +542,34 @@ contract ImmutableEntity is /*Initializable,*/ Ownable, PullPayment,
     // If a fee charged, transfer it to Immutable escrow bank
     if (fee > 0)
       tokenInterface.transferToEscrow.value(fee)();
+
+    // Send event for transfer, 
+    emit entityTransferEvent(entityIndex + 1, productIndex, msg.value);
+  }
+
+  /// @notice Donate tokens to an entity.
+  /// Entity must exist
+  /// msg.sender is the payee
+  /// @param entityIndex The index of entity
+  /// @param productIndex The index of product
+  /// @param numTokens The number of tokens to donate
+  function entityDonate(uint256 entityIndex, uint256 productIndex,
+                        uint256 numTokens)
+    external
+  {
+    uint256 entityStatus = entityIndexStatus(entityIndex);
+    entityIndex = entityIdToLocalId(entityIndex);
+
+    require(entityStatus > 0, EntityNotValidated);
+    require(((entityStatus & Nonprofit) == Nonprofit),
+            "Can donate to nonprofits only.");
+
+    // Transfer tokens to the entity
+    if (!tokenInterface.transferFrom(msg.sender, EntityArray[entityIndex], numTokens))
+      revert("Transfer failed");
+
+    // Send event for donation 
+    emit entityDonateEvent(entityIndex + 1, productIndex, numTokens);
   }
 
   /// @notice Purchase an block of tokens offered for ETH.

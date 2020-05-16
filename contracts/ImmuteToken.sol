@@ -1,22 +1,21 @@
 pragma solidity 0.5.16;
 
+/*
 //For truffle testing
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Mintable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol";
 import "@openzeppelin/contracts/payment/PullPayment.sol";
+*/
 
-/*
 // For upgradable contracts
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Detailed.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Mintable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Pausable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/payment/PullPayment.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
-*/
 
 import "./ImmutableEntity.sol";
 
@@ -24,7 +23,7 @@ import "./ImmutableEntity.sol";
 /// @author Sean Lawless for ImmutableSoft Inc.
 /// @notice Token transfers allowed with ImmutableEcosystem only
 /// @dev All transfers reset approval of all tokens to ecosystem
-contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
+contract ImmuteToken is Initializable, Ownable, ERC20Detailed,
                    ERC20Mintable, ERC20Pausable, PullPayment
 {
   uint256 constant MaxPromos = 5;
@@ -48,20 +47,21 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
   /// @notice Token contract initializer/constructor.
   /// Executed on contract creation only.
   /// @param initialSupply the initial supply of tokens
-  constructor(uint256 initialSupply) public ERC20Detailed("Immute", "IuT", 18)
+  /*constructor(uint256 initialSupply) public ERC20Detailed("Immute", "IuT", 18)
                                      ERC20Mintable()
                                      ERC20Pausable()
                                      PullPayment()
   {
-/*  function initialize(uint256 initialSupply) initializer public
+*/
+function initialize(uint256 initialSupply) public initializer
   {
     Ownable.initialize(msg.sender);
     ERC20Detailed.initialize("Immute", "IuT", 18);
     ERC20Mintable.initialize(msg.sender);
     ERC20Pausable.initialize(msg.sender);
     PullPayment.initialize();
-*/
-    ethRate = 800; // $.25 if ETH $200
+
+    ethRate = 800; // for $.25, 500 if ETH $125, 800 if ETH $200
 
     // Set primary (0) promotion at 10% after 400 ($100)
     //   (10x = 1y) 1/10 (10%)
@@ -78,6 +78,8 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
     // Mint the initial supply of tokens for the owner
     _mint(msg.sender, initialSupply);
 
+    // Set default bank address and token state to restricted
+    bank = msg.sender;
     restricted = true;
   }
 
@@ -135,10 +137,22 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
                                        address licenseContract)
     external onlyOwner
   {
-    // Pre-approve owner tokens for use in all three contracts
     if ((entityContract != address(0)) && (productContract != address(0)) &&
         (licenseContract != address(0)))
     {
+
+      // If present and different, remove mint ability from contracts
+      if ((entityAddr != address(0)) && (entityContract != entityAddr))
+        _removeMinter(entityAddr);
+      if ((productAddr != address(0)) && (productContract != productAddr))
+        _removeMinter(productAddr);
+
+      // If different add minter role to entity and product contracts
+      if (entityContract != entityAddr)
+        addMinter(entityContract);
+      if (productContract != productAddr)
+        addMinter(productContract);
+
       // Assign contract addresses token will be restricted to
       entityAddr = entityContract;
       productAddr = productContract;
@@ -146,19 +160,11 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
 
       // Initialize the entity contract interface
       entityInterface = ImmutableEntity(entityAddr);
-      addMinter(entityAddr);
+
+      // Pre-approve owner tokens for use in all three contracts
       _approve(msg.sender, entityAddr, balanceOf(msg.sender));
-
-      // Add minter and approve product contract
-      addMinter(productAddr);
       _approve(msg.sender, productAddr, balanceOf(msg.sender));
-
-      // Approve license contract
       _approve(msg.sender, licenseAddr, balanceOf(msg.sender));
-
-      // If owner is minter, renounce mintership
-      if (isMinter(owner()))
-        renounceMinter();
 
       // Define token as restricted
       restricted = true;
@@ -291,6 +297,24 @@ contract ImmuteToken is /*Initializable,*/ Ownable, /*ERC20,*/ ERC20Detailed,
     external payable
   {
     _asyncTransfer(bank, msg.value);
+  }
+
+  /// @notice ImmuteToken tokenMint can only be called by valid minters
+  /// If ecosystem restricted auto-approve ecosystem transfers.
+  /// @param recipient The token recipient
+  /// @param amount The token amount to mint
+  function tokenMint(address recipient, uint256 amount)
+    external
+  {
+    require(isMinter(msg.sender), "Sender is not a minter");
+
+    // Mint new tokens
+    _mint(recipient, amount);
+
+    // Pre-approve tokens for use in any ecosystem contract
+    _approve(recipient, licenseAddr, balanceOf(recipient));
+    _approve(recipient, productAddr, balanceOf(recipient));
+    _approve(recipient, entityAddr, balanceOf(recipient));
   }
 
   ///////////////////////////////////

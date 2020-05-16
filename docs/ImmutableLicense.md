@@ -74,7 +74,7 @@ event licensePurchaseEvent(uint256  entityIndex, uint256  productIndex, uint256 
 - [(address productAddr, address entityAddr, address tokenAddr)](#)
 - [licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 duration, uint256 promoPriceInTokens, uint256 promoDuration)](#licenseoffer)
 - [licenseTransferEscrow(uint256 entityIndex, uint256 productIndex, uint256 promotional)](#licensetransferescrow)
-- [license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value, uint256 expiration, uint256 oldHash)](#license_product)
+- [license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value, uint256 expiration, uint256 previousHash)](#license_product)
 - [license_resellable(uint256 entityIndex, uint256 productIndex)](#license_resellable)
 - [licenseCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue, uint256 expiration)](#licensecreate)
 - [licensePurchase(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 promotional)](#licensepurchase)
@@ -149,7 +149,7 @@ Create a product license.
  Not public, called internally. msg.sender is the license owner.
 
 ```js
-function license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value, uint256 expiration, uint256 oldHash) private nonpayable
+function license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value, uint256 expiration, uint256 previousHash) private nonpayable
 returns(uint256)
 ```
 
@@ -162,7 +162,7 @@ returns(uint256)
 | hash | uint256 | The external license activation hash | 
 | value | uint256 | The activation value | 
 | expiration | uint256 | The activation expiration | 
-| oldHash | uint256 | The previous identifier or 0 | 
+| previousHash | uint256 | The previous identifier or 0 | 
 
 ### license_resellable
 

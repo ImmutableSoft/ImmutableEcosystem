@@ -8,7 +8,7 @@ import "./ImmutableEntity.sol";
 /// @author Sean Lawless for ImmutableSoft Inc.
 /// @notice Token transfers use the ImmuteToken only
 /// @dev Ecosystem is split in three, Entities, Releases and Licenses
-contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
+contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
 {
   uint256 constant ReferralProductBonus = 4000000000000000000; //  4 IuT
 
@@ -64,14 +64,17 @@ contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
   /// @param entityAddr the address of the ImmutableEntity contract
   /// @param tokenAddr the address of the ImmuteToken contract
   /// @param commonAddr the address of the StringCommon contract
+/*
   constructor(address entityAddr, address tokenAddr,
               address commonAddr)
-    public //ImmutableBase(immuteToken, commonAddr, ensAddr)
+    public
   {
-/*
-    Ownable.initialize(msg.sender);
-    PullPayment.initialize();
 */
+  function initialize(address entityAddr, address tokenAddr,
+                      address commonAddr) public initializer
+  {
+    Ownable.initialize(msg.sender);
+
     entityInterface = ImmutableEntity(entityAddr);
     tokenInterface = ImmuteToken(tokenAddr);
     commonInterface = StringCommon(commonAddr);
@@ -238,15 +241,9 @@ contract ImmutableProduct is /*Initializable,*/ Ownable, ImmutableConstants
     // If any escrow available, withdraw (transfer) tokens
     if (releaseEscrowAmount > 0)
     {
-      uint256 splitEscrowAmount = releaseEscrowAmount / 2;
-
-      // Transfer half of tokens to the sender and revert if failure
-      if (tokenInterface.transfer(msg.sender, splitEscrowAmount) == false)
+      // Transfer tokens to the sender and revert if failure
+      if (tokenInterface.transfer(msg.sender, releaseEscrowAmount) == false)
         revert("Transfer to entity failed");
-
-      // Transfer remaining half of tokens to Immutable and revert if failure
-      if (tokenInterface.transfer(owner(), splitEscrowAmount) == false)
-          revert("Transfer to owner failed");
     }
   }
 

@@ -86,6 +86,7 @@ contract ImmutableConstants
   uint256 constant BIOS_aarch32 =   (1 << 138);
   uint256 constant BIOS_aarch64 =   (1 << 139);
   uint256 constant BIOS_arm64 =     (1 << 140);
+  uint256 constant Mac_amd64 =      (1 << 141);
   // Room here for expansion
 
   // End with general types

@@ -66,6 +66,8 @@ contract ImmutableResolver private resolver;
 event entityEvent(uint256  entityIndex, string  name, string  url);
 event entityTokenBlockOfferEvent(uint256  entityIndex, uint256  rate, uint256  tokens, uint256  amount);
 event entityTokenBlockPurchaseEvent(address indexed purchaserAddress, uint256  entityIndex, uint256  rate, uint256  tokens, uint256  amount);
+event entityTransferEvent(uint256  entityIndex, uint256  productIndex, uint256  amount);
+event entityDonateEvent(uint256  entityIndex, uint256  productIndex, uint256  numTokens);
 ```
 
 ## Functions
@@ -82,8 +84,9 @@ event entityTokenBlockPurchaseEvent(address indexed purchaserAddress, uint256  e
 - [entityAddressMove(address oldAddress)](#entityaddressmove)
 - [entityPaymentsWithdraw()](#entitypaymentswithdraw)
 - [entityTokenBlockOffer(uint256 rate, uint256 tokens, uint256 count)](#entitytokenblockoffer)
-- [entityTokenBlockOfferRevoke(uint256 offerIndex)](#entitytokenblockofferrevoke)
-- [entityTransfer(uint256 entityIndex)](#entitytransfer)
+- [entityTokenBlockOfferChange(uint256 offerIndex, uint256 rate, uint256 count)](#entitytokenblockofferchange)
+- [entityTransfer(uint256 entityIndex, uint256 productIndex)](#entitytransfer)
+- [entityDonate(uint256 entityIndex, uint256 productIndex, uint256 numTokens)](#entitydonate)
 - [entityTokenBlockPurchase(uint256 entityIndex, uint256 offerIndex, uint256 count)](#entitytokenblockpurchase)
 - [entityIdToLocalId(uint256 entityIndex)](#entityidtolocalid)
 - [entityIndexStatus(uint256 entityIndex)](#entityindexstatus)
@@ -299,13 +302,13 @@ function entityTokenBlockOffer(uint256 rate, uint256 tokens, uint256 count) exte
 | tokens | uint256 | The minimum multiplyer of tokens offered | 
 | count | uint256 | The number of blocks, or 'tokens' amounts | 
 
-### entityTokenBlockOfferRevoke
+### entityTokenBlockOfferChange
 
-Revoke a previous offer of a block of tokens.
+Change rate and/or number of blocks of token offer.
  Offer must already exist and owned by msg.sender.
 
 ```js
-function entityTokenBlockOfferRevoke(uint256 offerIndex) external nonpayable
+function entityTokenBlockOfferChange(uint256 offerIndex, uint256 rate, uint256 count) external nonpayable
 ```
 
 **Arguments**
@@ -313,6 +316,8 @@ function entityTokenBlockOfferRevoke(uint256 offerIndex) external nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 | offerIndex | uint256 | The identifier of the offer to revoke | 
+| rate | uint256 |  | 
+| count | uint256 |  | 
 
 ### entityTransfer
 
@@ -322,7 +327,7 @@ Transfer ETH to an entity.
  msg.sender is the payee
 
 ```js
-function entityTransfer(uint256 entityIndex) public payable
+function entityTransfer(uint256 entityIndex, uint256 productIndex) public payable
 ```
 
 **Arguments**
@@ -330,6 +335,25 @@ function entityTransfer(uint256 entityIndex) public payable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 | entityIndex | uint256 | The index of entity recipient bank | 
+| productIndex | uint256 |  | 
+
+### entityDonate
+
+Donate tokens to an entity.
+ Entity must exist
+ msg.sender is the payee
+
+```js
+function entityDonate(uint256 entityIndex, uint256 productIndex, uint256 numTokens) external nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The index of entity | 
+| productIndex | uint256 | The index of product | 
+| numTokens | uint256 | The number of tokens to donate | 
 
 ### entityTokenBlockPurchase
 

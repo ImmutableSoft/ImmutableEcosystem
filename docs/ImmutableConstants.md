@@ -65,6 +65,7 @@ uint256 internal constant BIOS_amd64;
 uint256 internal constant BIOS_aarch32;
 uint256 internal constant BIOS_aarch64;
 uint256 internal constant BIOS_arm64;
+uint256 internal constant Mac_amd64;
 uint256 internal constant SourceCode;
 uint256 internal constant Agnostic;
 uint256 internal constant NotApplicable;

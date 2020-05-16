@@ -60,15 +60,34 @@ contract("ImmutableEcosystem", accounts => {
     // Add the new owner as a pauser
     await immuteTokenInstance.addPauser(TokenOwner, { from: accounts[0] });
 
+    // Add the new owner as a minter
+    await immuteTokenInstance.addMinter(TokenOwner, { from: accounts[0] });
+
     // Change the owner
     await immuteTokenInstance.transferOwnership(TokenOwner, { from: accounts[0] });
 
     // Renounce the old owner as pauser
+    await immuteTokenInstance.renounceMinter({ from: accounts[0] });
+
+    // Renounce the old owner as pauser
     await immuteTokenInstance.renouncePauser({ from: accounts[0] });
   });
+
   it("Change ImmuteToken bank", async () => {
     // Change the owner
     await immuteTokenInstance.bankChange(TokenOwner, { from: TokenOwner });
+  });
+
+  it("Restrict ImmuteToken transfer with new Owner and different contract addresses", async () => {
+    // Restrict the transfer of tokens to the contracts
+    await immuteTokenInstance.restrictTransferToContracts(immutableEntityInstance.address,
+                                immutableLicenseInstance.address, immutableProductInstance.address, { from: TokenOwner });
+  });
+
+  it("Restrict ImmuteToken transfer to ImmutableEcosystem again", async () => {
+    // Restrict the transfer of tokens to the contracts
+    await immuteTokenInstance.restrictTransferToContracts(immutableEntityInstance.address,
+             immutableProductInstance.address, immutableLicenseInstance.address, { from: TokenOwner });
   });
 
 /* Uncomment to test ecosystem with unrestricted transfers
@@ -176,6 +195,13 @@ contract("ImmutableEcosystem", accounts => {
     await immuteTokenInstance.unpause({ from: TokenOwner });
   });
 
+  it("Ensure minting fails from addresses", async () => {
+    // Attempt token transfer, ensure it reverts
+    var bigPurchase = new BN(100000000)
+    bigPurchase = bigPurchase * 10000000000;
+    await truffleAssert.reverts(immuteTokenInstance.tokenMint(Account,
+                                10000000000, { from: Account }));
+  });
 
   it("Create a new product release", async () => {
     // Get the number of products
@@ -449,6 +475,35 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(balanceAfter - balanceBefore, 0, "Failed, tokens were transferred!");
   });
 
+  it("Donate tokens to a nonprofit entity", async () => {
+    // Purchase tokens and approve them for use by accounts[9]
+    const balanceBefore = await immuteTokenInstance.balanceOf(accounts[9]);
+    var bigPurchase = new BN(100000000)
+    bigPurchase = bigPurchase * 20000000000; // 2 tokens
+
+    var entityIndex = await immutableEntityInstance.entityAddressToIndex(accounts[9]);
+
+    // Donate the tokens
+    await immutableEntityInstance.entityDonate(entityIndex, 0, 10000000000, { from: EndUser });
+    const balanceAfter = await immuteTokenInstance.balanceOf(accounts[9]);
+    assert.equal(balanceAfter - balanceBefore, 10000000000, "Failed, tokens were not transfered!");
+  });
+
+  it("Donate tokens to a for profit entity", async () => {
+    // Purchase tokens and approve them for use by accounts[9]
+    const balanceBefore = await immuteTokenInstance.balanceOf(Account);
+    var bigPurchase = new BN(100000000)
+    bigPurchase = bigPurchase * 20000000000; // 2 tokens
+
+    var entityIndex = await immutableEntityInstance.entityAddressToIndex(Account);
+
+    // Donate tokens to a for profit entity (must revert)
+    await truffleAssert.reverts(immutableEntityInstance.entityDonate(entityIndex,
+                                0, 10000000000, { from: EndUser }));
+    const balanceAfter = await immuteTokenInstance.balanceOf(Account);
+    assert.equal(balanceAfter - balanceBefore, 0, "Failed, tokens were transfered!");
+  });
+
   it("Attempt to transfer from another to the ecosystem", async () => {
     // Purchase tokens and approve them for use by accounts[9]
     const balanceBefore = await immuteTokenInstance.balanceOf(EndUser);
@@ -498,8 +553,21 @@ contract("ImmutableEcosystem", accounts => {
 
     const newBalance = await immuteTokenInstance.balanceOf(Account);
 
-    assert.equal(newBalance - origBalance, 9499967488 /*(10000000000 * 95) / 100*/,
+    assert.equal(newBalance - origBalance, 9799991296 /*(10000000000 * 98) / 100*/,
                  "Failed, not enough tokens transferred to creator!");
+  });
+
+  it("Purchase a duplicate product activation license", async () => {
+    // Ensure revert if purchase of a duplicate activation license
+    //  (entity, productID, activationHash, promotional)
+    await truffleAssert.reverts(immutableLicenseInstance.licensePurchase(
+              1, 0, 0xF00D, 0, { from: EndUser2 }));
+    // Check the license. (entity, productID, activation hash)
+    const storedData = await immutableLicenseInstance.licenseStatus(1, 0, 0xF00D);
+
+    // Check to ensure license is still valid
+    assert.equal(storedData[0], 1, "Failed! License mismatch.");
+
   });
 
   it("Move a purchased activation license", async () => {
@@ -528,7 +596,7 @@ contract("ImmutableEcosystem", accounts => {
 
     var bigEscrow = new BN(100000000)
     bigEscrow = bigEscrow * 10000000000; // two escrows
-    assert.equal(oldBalance - newBalance, bigEscrow + 262100, "Tokens not charged for moving license");
+    assert.equal(oldBalance - newBalance, bigEscrow, "Tokens not charged for moving license");
   });
 /*
   it("Withdraw tokens earned from product licenses", async () => {
@@ -574,7 +642,7 @@ contract("ImmutableEcosystem", accounts => {
     const newUser2Balance = await immuteTokenInstance.balanceOf(EndUser2);
 
     assert.equal(user2Balance - newUser2Balance, 5000000000, "Tokens not charged for resell");
-    assert.equal(newBalance - oldBalance, 4750049280, "Tokens not earned for resell");
+    assert.equal(newBalance - oldBalance, 4899995648, "Tokens not earned for resell");
   });
 
   it("Move a resold activation license", async () => {
@@ -651,7 +719,7 @@ contract("ImmutableEcosystem", accounts => {
 
   it("Revoke a token block offer", async () => {
     // Revoke the token block offer
-    await immutableEntityInstance.entityTokenBlockOfferRevoke(0, { from: Account });
+    await immutableEntityInstance.entityTokenBlockOfferChange(0, 0, 0, { from: Account });
 
     const offers = await immutableEntityInstance.entityNumberOfOffers(1);
     assert.equal(offers, 0, "Failed, product token block offers is not zero");
@@ -684,8 +752,8 @@ contract("ImmutableEcosystem", accounts => {
     });
 
     var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 5000000000; // TODO whats with rounding errors?
-    assert.equal(balanceAfter - balanceBefore, bigPurchase - 131100, "Failed, end user balance delta incorrect");
+    bigPurchase = (bigPurchase * 5000000000) - 131100;//499..9868900 // TODO whats with rounding errors?
+    assert.equal(balanceAfter - balanceBefore, bigPurchase, "Failed, end user balance delta incorrect");
   });
 
   it("Move an entity and all tokens to a new address", async () => {
@@ -1026,7 +1094,7 @@ contract("ImmutableEcosystem", accounts => {
 
     var bigEscrow = new BN(100000000)
     bigEscrow = bigEscrow * 10000000000; // one token
-    assert.equal(oldBalance - newBalance, bigEscrow + 262100, "Tokens not charged for moving license");
+    assert.equal(oldBalance - newBalance, bigEscrow, "Tokens not charged for moving license");
   });
 
 

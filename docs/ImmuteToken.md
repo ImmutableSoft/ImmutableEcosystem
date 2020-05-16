@@ -52,6 +52,7 @@ struct ImmuteToken.Promo[5] private promos;
 - [calculateBonus(uint256 numTokens)](#calculatebonus)
 - [transferToBank()](#transfertobank)
 - [transferToEscrow()](#transfertoescrow)
+- [tokenMint(address recipient, uint256 amount)](#tokenmint)
 - [tokenPurchase()](#tokenpurchase)
 
 ### 
@@ -265,6 +266,22 @@ function transferToEscrow() external payable
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
+
+### tokenMint
+
+ImmuteToken tokenMint can only be called by valid minters
+ If ecosystem restricted auto-approve ecosystem transfers.
+
+```js
+function tokenMint(address recipient, uint256 amount) external nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| recipient | address | The token recipient | 
+| amount | uint256 | The token amount to mint | 
 
 ### tokenPurchase
 

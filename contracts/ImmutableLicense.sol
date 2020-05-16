@@ -8,7 +8,7 @@ import "./ImmutableProduct.sol";
 /// @title The Immutable License - automated software sales
 /// @author Sean Lawless for ImmutableSoft Inc.
 /// @dev License elements and methods
-contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
+contract ImmutableLicense is Initializable, Ownable, ImmutableConstants
 {
   string constant HashCannotBeZero = "Hash cannot be zero";
 
@@ -69,14 +69,16 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
   /// @param productAddr the address of the ImmutableProduct contract
   /// @param entityAddr the address of the ImmutableEntity contract
   /// @param tokenAddr the address of the IuT token contract
-  constructor(address productAddr, address entityAddr,
+/*  constructor(address productAddr, address entityAddr,
               address tokenAddr)
     public
   {
-/*  function initialize(address immuteToken, address ensAddr) initializer public
+*/
+  function initialize(address productAddr, address entityAddr,
+                      address tokenAddr) public initializer
   {
     Ownable.initialize(msg.sender);
-*/
+
     productInterface = ImmutableProduct(productAddr);
     entityInterface = ImmutableEntity(entityAddr);
     tokenInterface = ImmuteToken(tokenAddr);
@@ -167,10 +169,10 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
     // Otherwise transfer immute tokens to the creator //smart contract
     else
     {
-      // If manual, transfer 95% of sale to entity, 5% to Immutable
+      // If manual, transfer 99% of sale to entity, 1% to Immutable
       if ((entityStatus & Automatic) != Automatic)
       {
-        uint256 feeAmount = (price * 5) / 100;
+        uint256 feeAmount = (price * 1) / 100;
         price -= feeAmount;
 
         // Transfer tokens to the sender and revert if failure
@@ -198,17 +200,19 @@ contract ImmutableLicense is /*Initializable,*/ Ownable, ImmutableConstants
   /// @param hash The external license activation hash
   /// @param value The activation value
   /// @param expiration The activation expiration
-  /// @param oldHash The previous identifier or 0
+  /// @param previousHash The previous identifier or 0
 function license_product(uint256 entityIndex, uint256 productIndex,
                          uint256 hash, uint256 value,
-                         uint256 expiration, uint256 oldHash)
+                         uint256 expiration, uint256 previousHash)
     private returns (uint256)
   {
     uint256 newHash;
+    uint256 oldHash;
     uint256 i;
 
     // Rehash the license hash to ensure uniqueness across products
     newHash = licenseLookupHash(entityIndex + 1, productIndex, hash);
+    oldHash = licenseLookupHash(entityIndex + 1, productIndex, previousHash);
 
     if (Licenses[newHash].licenseValue == 0)
     {
@@ -221,10 +225,13 @@ function license_product(uint256 entityIndex, uint256 productIndex,
       Licenses[newHash].priceInTokens = 0;
 
       // If an old hash then find and update or revert
-      if (oldHash > 0)
+      if (previousHash > 0)
       {
-        if (Licenses[newHash].entityOwner > 0)
+        // Check if this is a license move (old and new same owner)
+        if ((Licenses[newHash].entityOwner > 0) &&
+            (Licenses[newHash].entityOwner == Licenses[oldHash].entityOwner))
         {
+          // Update the reference
           for (i = 0; i < LicenseReferences[Licenses[newHash].entityOwner - 1].length;
                ++i)
           {
@@ -234,20 +241,45 @@ function license_product(uint256 entityIndex, uint256 productIndex,
               continue;
 
             // If this matches then update it and break out
-            if (LicenseReferences[Licenses[newHash].entityOwner - 1][i].hashIndex == oldHash)
+            if (LicenseReferences[Licenses[newHash].entityOwner - 1][i].hashIndex == previousHash)
             {
               LicenseReferences[Licenses[newHash].entityOwner - 1][i].hashIndex = hash;
               break;
             }
           }
-          require((i < LicenseReferences[Licenses[newHash].entityOwner - 1].length),
-                  "license reference failed to update");
+          if (i >= LicenseReferences[Licenses[newHash].entityOwner - 1].length)
+            revert("license reference failed to update on move");
         }
 
+        // Otherwise this is a transfer so clear old reference if any
+        else if (Licenses[oldHash].entityOwner > 0)
+        {
+          for (i = 0; i < LicenseReferences[Licenses[oldHash].entityOwner - 1].length;
+               ++i)
+          {
+            // If this reference does not match entity/product, skip it
+            if ((LicenseReferences[Licenses[oldHash].entityOwner - 1][i].entityID != entityIndex + 1) ||
+                (LicenseReferences[Licenses[oldHash].entityOwner - 1][i].productID != productIndex))
+              continue;
+
+            // If old hash reference is found then clear it and break out
+            if (LicenseReferences[Licenses[oldHash].entityOwner - 1][i].hashIndex == previousHash)
+            {
+              LicenseReferences[Licenses[oldHash].entityOwner - 1][i].hashIndex = 0;
+              LicenseReferences[Licenses[oldHash].entityOwner - 1][i].entityID = 0;
+              LicenseReferences[Licenses[oldHash].entityOwner - 1][i].productID = 0;
+              break;
+            }
+          }
+          if (i >= LicenseReferences[Licenses[oldHash].entityOwner - 1].length)
+            revert("old license reference failed to clear on transfer");
+        }
       }
 
-      // If purchaser registered, add the license reference information
-      else if (Licenses[newHash].entityOwner > 0)
+      // If purchaser registered and not a move, add license reference
+      if ((Licenses[newHash].entityOwner > 0) && // purchaser registered
+          ((previousHash == 0) || // and not a move
+           (Licenses[newHash].entityOwner != Licenses[oldHash].entityOwner)))
       {
         for (i = 0; i < LicenseReferences[Licenses[newHash].entityOwner - 1].length;
              ++i)
@@ -271,7 +303,7 @@ function license_product(uint256 entityIndex, uint256 productIndex,
     // Otherwise license already exists so extend the expiration
     else
     {
-      // Require the old license to be owned by the sender
+      // Require license to be owned by the sender
       require((Licenses[newHash].owner == msg.sender) ||
               ((Licenses[newHash].entityOwner > 0) &&
                (Licenses[newHash].entityOwner ==
@@ -290,6 +322,40 @@ function license_product(uint256 entityIndex, uint256 productIndex,
         Licenses[newHash].expiration = expiration + (Licenses[newHash].expiration - now);
       else
         Licenses[newHash].expiration = expiration;
+
+      // If an old hash then find and clear moved reference
+      if (previousHash > 0)
+      {
+        if (Licenses[oldHash].entityOwner > 0)
+        {
+          // Require license to be owned by the sender
+          require((Licenses[oldHash].owner == msg.sender) ||
+                  ((Licenses[oldHash].entityOwner > 0) &&
+                   (Licenses[oldHash].entityOwner ==
+                    entityInterface.entityAddressToIndex(msg.sender))),
+                  "Sender does not own original license");
+
+          for (i = 0; i < LicenseReferences[Licenses[oldHash].entityOwner - 1].length;
+               ++i)
+          {
+            // If this reference does not match entity/product, skip it
+            if ((LicenseReferences[Licenses[oldHash].entityOwner - 1][i].entityID != entityIndex + 1) ||
+                (LicenseReferences[Licenses[oldHash].entityOwner - 1][i].productID != productIndex))
+              continue;
+
+            // If old hash reference is found then clear it and break out
+            if (LicenseReferences[Licenses[oldHash].entityOwner - 1][i].hashIndex == previousHash)
+            {
+              LicenseReferences[Licenses[oldHash].entityOwner - 1][i].hashIndex = 0;
+              LicenseReferences[Licenses[oldHash].entityOwner - 1][i].entityID = 0;
+              LicenseReferences[Licenses[oldHash].entityOwner - 1][i].productID = 0;
+              break;
+            }
+          }
+          if (i >= LicenseReferences[Licenses[newHash].entityOwner - 1].length)
+            revert("old license reference failed to be cleared");
+        }
+      }
     }
 
     return newHash;
@@ -411,7 +477,8 @@ function license_resellable(uint256 entityIndex, uint256 productIndex)
     // Transfer the ETH to the entity bank address
     require(msg.value * tokenInterface.currentRate() >=
             priceInTokens, "Not enough ETH");
-    entityInterface.entityTransfer.value(msg.value)(entityIndex + 1);
+    entityInterface.entityTransfer.value(msg.value)(entityIndex + 1,
+                                                    productIndex);
 
     // Udpate the product license for this end user
     license_product(entityIndex, productIndex, licenseHash, 1,
@@ -452,6 +519,8 @@ function license_resellable(uint256 entityIndex, uint256 productIndex)
               entityInterface.entityAddressToIndex(msg.sender))),
             "Sender does not own license");
 
+    require(newLicenseHash != oldLicenseHash, "Identifier identical");
+
     // Save old activation license value and ensure valid
     licenseValue = Licenses[oldHash].licenseValue;
     expiration = Licenses[oldHash].expiration;
@@ -468,6 +537,10 @@ function license_resellable(uint256 entityIndex, uint256 productIndex)
         revert("Owner transfer failed");
     }
 
+    // Create the new activation license
+    license_product(entityIndex, productIndex, newLicenseHash,
+                    licenseValue, expiration, oldLicenseHash);
+
     // Clear/Deactivate old activation license
     Licenses[oldHash].entityID = 0;
     Licenses[oldHash].productID = 0;
@@ -476,10 +549,6 @@ function license_resellable(uint256 entityIndex, uint256 productIndex)
     Licenses[oldHash].entityOwner = 0;
     Licenses[oldHash].priceInTokens = 0;
     Licenses[oldHash].expiration = 0;
-
-    // Create the new activation license
-    license_product(entityIndex, productIndex, newLicenseHash,
-                    licenseValue, expiration, oldLicenseHash);
   }
 
   /// @notice Offer a software product license for resale.
@@ -555,10 +624,15 @@ function license_resellable(uint256 entityIndex, uint256 productIndex)
     require(Licenses[oldHash].priceInTokens > 0, "License not for sale");
     require((Licenses[oldHash].expiration == 0) ||
             (Licenses[oldHash].expiration > now), "Resale of expired license invalid");
+    // Ensure new identifier is different from current
+    require(licenseHash != newLicenseHash, "Identifier identical");
 
     // Get the old activation license value and ensure it is valid
     licenseValue = Licenses[oldHash].licenseValue;
     require(licenseValue > 0, "Old license not valid");
+
+    require(entityIndex + 1 == Licenses[oldHash].entityID, "Entity ID mismatch");
+    require(productIndex == Licenses[oldHash].productID, "Product ID mismatch");
 
     // Look up the license owner and their entity status
     uint256 fee = 0;
@@ -574,16 +648,16 @@ function license_resellable(uint256 entityIndex, uint256 productIndex)
     if ((entityStatus & CustomToken) == CustomToken)
       customToken = entityInterface.entityCustomTokenAddress(entityIndex + 1);
 
-    // If not automatic, charge a 5% fee
+    // If not automatic, charge a 1% fee
     if ((ownerStatus & Automatic) != Automatic)
     {
-      // Charge one token to resale if purchased in custom token, otherwise 5%
+      // Charge one token to resale if purchased in custom token, otherwise 1%
       if (customToken != address(0))
         fee = 1000000000000000000;
       else
-        fee = (Licenses[oldHash].priceInTokens * 5) / 100;
+        fee = (Licenses[oldHash].priceInTokens * 1) / 100;
 
-      // Transfer 5% fee from msg.sender to Immutable contract
+      // Transfer 1% fee from msg.sender to Immutable contract
       if (tokenInterface.transferFrom(msg.sender, owner(), fee) == false)
         revert("Owner transfer failed");
     }
@@ -606,35 +680,9 @@ function license_resellable(uint256 entityIndex, uint256 productIndex)
         revert("Resell transfer failed");
     }
 
-    // If an old hash then find and remove reference or revert
-    if (Licenses[oldHash].entityOwner > 0)
-    {
-      uint256 i;
-
-      for (i = 0; i < LicenseReferences[Licenses[oldHash].entityOwner - 1].length;
-           ++i)
-      {
-        // If this reference does not match entity/product, skip it
-        if ((LicenseReferences[Licenses[oldHash].entityOwner - 1][i].entityID != entityIndex + 1) ||
-            (LicenseReferences[Licenses[oldHash].entityOwner - 1][i].productID != productIndex))
-          continue;
-
-        // If this matches then clear it and break out
-        if (LicenseReferences[Licenses[oldHash].entityOwner - 1][i].hashIndex == licenseHash)
-        {
-          LicenseReferences[Licenses[oldHash].entityOwner - 1][i].entityID = 0;
-          LicenseReferences[Licenses[oldHash].entityOwner - 1][i].productID = 0;
-          LicenseReferences[Licenses[oldHash].entityOwner - 1][i].hashIndex = 0;
-          break;
-        }
-      }
-      require((i < LicenseReferences[Licenses[oldHash].entityOwner - 1].length),
-              "license reference failed to clear");
-    }
-
     // Create the new activation license and reference
-    license_product(Licenses[oldHash].entityID - 1, Licenses[oldHash].productID, newLicenseHash,
-                    Licenses[oldHash].licenseValue, Licenses[oldHash].expiration, 0);
+    license_product(entityIndex, productIndex, newLicenseHash,
+                    Licenses[oldHash].licenseValue, Licenses[oldHash].expiration, licenseHash);
 
     // Clear/Deactivate old activation license
     Licenses[oldHash].entityID = 0;
