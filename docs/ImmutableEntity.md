@@ -2,7 +2,7 @@
 
 View Source: [contracts/ImmutableEntity.sol](../contracts/ImmutableEntity.sol)
 
-**↗ Extends: [Ownable](Ownable.md), [PullPayment](PullPayment.md), [ImmutableConstants](ImmutableConstants.md)**
+**↗ Extends: [Initializable](Initializable.md), [Ownable](Ownable.md), [PullPayment](PullPayment.md), [ImmutableConstants](ImmutableConstants.md)**
 
 **ImmutableEntity**
 
@@ -72,7 +72,7 @@ event entityDonateEvent(uint256  entityIndex, uint256  productIndex, uint256  nu
 
 ## Functions
 
-- [(address immuteToken, address commonAddr)](#)
+- [initialize(address immuteToken, address commonAddr)](#initialize)
 - [entityResolver(address resolverAddr, bytes32 rootNode)](#entityresolver)
 - [entityStatusUpdate(uint256 entityIndex, uint256 status)](#entitystatusupdate)
 - [entityCustomToken(uint256 entityIndex, address tokenAddress)](#entitycustomtoken)
@@ -98,17 +98,19 @@ event entityDonateEvent(uint256  entityIndex, uint256  productIndex, uint256  nu
 - [entityNumberOf()](#entitynumberof)
 - [entityNumberOfOffers(uint256 entityIndex)](#entitynumberofoffers)
 - [entityOfferDetails(uint256 entityIndex, uint256 offerId)](#entityofferdetails)
+- [entityAllOfferDetails(uint256 entityIndex)](#entityallofferdetails)
 - [entityPaymentsCheck()](#entitypaymentscheck)
 - [entityCustomTokenAddress(uint256 entityIndex)](#entitycustomtokenaddress)
 - [entityRootNode()](#entityrootnode)
+- [entityAllDetails()](#entityalldetails)
 
-### 
+### initialize
 
 Contract initializer/constructor.
  Executed on contract creation only.
 
 ```js
-function (address immuteToken, address commonAddr) public nonpayable PullPayment 
+function initialize(address immuteToken, address commonAddr) public nonpayable initializer 
 ```
 
 **Arguments**
@@ -570,6 +572,26 @@ the ETH to token exchange rate
 | entityIndex | uint256 | The index of the entity to lookup | 
 | offerId | uint256 |  | 
 
+### entityAllOfferDetails
+
+Retrieve all entity token offer details
+ Status of empty arrays if none found.
+
+```js
+function entityAllOfferDetails(uint256 entityIndex) external view
+returns(uint256[], uint256[], uint256[])
+```
+
+**Returns**
+
+array of ETH to token exchange rate
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The index of the entity to lookup | 
+
 ### entityPaymentsCheck
 
 Check payment (ETH) due entity bank.
@@ -626,6 +648,25 @@ the bytes32 ENS root node for immutablesoft.eth
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
+### entityAllDetails
+
+Retrieve all entity details
+ Status of empty arrays if none found.
+
+```js
+function entityAllDetails() external view
+returns(uint256[], string[], string[])
+```
+
+**Returns**
+
+array of entity status
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+
 ## Contracts
 
 * [Address](Address.md)
@@ -645,6 +686,7 @@ the bytes32 ENS root node for immutablesoft.eth
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

@@ -1,6 +1,6 @@
 # SafeMath.sol
 
-View Source: [@openzeppelin/contracts/math/SafeMath.sol](../@openzeppelin/contracts/math/SafeMath.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol](../@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol)
 
 **SafeMath**
 
@@ -218,6 +218,7 @@ returns(uint256)
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

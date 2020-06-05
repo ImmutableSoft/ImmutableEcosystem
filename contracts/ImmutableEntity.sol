@@ -1,5 +1,10 @@
 pragma solidity 0.5.16;
 
+// Optimized ecosystem read interface returns arrays and
+// requires experimental ABIEncoderV2
+//   DO NOT release in production with compiler < 0.5.7
+pragma experimental ABIEncoderV2;
+
 import "./StringCommon.sol";
 import "./ImmuteToken.sol";
 import "./ImmutableConstants.sol";
@@ -543,7 +548,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     if (fee > 0)
       tokenInterface.transferToEscrow.value(fee)();
 
-    // Send event for transfer, 
+    // Send event for transfer
     emit entityTransferEvent(entityIndex + 1, productIndex, msg.value);
   }
 
@@ -568,7 +573,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     if (!tokenInterface.transferFrom(msg.sender, EntityArray[entityIndex], numTokens))
       revert("Transfer failed");
 
-    // Send event for donation 
+    // Send event for donation
     emit entityDonateEvent(entityIndex + 1, productIndex, numTokens);
   }
 
@@ -770,6 +775,33 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
             entity.offers[offerId].escrow);
   }
 
+  /// @notice Retrieve all entity token offer details
+  /// Status of empty arrays if none found.
+  /// @param entityIndex The index of the entity to lookup
+  /// @return array of ETH to token exchange rate
+  /// @return array of block size
+  /// @return array of size of escrow
+  function entityAllOfferDetails(uint256 entityIndex)
+    external view returns (uint256[] memory, uint256[] memory,
+                           uint256[] memory)
+  {
+    entityIndex = entityIdToLocalId(entityIndex);
+    Entity storage entity = Entities[entityIndex];
+
+    uint256[] memory resultRate = new uint256[](entity.numberOfOffers);
+    uint256[] memory resultBlockSize = new uint256[](entity.numberOfOffers);
+    uint256[] memory resultEscrow = new uint256[](entity.numberOfOffers);
+
+    for (uint i = 0; i < entity.numberOfOffers; ++i)
+    {
+      resultRate[i] = entity.offers[i].rate;
+      resultBlockSize[i] = entity.offers[i].blockSize;
+      resultEscrow[i] = entity.offers[i].escrow;
+    }
+
+    return (resultRate, resultBlockSize, resultEscrow);
+  }
+
   /// @notice Check payment (ETH) due entity bank.
   /// Uses OpenZeppelin PullPayment interface.
   /// @return the amount of ETH in the entity escrow
@@ -813,6 +845,29 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
       return resolver.rootNode();
     else
       return 0;
+  }
+
+  /// @notice Retrieve all entity details
+  /// Status of empty arrays if none found.
+  /// @return array of entity status
+  /// @return array of entity name
+  /// @return array of entity URL
+  function entityAllDetails()
+    external view returns (uint256[] memory, string[] memory,
+                           string[] memory)
+  {
+    uint256[] memory resultStatus = new uint256[](Entities.length);
+    string[] memory resultName = new string[](Entities.length);
+    string[] memory resultURL = new string[](Entities.length);
+
+    for (uint i = 0; i < Entities.length; ++i)
+    {
+      resultStatus[i] = EntityStatus[i];
+      resultName[i] = Entities[i].name;
+      resultURL[i] = Entities[i].infoURL;
+    }
+
+    return (resultStatus, resultName, resultURL);
   }
 
 }

@@ -96,6 +96,7 @@ string internal constant EntityNotValidated;
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

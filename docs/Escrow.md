@@ -1,8 +1,8 @@
 # Escrow (Escrow.sol)
 
-View Source: [@openzeppelin/contracts/payment/escrow/Escrow.sol](../@openzeppelin/contracts/payment/escrow/Escrow.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/payment/escrow/Escrow.sol](../@openzeppelin/contracts-ethereum-package/contracts/payment/escrow/Escrow.sol)
 
-**↗ Extends: [Secondary](Secondary.md)**
+**↗ Extends: [Initializable](Initializable.md), [Secondary](Secondary.md)**
 
 **Escrow**
 
@@ -21,6 +21,7 @@ to the escrow's deposit and withdraw.
 
 ```js
 mapping(address => uint256) private _deposits;
+uint256[50] private ______gap;
 
 ```
 
@@ -33,10 +34,25 @@ event Withdrawn(address indexed payee, uint256  weiAmount);
 
 ## Functions
 
+- [initialize(address sender)](#initialize)
 - [depositsOf(address payee)](#depositsof)
 - [deposit(address payee)](#deposit)
 - [withdraw(address payable payee)](#withdraw)
 - [withdrawWithGas(address payable payee)](#withdrawwithgas)
+
+### initialize
+
+⤾ overrides [Secondary.initialize](Secondary.md#initialize)
+
+```js
+function initialize(address sender) public nonpayable initializer 
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| sender | address |  | 
 
 ### depositsOf
 
@@ -122,6 +138,7 @@ function withdrawWithGas(address payable payee) public nonpayable onlyPrimary
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

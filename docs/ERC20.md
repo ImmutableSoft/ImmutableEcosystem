@@ -1,8 +1,8 @@
 # ERC20.sol
 
-View Source: [@openzeppelin/contracts/token/ERC20/ERC20.sol](../@openzeppelin/contracts/token/ERC20/ERC20.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol)
 
-**↗ Extends: [Context](Context.md), [IERC20](IERC20.md)**
+**↗ Extends: [Initializable](Initializable.md), [Context](Context.md), [IERC20](IERC20.md)**
 **↘ Derived Contracts: [ERC20Mintable](ERC20Mintable.md), [ERC20Pausable](ERC20Pausable.md)**
 
 **ERC20**
@@ -32,6 +32,7 @@ allowances. See {IERC20-approve}.
 mapping(address => uint256) private _balances;
 mapping(address => mapping(address => uint256)) private _allowances;
 uint256 private _totalSupply;
+uint256[50] private ______gap;
 
 ```
 
@@ -343,6 +344,7 @@ function _burnFrom(address account, uint256 amount) internal nonpayable
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

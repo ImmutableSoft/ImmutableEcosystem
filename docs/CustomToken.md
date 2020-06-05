@@ -8,12 +8,12 @@ View Source: [contracts/CustomToken.sol](../contracts/CustomToken.sol)
 
 ## Functions
 
-- [()](#)
+- [initialize()](#initialize)
 
-### 
+### initialize
 
 ```js
-function () public nonpayable ERC20Detailed ERC20Mintable 
+function initialize() public nonpayable initializer 
 ```
 
 **Arguments**
@@ -40,6 +40,7 @@ function () public nonpayable ERC20Detailed ERC20Mintable
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

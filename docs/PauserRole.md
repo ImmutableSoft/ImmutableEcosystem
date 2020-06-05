@@ -1,8 +1,8 @@
 # PauserRole.sol
 
-View Source: [@openzeppelin/contracts/access/roles/PauserRole.sol](../@openzeppelin/contracts/access/roles/PauserRole.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/access/roles/PauserRole.sol](../@openzeppelin/contracts-ethereum-package/contracts/access/roles/PauserRole.sol)
 
-**↗ Extends: [Context](Context.md)**
+**↗ Extends: [Initializable](Initializable.md), [Context](Context.md)**
 **↘ Derived Contracts: [Pausable](Pausable.md)**
 
 **PauserRole**
@@ -12,6 +12,7 @@ View Source: [@openzeppelin/contracts/access/roles/PauserRole.sol](../@openzeppe
 
 ```js
 struct Roles.Role private _pausers;
+uint256[50] private ______gap;
 
 ```
 
@@ -39,23 +40,28 @@ modifier onlyPauser() internal
 
 ## Functions
 
-- [()](#)
+- [initialize(address sender)](#initialize)
 - [isPauser(address account)](#ispauser)
 - [addPauser(address account)](#addpauser)
 - [renouncePauser()](#renouncepauser)
 - [_addPauser(address account)](#_addpauser)
 - [_removePauser(address account)](#_removepauser)
 
-### 
+### initialize
+
+⤾ overrides [ERC20Mintable.initialize](ERC20Mintable.md#initialize)
+
+⤿ Overridden Implementation(s): [ERC20Pausable.initialize](ERC20Pausable.md#initialize),[Pausable.initialize](Pausable.md#initialize)
 
 ```js
-function () internal nonpayable
+function initialize(address sender) public nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
+| sender | address |  | 
 
 ### isPauser
 
@@ -136,6 +142,7 @@ function _removePauser(address account) internal nonpayable
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

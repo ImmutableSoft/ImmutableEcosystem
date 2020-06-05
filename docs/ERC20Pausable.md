@@ -1,8 +1,8 @@
 # Pausable token (ERC20Pausable.sol)
 
-View Source: [@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol](../@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Pausable.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Pausable.sol)
 
-**↗ Extends: [ERC20](ERC20.md), [Pausable](Pausable.md)**
+**↗ Extends: [Initializable](Initializable.md), [ERC20](ERC20.md), [Pausable](Pausable.md)**
 **↘ Derived Contracts: [ImmuteToken](ImmuteToken.md)**
 
 **ERC20Pausable**
@@ -12,13 +12,36 @@ ERC20 with pausable transfers and allowances.
 an emergency switch for freezing all token transfers in the event of a large
 bug.
 
+## Contract Members
+**Constants & Variables**
+
+```js
+uint256[50] private ______gap;
+
+```
+
 ## Functions
 
+- [initialize(address sender)](#initialize)
 - [transfer(address to, uint256 value)](#transfer)
 - [transferFrom(address from, address to, uint256 value)](#transferfrom)
 - [approve(address spender, uint256 value)](#approve)
 - [increaseAllowance(address spender, uint256 addedValue)](#increaseallowance)
 - [decreaseAllowance(address spender, uint256 subtractedValue)](#decreaseallowance)
+
+### initialize
+
+⤾ overrides [Pausable.initialize](Pausable.md#initialize)
+
+```js
+function initialize(address sender) public nonpayable initializer 
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| sender | address |  | 
 
 ### transfer
 
@@ -124,6 +147,7 @@ returns(bool)
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

@@ -53,6 +53,8 @@ contract ImmuteToken is Initializable, Ownable, ERC20Detailed,
                                      PullPayment()
   {
 */
+/* use initializeMe to deploy for testing : there are multiple initialize functions */
+/*function initializeMe(uint256 initialSupply) public initializer*/
 function initialize(uint256 initialSupply) public initializer
   {
     Ownable.initialize(msg.sender);

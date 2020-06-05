@@ -38,8 +38,8 @@ contract ImmutableResolver is Initializable, Ownable, AddrResolver
   {
     Ownable.initialize(msg.sender);
 
-    require(ensAddr != address(0));
-    require(entityAddr != address(0));
+    require(ensAddr != address(0), "ENS address required");
+    require(entityAddr != address(0), "immutableEntity contract address required");
 
     // Initialize immutable entity contract interface
     entityInterface = ImmutableEntity(entityAddr);
@@ -55,7 +55,7 @@ contract ImmutableResolver is Initializable, Ownable, AddrResolver
   {
     return (msg.sender == owner());
   }
-  
+
   /// @notice Sets the ENS immutablesoft root node
   /// @param rootNode is bytes32 ENS root node for immutablesoft.eth
   function setRootNode(bytes32 rootNode)

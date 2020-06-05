@@ -1,8 +1,8 @@
 # ERC20Detailed.sol
 
-View Source: [@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol](../@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Detailed.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Detailed.sol)
 
-**↗ Extends: [IERC20](IERC20.md)**
+**↗ Extends: [Initializable](Initializable.md), [IERC20](IERC20.md)**
 **↘ Derived Contracts: [CustomToken](CustomToken.md), [ImmuteToken](ImmuteToken.md)**
 
 **ERC20Detailed**
@@ -16,24 +16,25 @@ Optional functions from the ERC20 standard.
 string private _name;
 string private _symbol;
 uint8 private _decimals;
+uint256[50] private ______gap;
 
 ```
 
 ## Functions
 
-- [(string name, string symbol, uint8 decimals)](#)
+- [initialize(string name, string symbol, uint8 decimals)](#initialize)
 - [name()](#name)
 - [symbol()](#symbol)
 - [decimals()](#decimals)
 
-### 
+### initialize
 
 Sets the values for `name`, `symbol`, and `decimals`. All three of
 these values are immutable: they can only be set once during
 construction.
 
 ```js
-function (string name, string symbol, uint8 decimals) public nonpayable
+function initialize(string name, string symbol, uint8 decimals) public nonpayable initializer 
 ```
 
 **Arguments**
@@ -113,6 +114,7 @@ returns(uint8)
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

@@ -1,8 +1,8 @@
 # Pausable.sol
 
-View Source: [@openzeppelin/contracts/lifecycle/Pausable.sol](../@openzeppelin/contracts/lifecycle/Pausable.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/lifecycle/Pausable.sol](../@openzeppelin/contracts-ethereum-package/contracts/lifecycle/Pausable.sol)
 
-**↗ Extends: [Context](Context.md), [PauserRole](PauserRole.md)**
+**↗ Extends: [Initializable](Initializable.md), [Context](Context.md), [PauserRole](PauserRole.md)**
 **↘ Derived Contracts: [ERC20Pausable](ERC20Pausable.md)**
 
 **Pausable**
@@ -19,6 +19,7 @@ simply including this module, only once the modifiers are put in place.
 
 ```js
 bool private _paused;
+uint256[50] private ______gap;
 
 ```
 
@@ -62,24 +63,29 @@ modifier whenPaused() internal
 
 ## Functions
 
-- [()](#)
+- [initialize(address sender)](#initialize)
 - [paused()](#paused)
 - [pause()](#pause)
 - [unpause()](#unpause)
 
-### 
+### initialize
+
+⤾ overrides [PauserRole.initialize](PauserRole.md#initialize)
+
+⤿ Overridden Implementation(s): [ERC20Pausable.initialize](ERC20Pausable.md#initialize)
 
 Initializes the contract in unpaused state. Assigns the Pauser role
 to the deployer.
 
 ```js
-function () internal nonpayable
+function initialize(address sender) public nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
+| sender | address |  | 
 
 ### paused
 
@@ -140,6 +146,7 @@ function unpause() public nonpayable onlyPauser whenPaused
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

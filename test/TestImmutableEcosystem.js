@@ -174,6 +174,50 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(storedData[0], "Test Product0", "Failed! Name mismatch.");
   });
 
+  it("Create a duplicate product ", async () => {
+    // Read back the organization status
+    const status = await immutableEntityInstance.entityIndexStatus(1);
+    if (status == 0)
+    {
+      // Update the organization status to a creator (1)
+      await immutableEntityInstance.entityStatusUpdate(1, 1, { from: Owner });
+    }
+
+    // Get the number of products
+    const numProducts = await immutableProductInstance.productNumberOf(1);
+
+    if (numProducts == 1)
+    {
+      // Create a new test product
+      await truffleAssert.reverts(immutableProductInstance.productCreate("Test Product0",
+              "http://example.com/TestProduct0",
+              "http://example.com/TestProduct0/favicon.ico", 0, { from: Account }));
+    }
+
+    // Get the product name
+    storedData = await immutableProductInstance.productDetails(1, 0);
+    
+    assert.equal(storedData[0], "Test Product0", "Failed! Name mismatch.");
+  });
+
+  it("Edit product ", async () => {
+    // Get the number of products
+    const numProducts = await immutableProductInstance.productNumberOf(1);
+
+    if (numProducts == 1)
+    {
+      // Edit the test product
+      await immutableProductInstance.productEdit(0, "Test Product 0",
+              "http://testproduct0.example.com/",
+              "http://testproduct0.example.com/favicon.ico", 0, { from: Account });
+    }
+
+    // Get the product name
+    storedData = await immutableProductInstance.productDetails(1, 0);
+    
+    assert.equal(storedData[0], "Test Product 0", "Failed! Name mismatch.");
+  });
+
   it("Purchase tokens", async () => {
     // Purchase tokens (auto-approved for use in immutable ecosystem)
     // TODO: Move from ERC20 to ERC777?
@@ -207,12 +251,11 @@ contract("ImmutableEcosystem", accounts => {
     // Get the number of products
     const numProducts = await immutableProductInstance.productNumberOf('1');
 
-    if (numProducts == 0)
+    if (numProducts <= 0)
     {
       // Create a new test product
-      await immutableProductInstance.productCreate("Test Product0",
-              "http://example.com/TestProduct0",
-              "http://example.com/TestProduct0/favicon.ico", 0, { from: Account });
+      assert.equal(true, false, "Failed, product does not exist");
+      return;
     }
 
     var bigEscrow = new BN(100000000)
@@ -259,7 +302,10 @@ contract("ImmutableEcosystem", accounts => {
     {
       var details = await immutableProductInstance.productDetails(
                                                  1, i);
-      var testResult = "Test Product";
+      if (i == 0)
+        var testResult = "Test Product ";
+      else
+        var testResult = "Test Product";
       
       var name = testResult.concat(i.toString());
       assert.equal(details[0], name, "Failed! Product name mismatch.");
@@ -553,7 +599,7 @@ contract("ImmutableEcosystem", accounts => {
 
     const newBalance = await immuteTokenInstance.balanceOf(Account);
 
-    assert.equal(newBalance - origBalance, 9799991296 /*(10000000000 * 98) / 100*/,
+    assert.equal(newBalance - origBalance, 9899999232 /*(10000000000 * 98) / 100*/,
                  "Failed, not enough tokens transferred to creator!");
   });
 
@@ -642,7 +688,7 @@ contract("ImmutableEcosystem", accounts => {
     const newUser2Balance = await immuteTokenInstance.balanceOf(EndUser2);
 
     assert.equal(user2Balance - newUser2Balance, 5000000000, "Tokens not charged for resell");
-    assert.equal(newBalance - oldBalance, 4899995648, "Tokens not earned for resell");
+    assert.equal(newBalance - oldBalance, 4950065152, "Tokens not earned for resell");
   });
 
   it("Move a resold activation license", async () => {
@@ -689,7 +735,7 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(offers, 1, "Failed, product activation license offers is zero");
 
     var balanceAfter = new BN(await immuteTokenInstance.balanceOf(Account));
-    assert.equal(balanceBefore - balanceAfter , 2399928320, "Failed, not enough tokens transfered to contract!");
+    assert.equal(balanceBefore - balanceAfter , 2400059392, "Failed, not enough tokens transfered to contract!");
 
   });
 
@@ -698,7 +744,7 @@ contract("ImmutableEcosystem", accounts => {
     const balanceBefore = await immuteTokenInstance.balanceOf(EndUser);
     let tokenPurchase = await immutableEntityInstance.entityTokenBlockPurchase(1, 0, 1, { from: EndUser, value: 1200000000 / 1200 });
     const balanceAfter = await immuteTokenInstance.balanceOf(EndUser);
-    assert.equal(balanceAfter - balanceBefore, 1200095232, "Failed, end user balance incorrect");
+    assert.equal(balanceAfter - balanceBefore, 1199833088, "Failed, end user balance incorrect");
 
 //    truffleAssert.eventEmitted(tokenPurchase, 'EntityTokenBlockPurchaseEvent', (ev) => {
 //        return ((ev.challenger == EndUser) && (ev.creator == Account) &&
@@ -723,6 +769,21 @@ contract("ImmutableEcosystem", accounts => {
 
     const offers = await immutableEntityInstance.entityNumberOfOffers(1);
     assert.equal(offers, 0, "Failed, product token block offers is not zero");
+  });
+
+  it("Create another Token Offer", async () => {
+    const balanceBefore = new BN(await immuteTokenInstance.balanceOf(Account));
+
+    // Create a token block offer (rate, amount, block count)
+    await immutableEntityInstance.entityTokenBlockOffer(1200,
+     1200000000, 2, { from: Account });
+
+    const offers = await immutableEntityInstance.entityNumberOfOffers(1, { from: Account });
+    assert.equal(offers, 1, "Failed, product activation license offers is zero");
+
+    var balanceAfter = new BN(await immuteTokenInstance.balanceOf(Account));
+    assert.equal(balanceBefore - balanceAfter , 2400059392, "Failed, not enough tokens transfered to contract!");
+
   });
 
   it("Challenge a product release", async () => {
@@ -752,7 +813,7 @@ contract("ImmutableEcosystem", accounts => {
     });
 
     var bigPurchase = new BN(100000000)
-    bigPurchase = (bigPurchase * 5000000000) - 131100;//499..9868900 // TODO whats with rounding errors?
+    bigPurchase = (bigPurchase * 5000000000) + 131100;//499..9868900 // TODO whats with rounding errors?
     assert.equal(balanceAfter - balanceBefore, bigPurchase, "Failed, end user balance delta incorrect");
   });
 
@@ -1097,5 +1158,42 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(oldBalance - newBalance, bigEscrow, "Tokens not charged for moving license");
   });
 
+  it("Read all the entities", async () => {
+    // Read all the entities
+    let entities = await immutableEntityInstance.entityAllDetails();
+
+    assert.equal(entities[1][0], "Test Org", "Failed! Test Org not found." + entities[1]);
+  });
+
+  it("Read all the products for the first entity", async () => {
+    // Read all the products for entity one
+    let products = await immutableProductInstance.productAllDetails(1);
+
+    assert.equal(products[0].length, 3, "Failed! Result array length not 3" + products[0].length);
+    assert.equal(products[0][0], "Test Product 0", "Failed! Test Product 0 not found." + products[0]);
+  });
+
+  it("Read all the releases for the first entity, first product", async () => {
+    // Read all the releases for the first product
+    let releases = await immutableProductInstance.productAllReleaseDetails(1, 0);
+
+    assert.equal(releases[1][0], "http://example.com/releases/TestProduct.zip",
+      "Failed! Release URI does not match." + releases[1]);
+  });
+
+  it("Read all the token offers for the first entity", async () => {
+    // Read all the token offers for the first entity
+    let offers = await immutableEntityInstance.entityAllOfferDetails(1);
+
+    assert.equal(offers[0].length, 1, "Failed! No offers present." + offers[0]);
+  });
+
+
+  it("Read all the activations for the fourth entity (end user)", async () => {
+    // Read all the activations for the end user
+    let activations = await immutableLicenseInstance.licenseAllDetails(4);
+
+    assert.equal(activations[0].length, 1, "Failed! Not an activation." + activations[0].length);
+  });
 
 });

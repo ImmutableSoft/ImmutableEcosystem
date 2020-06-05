@@ -1,5 +1,10 @@
 pragma solidity 0.5.16;
 
+// Optimized ecosystem read interface returns arrays and
+// requires experimental ABIEncoderV2
+//   DO NOT release in production with compiler < 0.5.7
+pragma experimental ABIEncoderV2;
+
 import "./ImmutableEntity.sol";
 
 /// Comments within /*  */ are for toggling upgradable contracts */
@@ -96,6 +101,8 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
     uint256 entityIndex = entityInterface.entityIdToLocalId(
                      entityInterface.entityAddressToIndex(msg.sender));
     uint256 productID;
+    address referralAddress;
+    uint256 creationTime;
 
     // Only a validated entity can create a product
     require(entityInterface.entityAddressStatus(msg.sender) > 0, "Entity is not validated");
@@ -109,38 +116,105 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
       // Check if the product name matches an existing product
       if (commonInterface.stringsEqual(Products[entityIndex][productID].name, productName))
       {
-        // Update the product information
-        Products[entityIndex][productID].name = productName;
-        Products[entityIndex][productID].infoURL = productURL;
-        Products[entityIndex][productID].logoURL = logoURL;
-        Products[entityIndex][productID].details = productDetails;
-        break;
+        // Revert the transaction as product already exists
+        revert("Product name already exists");
       }
     }
 
-    // If not an update to existing product, create a new product
-    if (productID >= Products[entityIndex].length)
-    {
-      Products[entityIndex].push(Product(productName, productURL, logoURL,
-                                 productDetails, 0));
+    Products[entityIndex].push(Product(productName, productURL, logoURL,
+                               productDetails, 0));
 
-      address referralAddress;
-      uint256 creationTime;
-      (referralAddress, creationTime) = entityInterface.entityReferralByIndex(
+    (referralAddress, creationTime) = entityInterface.entityReferralByIndex(
                                                       entityIndex + 1);
 
-      // If referral is valid (within 30 days), mint out the 10% bonus
-      if ((referralAddress != address(0)) && (creationTime < now + 30 days))
-      {
-        // Mint bonus tokens for the referral
-        tokenInterface.mint(referralAddress, ReferralProductBonus);
-      }
+    // If referral is valid (within 30 days), mint out the 10% bonus
+    if ((referralAddress != address(0)) && (creationTime < now + 30 days))
+    {
+      // Mint bonus tokens for the referral
+      tokenInterface.mint(referralAddress, ReferralProductBonus);
     }
 
     // Emit an new product event and return the product index
     emit productEvent(entityIndex + 1, productID, productName,
                       productURL, productDetails);
     return productID;
+  }
+
+  /// @notice Edit an existing product of an entity.
+  /// Entity must exist and be validated by Immutable.
+  /// @param productName The name of the new product
+  /// @param productURL The primary URL of the product
+  /// @param logoURL The logo URL of the product
+  /// @param productDetails the product category, languages, etc.
+  function productEdit(uint256 productIndex,
+                       string calldata productName,
+                       string calldata productURL,
+                       string calldata logoURL,
+                       uint256 productDetails)
+    external
+  {
+    uint256 entityIndex = entityInterface.entityIdToLocalId(
+                     entityInterface.entityAddressToIndex(msg.sender));
+    uint256 productID;
+
+    // Only a validated entity can create a product
+    require(entityInterface.entityAddressStatus(msg.sender) > 0, "Entity is not validated");
+    require((bytes(productName).length == 0) || (bytes(productURL).length != 0), "Product URL parameter required");
+    require(Products[entityIndex].length > productIndex, "Product not found");
+
+    // Update the product information
+    if (bytes(productName).length > 0)
+    {
+      // If product exists with same name then fatal error so revert
+      for (productID = 0; productID < Products[entityIndex].length;
+           ++productID)
+      {
+        if (productIndex != productID)
+        {
+          // Check if the product name matches an existing product
+          if (commonInterface.stringsEqual(Products[entityIndex][productID].name, productName))
+          {
+            // Revert the transaction as product already exists
+            revert("Product name already exists");
+          }
+        }
+      }
+
+      // Update the product information
+      Products[entityIndex][productIndex].name = productName;
+      Products[entityIndex][productIndex].infoURL = productURL;
+      Products[entityIndex][productIndex].logoURL = logoURL;
+      Products[entityIndex][productIndex].details = productDetails;
+    }
+
+    // Else if name is empty then a delete, so clear entire product 
+    else
+    {
+      delete Products[entityIndex][productIndex];
+
+      // If this is the last product then decrease size of array
+      if ((Products[entityIndex].length - 1 == productIndex) &&
+          (Products[entityIndex][Products[entityIndex].length - 1].numberOfReleases == 0))
+      {
+        Products[entityIndex].length--;
+
+        // Remove all stranded empty products before this one
+        while ((Products[entityIndex].length > 0) &&
+               (bytes(Products[entityIndex]
+                              [Products[entityIndex].length - 1].name).length == 0) &&
+                (Products[entityIndex]
+                         [Products[entityIndex].length - 1].numberOfReleases == 0))
+        {
+          delete Products[entityIndex][Products[entityIndex].length - 1];
+          Products[entityIndex].length--;
+        }
+      }
+    }
+
+    // Emit an new product event and return the product index
+    emit productEvent(entityIndex + 1, productIndex, productName,
+                      productURL, productDetails);
+    return;
   }
 
   /// @notice Create a new release of an existing product.
@@ -316,8 +390,8 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
         if ((Products[entityIndex][id].releases[rel].expireTime <= now) &&
             (Products[entityIndex][id].releases[rel].escrow > 0))
         {
-          // Entity shares half the product release escrows
-          releaseEscrowAmount += Products[entityIndex][id].releases[rel].escrow / 2;
+          // Add the product release escrow to the total
+          releaseEscrowAmount += Products[entityIndex][id].releases[rel].escrow;
         }
       }
     }
@@ -328,7 +402,7 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
 
   /// @notice Return version, URI and hash of existing product release.
   /// Entity, Product and Release must exist.
-  /// @param entityIndex The index of the entity to challenge
+  /// @param entityIndex The index of the entity owner of product
   /// @param productIndex The product ID of the new release
   /// @param releaseIndex The index of the product release
   /// @return the version, architecture and language(s)
@@ -348,6 +422,35 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
     return (Products[entityIndex][productIndex].releases[releaseIndex].version,
             Products[entityIndex][productIndex].releases[releaseIndex].fileURI,
             Products[entityIndex][productIndex].releases[releaseIndex].hash);
+  }
+
+  /// @notice Retrieve details for all product releases
+  /// Status of empty arrays if none found.
+  /// @param entityIndex The index of the entity owner of product
+  /// @param productIndex The product ID of the new release
+  /// @return array of version, architecture and language(s)
+  /// @return array of URI to the product release file
+  /// @return array of SHA256 checksum hash of the file
+  function productAllReleaseDetails(uint256 entityIndex, uint256 productIndex)
+    external view returns (uint256[] memory, string[] memory,
+                           uint256[] memory)
+  {
+    entityIndex = entityInterface.entityIdToLocalId(entityIndex);
+    require(Products[entityIndex].length > productIndex, "Product not found");
+
+    uint256[] memory resultVersion = new uint256[](Products[entityIndex][productIndex].numberOfReleases);
+    string[] memory resultURI = new string[](Products[entityIndex][productIndex].numberOfReleases);
+    uint256[] memory resultHash = new uint256[](Products[entityIndex][productIndex].numberOfReleases);
+
+    // Build result arrays for all release information of a product
+    for (uint i = 0; i < Products[entityIndex][productIndex].numberOfReleases; ++i)
+    {
+      resultVersion[i] = Products[entityIndex][productIndex].releases[i].version;
+      resultURI[i] = Products[entityIndex][productIndex].releases[i].fileURI;
+      resultHash[i] = Products[entityIndex][productIndex].releases[i].hash;
+    }
+
+    return (resultVersion, resultURI, resultHash);
   }
 
   /// @notice Return the number of products maintained by an entity.
@@ -410,5 +513,32 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
     return (name, infoURL, logoURL,
             Products[entityIndex][productIndex].details);
   }
+
+  /// @notice Retrieve details for all products
+  /// Status of empty arrays if none found.
+  /// @return array of name, infoURL, logoURL and status details
+  function productAllDetails(uint256 entityIndex)
+    external view returns (string[] memory, string[] memory,
+                           string[] memory, uint256[] memory)
+  {
+    entityIndex = entityInterface.entityIdToLocalId(entityIndex);
+
+    string[] memory resultName = new string[](Products[entityIndex].length);
+    string[] memory resultInfoURL = new string[](Products[entityIndex].length);
+    string[] memory resultLogoURL = new string[](Products[entityIndex].length);
+    uint256[] memory resultDetails = new uint256[](Products[entityIndex].length);
+
+    // Build result arrays for all product information of an Entity
+    for (uint i = 0; i < Products[entityIndex].length; ++i)
+    {
+      resultName[i] = Products[entityIndex][i].name;
+      resultInfoURL[i] = Products[entityIndex][i].infoURL;
+      resultLogoURL[i] = Products[entityIndex][i].logoURL;
+      resultDetails[i] = Products[entityIndex][i].details;
+    }
+
+    return (resultName, resultInfoURL, resultLogoURL, resultDetails);
+  }
+
 
 }

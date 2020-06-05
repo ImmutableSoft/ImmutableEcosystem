@@ -2,7 +2,7 @@
 
 View Source: [contracts/ImmutableResolver.sol](../contracts/ImmutableResolver.sol)
 
-**↗ Extends: [Ownable](Ownable.md), [AddrResolver](AddrResolver.md)**
+**↗ Extends: [Initializable](Initializable.md), [Ownable](Ownable.md), [AddrResolver](AddrResolver.md)**
 
 **ImmutableResolver**
 
@@ -21,18 +21,18 @@ contract ImmutableEntity private entityInterface;
 
 ## Functions
 
-- [(address entityAddr, address ensAddr)](#)
+- [initialize(address entityAddr, address ensAddr)](#initialize)
 - [isAuthorised(bytes32 )](#isauthorised)
 - [setRootNode(bytes32 rootNode)](#setrootnode)
 - [rootNode()](#rootnode)
 
-### 
+### initialize
 
 ImmutableResolver contract initializer/constructor.
  Executed on contract creation only.
 
 ```js
-function (address entityAddr, address ensAddr) public nonpayable
+function initialize(address entityAddr, address ensAddr) public nonpayable initializer 
 ```
 
 **Arguments**
@@ -116,6 +116,7 @@ the bytes32 ENS root node for immutablesoft.eth
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

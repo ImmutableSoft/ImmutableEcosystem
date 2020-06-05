@@ -1,6 +1,6 @@
 # IERC20.sol
 
-View Source: [@openzeppelin/contracts/token/ERC20/IERC20.sol](../@openzeppelin/contracts/token/ERC20/IERC20.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol)
 
 **↘ Derived Contracts: [ERC20](ERC20.md), [ERC20Detailed](ERC20Detailed.md)**
 
@@ -167,6 +167,7 @@ returns(bool)
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

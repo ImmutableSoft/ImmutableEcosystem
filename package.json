@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/ImmutableSoft",
   "devDependencies": {
-    "dotenv": "^8.2.0",
-    "@truffle/hdwallet-provider": "^1.0.30"
+    "@truffle/hdwallet-provider": "^1.0.35",
+    "dotenv": "^8.2.0"
   },
   "dependencies": {
     "@ensdomains/ens": "^0.4.4",

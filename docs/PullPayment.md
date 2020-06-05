@@ -1,7 +1,8 @@
 # PullPayment.sol
 
-View Source: [@openzeppelin/contracts/payment/PullPayment.sol](../@openzeppelin/contracts/payment/PullPayment.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/payment/PullPayment.sol](../@openzeppelin/contracts-ethereum-package/contracts/payment/PullPayment.sol)
 
+**↗ Extends: [Initializable](Initializable.md)**
 **↘ Derived Contracts: [ImmutableEntity](ImmutableEntity.md), [ImmuteToken](ImmuteToken.md)**
 
 **PullPayment**
@@ -13,9 +14,6 @@ receiver account, which must withdraw its payments itself.
  * Pull-payments are often considered the best practice when it comes to sending
 Ether, security-wise. It prevents recipients from blocking execution, and
 eliminates reentrancy concerns.
- * TIP: If you would like to learn more about reentrancy and alternative ways
-to protect against it, check out our blog post
-https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
  * To use, derive from the `PullPayment` contract, and use {_asyncTransfer}
 instead of Solidity's `transfer` function. Payees can query their due
 payments with {payments}, and retrieve them with {withdrawPayments}.
@@ -25,21 +23,22 @@ payments with {payments}, and retrieve them with {withdrawPayments}.
 
 ```js
 contract Escrow private _escrow;
+uint256[50] private ______gap;
 
 ```
 
 ## Functions
 
-- [()](#)
+- [initialize()](#initialize)
 - [withdrawPayments(address payable payee)](#withdrawpayments)
 - [withdrawPaymentsWithGas(address payable payee)](#withdrawpaymentswithgas)
 - [payments(address dest)](#payments)
 - [_asyncTransfer(address dest, uint256 amount)](#_asynctransfer)
 
-### 
+### initialize
 
 ```js
-function () internal nonpayable
+function initialize() public nonpayable initializer 
 ```
 
 **Arguments**
@@ -140,6 +139,7 @@ function _asyncTransfer(address dest, uint256 amount) internal nonpayable
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

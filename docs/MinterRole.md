@@ -1,8 +1,8 @@
 # MinterRole.sol
 
-View Source: [@openzeppelin/contracts/access/roles/MinterRole.sol](../@openzeppelin/contracts/access/roles/MinterRole.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/access/roles/MinterRole.sol](../@openzeppelin/contracts-ethereum-package/contracts/access/roles/MinterRole.sol)
 
-**↗ Extends: [Context](Context.md)**
+**↗ Extends: [Initializable](Initializable.md), [Context](Context.md)**
 **↘ Derived Contracts: [ERC20Mintable](ERC20Mintable.md)**
 
 **MinterRole**
@@ -12,6 +12,7 @@ View Source: [@openzeppelin/contracts/access/roles/MinterRole.sol](../@openzeppe
 
 ```js
 struct Roles.Role private _minters;
+uint256[50] private ______gap;
 
 ```
 
@@ -39,23 +40,28 @@ modifier onlyMinter() internal
 
 ## Functions
 
-- [()](#)
+- [initialize(address sender)](#initialize)
 - [isMinter(address account)](#isminter)
 - [addMinter(address account)](#addminter)
 - [renounceMinter()](#renounceminter)
 - [_addMinter(address account)](#_addminter)
 - [_removeMinter(address account)](#_removeminter)
 
-### 
+### initialize
+
+⤾ overrides [Ownable.initialize](Ownable.md#initialize)
+
+⤿ Overridden Implementation(s): [ERC20Mintable.initialize](ERC20Mintable.md#initialize),[ERC20Pausable.initialize](ERC20Pausable.md#initialize),[Pausable.initialize](Pausable.md#initialize),[PauserRole.initialize](PauserRole.md#initialize)
 
 ```js
-function () internal nonpayable
+function initialize(address sender) public nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
+| sender | address |  | 
 
 ### isMinter
 
@@ -136,6 +142,7 @@ function _removeMinter(address account) internal nonpayable
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

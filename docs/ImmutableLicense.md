@@ -2,7 +2,7 @@
 
 View Source: [contracts/ImmutableLicense.sol](../contracts/ImmutableLicense.sol)
 
-**↗ Extends: [Ownable](Ownable.md), [ImmutableConstants](ImmutableConstants.md)**
+**↗ Extends: [Initializable](Initializable.md), [Ownable](Ownable.md), [ImmutableConstants](ImmutableConstants.md)**
 
 **ImmutableLicense**
 
@@ -71,7 +71,7 @@ event licensePurchaseEvent(uint256  entityIndex, uint256  productIndex, uint256 
 
 ## Functions
 
-- [(address productAddr, address entityAddr, address tokenAddr)](#)
+- [initialize(address productAddr, address entityAddr, address tokenAddr)](#initialize)
 - [licenseOffer(uint256 productIndex, uint256 priceInTokens, uint256 duration, uint256 promoPriceInTokens, uint256 promoDuration)](#licenseoffer)
 - [licenseTransferEscrow(uint256 entityIndex, uint256 productIndex, uint256 promotional)](#licensetransferescrow)
 - [license_product(uint256 entityIndex, uint256 productIndex, uint256 hash, uint256 value, uint256 expiration, uint256 previousHash)](#license_product)
@@ -85,16 +85,17 @@ event licensePurchaseEvent(uint256  entityIndex, uint256  productIndex, uint256 
 - [licenseNumberOf(uint256 entityIndex)](#licensenumberof)
 - [licenseDetails(uint256 entityIndex, uint256 licenseIndex)](#licensedetails)
 - [licenseStatus(uint256 entityIndex, uint256 productIndex, uint256 licenseHash)](#licensestatus)
+- [licenseAllDetails(uint256 entityIndex)](#licensealldetails)
 - [licenseOfferDetails(uint256 entityIndex, uint256 productIndex)](#licenseofferdetails)
 - [licenseLookupHash(uint256 entityIndex, uint256 productIndex, uint256 licenseHash)](#licenselookuphash)
 
-### 
+### initialize
 
 License contract initializer/constructor.
  Executed on contract creation only.
 
 ```js
-function (address productAddr, address entityAddr, address tokenAddr) public nonpayable
+function initialize(address productAddr, address entityAddr, address tokenAddr) public nonpayable initializer 
 ```
 
 **Arguments**
@@ -362,6 +363,26 @@ the license value (> 0 is valid)
 | productIndex | uint256 | The specific ID of the product | 
 | licenseHash | uint256 | the external unique identifier to activate | 
 
+### licenseAllDetails
+
+Return all license activation details for an entity
+ Entity must be valid.
+
+```js
+function licenseAllDetails(uint256 entityIndex) external view
+returns(uint256[], uint256[], uint256[], uint256[], uint256[])
+```
+
+**Returns**
+
+array of entity id of product activated
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The entity to return activations for | 
+
 ### licenseOfferDetails
 
 Return the price of a product activation license.
@@ -424,6 +445,7 @@ the internal activation license hash
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

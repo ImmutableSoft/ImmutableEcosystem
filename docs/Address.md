@@ -1,6 +1,6 @@
 # Address.sol
 
-View Source: [@openzeppelin/contracts/utils/Address.sol](../@openzeppelin/contracts/utils/Address.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol](../@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol)
 
 **Address**
 
@@ -15,17 +15,12 @@ Collection of functions related to the address type
 ### isContract
 
 Returns true if `account` is a contract.
-     * [IMPORTANT]
-====
-It is unsafe to assume that an address for which this function returns
-false is an externally-owned account (EOA) and not a contract.
-     * Among others, `isContract` will return false for the following 
-types of addresses:
-     *  - an externally-owned account
- - a contract in construction
- - an address where a contract will be created
- - an address where a contract lived, but was destroyed
-====
+     * This test is non-exhaustive, and there may be false-negatives: during the
+execution of a contract's constructor, its address will be reported as
+not containing a contract.
+     * IMPORTANT: It is unsafe to assume that an address for which this
+function returns false is an externally-owned account (EOA) and not a
+contract.
 
 ```js
 function isContract(address account) internal view
@@ -100,6 +95,7 @@ function sendValue(address payable recipient, uint256 amount) internal nonpayabl
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

@@ -2,7 +2,7 @@
 
 View Source: [contracts/ImmuteToken.sol](../contracts/ImmuteToken.sol)
 
-**↗ Extends: [Ownable](Ownable.md), [ERC20Detailed](ERC20Detailed.md), [ERC20Mintable](ERC20Mintable.md), [ERC20Pausable](ERC20Pausable.md), [PullPayment](PullPayment.md)**
+**↗ Extends: [Initializable](Initializable.md), [Ownable](Ownable.md), [ERC20Detailed](ERC20Detailed.md), [ERC20Mintable](ERC20Mintable.md), [ERC20Pausable](ERC20Pausable.md), [PullPayment](PullPayment.md)**
 
 **ImmuteToken**
 
@@ -40,7 +40,7 @@ struct ImmuteToken.Promo[5] private promos;
 
 ## Functions
 
-- [(uint256 initialSupply)](#)
+- [initialize(uint256 initialSupply)](#initialize)
 - [bankChange(address payable newBank)](#bankchange)
 - [rateChange(uint256 newRate)](#ratechange)
 - [promoSet(uint256 index, uint256 algoX, uint256 algoY, uint256 base)](#promoset)
@@ -55,13 +55,13 @@ struct ImmuteToken.Promo[5] private promos;
 - [tokenMint(address recipient, uint256 amount)](#tokenmint)
 - [tokenPurchase()](#tokenpurchase)
 
-### 
+### initialize
 
 Token contract initializer/constructor.
  Executed on contract creation only.
 
 ```js
-function (uint256 initialSupply) public nonpayable ERC20Detailed ERC20Mintable ERC20Pausable PullPayment 
+function initialize(uint256 initialSupply) public nonpayable initializer 
 ```
 
 **Arguments**
@@ -316,6 +316,7 @@ function tokenPurchase() external payable
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

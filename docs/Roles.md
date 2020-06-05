@@ -1,6 +1,6 @@
 # Roles (Roles.sol)
 
-View Source: [@openzeppelin/contracts/access/Roles.sol](../@openzeppelin/contracts/access/Roles.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol](../@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol)
 
 **Roles**
 
@@ -90,6 +90,7 @@ bool
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

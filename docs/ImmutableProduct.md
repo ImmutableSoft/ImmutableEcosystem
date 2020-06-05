@@ -2,7 +2,7 @@
 
 View Source: [contracts/ImmutableProduct.sol](../contracts/ImmutableProduct.sol)
 
-**↗ Extends: [Ownable](Ownable.md), [ImmutableConstants](ImmutableConstants.md)**
+**↗ Extends: [Initializable](Initializable.md), [Ownable](Ownable.md), [ImmutableConstants](ImmutableConstants.md)**
 
 **ImmutableProduct**
 
@@ -61,25 +61,28 @@ event productReleaseChallengeAwardEvent(address indexed challenger, uint256  ent
 
 ## Functions
 
-- [(address entityAddr, address tokenAddr, address commonAddr)](#)
+- [initialize(address entityAddr, address tokenAddr, address commonAddr)](#initialize)
 - [productCreate(string productName, string productURL, string logoURL, uint256 productDetails)](#productcreate)
+- [productEdit(uint256 productIndex, string productName, string productURL, string logoURL, uint256 productDetails)](#productedit)
 - [productRelease(uint256 productIndex, uint256 newVersion, uint256 newHash, string newFileUri, uint256 escrow)](#productrelease)
 - [productReleaseChallenge(uint256 entityIndex, uint256 productIndex, uint256 releaseIndex, uint256 newHash)](#productreleasechallenge)
 - [productTokensWithdraw()](#producttokenswithdraw)
 - [productChallengeReward(address challengerAddress, uint256 entityIndex, uint256 productIndex, uint256 releaseIndex, uint256 newHash)](#productchallengereward)
 - [productTokenEscrow()](#producttokenescrow)
 - [productReleaseDetails(uint256 entityIndex, uint256 productIndex, uint256 releaseIndex)](#productreleasedetails)
+- [productAllReleaseDetails(uint256 entityIndex, uint256 productIndex)](#productallreleasedetails)
 - [productNumberOf(uint256 entityIndex)](#productnumberof)
 - [productNumberOfReleases(uint256 entityIndex, uint256 productIndex)](#productnumberofreleases)
 - [productDetails(uint256 entityIndex, uint256 productIndex)](#productdetails)
+- [productAllDetails(uint256 entityIndex)](#productalldetails)
 
-### 
+### initialize
 
 Product contract initializer/constructor.
  Executed on contract creation only.
 
 ```js
-function (address entityAddr, address tokenAddr, address commonAddr) public nonpayable
+function initialize(address entityAddr, address tokenAddr, address commonAddr) public nonpayable initializer 
 ```
 
 **Arguments**
@@ -104,6 +107,25 @@ returns(uint256)
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
+| productName | string | The name of the new product | 
+| productURL | string | The primary URL of the product | 
+| logoURL | string | The logo URL of the product | 
+| productDetails | uint256 | the product category, languages, etc. | 
+
+### productEdit
+
+Edit an existing product of an entity.
+ Entity must exist and be validated by Immutable.
+
+```js
+function productEdit(uint256 productIndex, string productName, string productURL, string logoURL, uint256 productDetails) external nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| productIndex | uint256 |  | 
 | productName | string | The name of the new product | 
 | productURL | string | The primary URL of the product | 
 | logoURL | string | The logo URL of the product | 
@@ -212,9 +234,30 @@ the version, architecture and language(s)
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity to challenge | 
+| entityIndex | uint256 | The index of the entity owner of product | 
 | productIndex | uint256 | The product ID of the new release | 
 | releaseIndex | uint256 | The index of the product release | 
+
+### productAllReleaseDetails
+
+Retrieve details for all product releases
+ Status of empty arrays if none found.
+
+```js
+function productAllReleaseDetails(uint256 entityIndex, uint256 productIndex) external view
+returns(uint256[], string[], uint256[])
+```
+
+**Returns**
+
+array of version, architecture and language(s)
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The index of the entity owner of product | 
+| productIndex | uint256 | The product ID of the new release | 
 
 ### productNumberOf
 
@@ -278,6 +321,26 @@ the name of the product
 | entityIndex | uint256 | The index of the entity | 
 | productIndex | uint256 | The specific ID of the product | 
 
+### productAllDetails
+
+Retrieve details for all products
+ Status of empty arrays if none found.
+
+```js
+function productAllDetails(uint256 entityIndex) external view
+returns(string[], string[], string[], uint256[])
+```
+
+**Returns**
+
+array of name, infoURL, logoURL and status details
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 |  | 
+
 ## Contracts
 
 * [Address](Address.md)
@@ -297,6 +360,7 @@ the name of the product
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

@@ -1,8 +1,8 @@
 # Secondary.sol
 
-View Source: [@openzeppelin/contracts/ownership/Secondary.sol](../@openzeppelin/contracts/ownership/Secondary.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/ownership/Secondary.sol](../@openzeppelin/contracts-ethereum-package/contracts/ownership/Secondary.sol)
 
-**↗ Extends: [Context](Context.md)**
+**↗ Extends: [Initializable](Initializable.md), [Context](Context.md)**
 **↘ Derived Contracts: [Escrow](Escrow.md)**
 
 **Secondary**
@@ -14,6 +14,7 @@ A Secondary contract can only be used by its primary account (the one that creat
 
 ```js
 address private _primary;
+uint256[50] private ______gap;
 
 ```
 
@@ -42,22 +43,25 @@ modifier onlyPrimary() internal
 
 ## Functions
 
-- [()](#)
+- [initialize(address sender)](#initialize)
 - [primary()](#primary)
 - [transferPrimary(address recipient)](#transferprimary)
 
-### 
+### initialize
+
+⤿ Overridden Implementation(s): [Escrow.initialize](Escrow.md#initialize)
 
 Sets the primary account to the one that is creating the Secondary contract.
 
 ```js
-function () internal nonpayable
+function initialize(address sender) public nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
+| sender | address |  | 
 
 ### primary
 
@@ -108,6 +112,7 @@ function transferPrimary(address recipient) public nonpayable onlyPrimary
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)

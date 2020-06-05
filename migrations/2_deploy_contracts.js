@@ -27,11 +27,11 @@ module.exports = function(deployer, network, accounts)
     let entity;
     let product;
 
-    deployer.deploy(ImmuteToken, "100000000000000000000")
-        .then(function(tokenInstance) {
-            token = tokenInstance;
-            return deployer.deploy(ENS);
-        })
+    deployer.deploy(ImmuteToken)
+//        .then(function(tokenInstance) {
+//            token = tokenInstance;
+//            return deployer.deploy(ENS);
+//        })
 
 //        .then(function(ensInstance) {
 //            ens = ensInstance;
@@ -41,44 +41,60 @@ module.exports = function(deployer, network, accounts)
 //            return deployer.deploy(ImmutableBase, token.address,
 //                                   ens.address, ensResolver.address);
 //        })
-        .then(function(ensInstance) {
-            ens = ensInstance;
+        .then(function(tokenInstance/*ensInstance*/) {
+//            ens = ensInstance;
+            token = tokenInstance;
+            return token.initializeMe(10000000000000);
+        })
+        .then(function() {
             return deployer.deploy(StringCommon);
         })
         .then(function(commonInstance) {
             common = commonInstance;
-            return deployer.deploy(ImmutableEntity, token.address, common.address);
+            return deployer.deploy(ImmutableEntity)
         })
         // Registrar
+//        .then(function(entityInstance) {
+//          entity = entityInstance;
+//          return deployer.deploy(ImmutableResolver, entity.address, ens.address);
+//        })
+        // Registrar
+//        .then(function(resolverInstance) {
+//          resolver = resolverInstance;
+//          return setupResolver(ens, resolver, accounts);
+//        })
         .then(function(entityInstance) {
-          entity = entityInstance;
-          return deployer.deploy(ImmutableResolver, entity.address, ens.address);
-        })
-        // Registrar
-        .then(function(resolverInstance) {
-          resolver = resolverInstance;
-          return setupResolver(ens, resolver, accounts);
+          entity = entityInstance; //
+          return entity.initialize(token.address, common.address);
         })
         .then(function() {
-            return deployer.deploy(ImmutableProduct, entity.address,
-                                   token.address, common.address);
+            return deployer.deploy(ImmutableProduct);
         })
         .then(function(productInstance) {
             product = productInstance;
-            return deployer.deploy(ImmutableLicense, product.address,
-                                   entity.address, token.address);
+            return product.initialize(entity.address, token.address, common.address);
+        })
+        .then(function() {
+            return deployer.deploy(ImmutableLicense);
+        })
+        .then(function(licenseInstance) {
+            return licenseInstance.initialize(product.address,entity.address, token.address);
         })
         .then(function() {
             return deployer.deploy(CustomToken);
         })
-        .then(function() {
-          return deployer.deploy(FIFSRegistrar, ens.address, namehash.hash(tld));
+        .then(function(customInstance) {
+            return customInstance.initialize();
         })
-        .then(function(registrarInstance) {
-          registrar = registrarInstance;
-          return setupRegistrar(ens, registrar, resolver);
-        })
-        // Reverse Registrar
+//        .then(function() {
+//          return deployer.deploy(FIFSRegistrar, ens.address, namehash.hash(tld));
+//        })
+//        .then(function(registrarInstance) {
+//          registrar = registrarInstance;
+//          return setupRegistrar(ens, registrar, resolver);
+//        })
+
+        // Old: Reverse Registrar
 //        .then(function() {
 //          return deployer.deploy(ReverseRegistrar, ens.address, resolver.address);
 //        })

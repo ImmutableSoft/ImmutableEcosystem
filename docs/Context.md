@@ -1,7 +1,8 @@
 # Context.sol
 
-View Source: [@openzeppelin/contracts/GSN/Context.sol](../@openzeppelin/contracts/GSN/Context.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/GSN/Context.sol](../@openzeppelin/contracts-ethereum-package/contracts/GSN/Context.sol)
 
+**↗ Extends: [Initializable](Initializable.md)**
 **↘ Derived Contracts: [ERC20](ERC20.md), [MinterRole](MinterRole.md), [Ownable](Ownable.md), [Pausable](Pausable.md), [PauserRole](PauserRole.md), [Secondary](Secondary.md)**
 
 **Context**
@@ -66,6 +67,7 @@ returns(bytes)
 * [ImmutableProduct](ImmutableProduct.md)
 * [ImmutableResolver](ImmutableResolver.md)
 * [ImmuteToken](ImmuteToken.md)
+* [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)
