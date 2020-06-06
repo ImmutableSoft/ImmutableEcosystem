@@ -156,7 +156,7 @@ Before a digital Creator can begin to utilize the Ecosystem for digital distribu
 
 The first requirement for a digital creator is to register your Entity (individual, organization or company) using the Ethereum Account that is to become the administrator for the Entity. Whatever Web3 account and network is currently active in MetaMask will be used for the registration.
 
-![image registration](./images/ImmutabeRegister.PNG)
+![image registration](./images/ImmutableRegister.PNG)
 
 The registration page looks something like above. After writing your Entity name and URL to the blockchain and thus demonstrating your ownership of the wallet address, you will be redirected to the main immutablesoft.org website to submit your private contact information. The Entity name and your Ethereum Account address should be auto populated. Be sure to check the email or voicemail submitted for communications from ImmutableSoft as we will be following up and verifying your information.
 
@@ -164,13 +164,13 @@ The registration page looks something like above. After writing your Entity name
 
 After registering your Entity with the Immutable Ecosystem, the Configure page and Registration interface should display something like above and a second tab opened in the browser for the Entity to submit their private contact information. If this second private contact information form is closed on accident, or you wish to resubmit or delegate this step, the link to submit your private information can be found on the Configure, Registrations page (in the Thank You note). A registration will be unapproved and incomplete until private contact information has been submitted on behalf of a Registered Entity and verified by ImmutableSoft.
 
-![image registrationSecondStep](./images/ImmutabeRegisterSecondStep.PNG)
+![image registrationSecondStep](./images/ImmutableRegisterSecondStep.PNG)
 
 ### The Product and Release Interfaces
 
 Once an Entity registration is approved the menu options Activations, Products (if Creator) and Token Offers appear when the Ecosystem is browsed with the Web3 account used for registration. Your Ethereum wallet becomes the access control mechanism to the Ecosystem, there is no login process and ImmutableSoft never knows your password or secret keywords. Each page in the Dapp menu provides a unique interface. The Products menu shows all products created by the Entity and allows the creator to Edit, set Licensing terms or create a New Release of the product.
 
-![image registrationSecondStep](./images/ImmutabeRegisteredConfigure.PNG)
+![image registrationSecondStep](./images/ImmutableRegisteredConfigure.PNG)
 
 The first step is to create our first product by pressing the New Product button. In this example it will be the fictitious sound editing tool Melodicious. In the example above the product name, details URL and logo image URL are defined for the Melodicious application. No restriction check boxes are set and the languages of the product is set to English only (languages is a multi-select box). Finally the category of Entertainment is chosen as it reflects the most popular category of uses of the product, although not the only category. The logo URL will be previewed in the New Product interface upon entry to avoid mistakes prior to writing the transaction to the blockchain. The completed new product interface, before submitting, would look similar to this picture.
 
@@ -210,23 +210,23 @@ Since ImmutableSoft is a US organization we are required to follow FEC/FinHub gu
 
 Converting between ETH and Immute tokens is required for Entities to monetize their digital products. Purchasing tokens exchanges ETH for tokens. To convert earned or excess tokens back into ETH requires the Entity to create a Token Block Offer. Token Block Offers put an Entities tokens into escrow within the smart contract and list those tokens as available in exchange for ETH for anyone else to purchase.
 
-![image tokenOffersMenu](./images/ImmutabeTokenOffers.PNG)
+![image tokenOffersMenu](./images/ImmutableTokenOffers.PNG)
 
 The ETH rate multiplier value is multiplied by the amount of ETH transferred to equal the number of tokens purchased. The number of tokens available for purchase from a token block offer is a multiple of the block size of the offer. The block size offered by an Entity is commonly the size of their products’ purchase price, or a common price point. The number of blocks is the number of tokens blocks available within a single offer. The number of blocks multiplied by the block size is the number of tokens transferred to escrow upon successful creation of the token block offer. As blocks are purchased from this offer, the number of blocks and escrow values decrease until the offer is exhausted. It is also possible to Edit an offer and change the number of blocks by transferring tokens to or from the token block offer escrow, however, the block size of an offer cannot be changed.
 
-![image tokenOffer](./images/ImmutabeTokenBlockOffer.PNG)
+![image tokenOffer](./images/ImmutableTokenBlockOffer.PNG)
 
 Since ImmutableSoft only provides bonus tokens for large purchases there is room for a robust token resale market for smaller token sizes. The current ImmutableSoft ETH rate multiplier is displayed in the interface and any token block offer must be equal to or larger than this value, meaning any token offer must be priced as less expensive than purchasing from ImmmutableSoft. This ensures the token offer is competitive while preventing upward price movement of the token. At any time prior to purchase an Entity can revoke an offer, which will move the tokens from escrow back to the Entity address.
 
-![image tokenBrowse](./images/ImmutabeTokenOfferBrowse.PNG)
+![image tokenBrowse](./images/ImmutableTokenOfferBrowse.PNG)
 
 To view the details of a token offer, click it from the display list of tokens (see picture above). This will bring up the Token Offer details page that allows Revoking or Editing a Token Offer.
 
-![image tokenSelected](./images/ImmutabeTokenOfferSelected.PNG)
+![image tokenSelected](./images/ImmutableTokenOfferSelected.PNG)
 
 It is possible to Edit a previously created token offer to add or remove blocks of tokens or change the exchange rate relative to ETH (the ETH multipler rate).
 
-![image tokenEdit](./images/ImmutabeTokenOfferEdit.PNG)
+![image tokenEdit](./images/ImmutableTokenOfferEdit.PNG)
 
 ### Token Escrows
 
