@@ -4,49 +4,49 @@
 
 ## Contents
 
-[Why the Immutable Ecosystem?](##why-the-immutable-ecosystem?)
+[Why the Immutable Ecosystem?](#why-the-immutable-ecosystem?)
 
-[Web3 Provider Requirement](##web3-provider-requirement)
+[Web3 Provider Requirement](#web3-provider-requirement)
 
-[Part I: End User](##part-i:-end-user)
+[Part I: End User](#part-i:-end-user)
 
-  [The User Interface](###the-user-interface)
+ + [The User Interface](#the-user-interface)
 
-  [Download And Verify](#download-and-verify)
+ + [Download And Verify](#download-and-verify)
 
-  [Purchase Tokens](#purchase-tokens)
+ + [Purchase Tokens](#purchase-tokens)
 
-  [Purchase an Activation License](#purchase-an-activation-license)
+ + [Purchase an Activation License](#purchase-an-activation-license)
 
-  [Change a Product Activation Identifier](#change-a-product-activation-identifier)
+ + [Change a Product Activation Identifier](#change-a-product-activation-identifier)
 
-  [Resell Activation License](#resell-activation-license)
+ + [Resell Activation License](#resell-activation-license)
 
 [Part II: Digital Creators](#part-ii:-digital-creators)
 
-  [Creator Requirements](#creator-requirements)
+ + [Creator Requirements](#creator-requirements)
 
-  [The Registration Process](#the-registration-process)
+ + [The Registration Process](#the-registration-process)
 
-  [The Product and Release Interfaces](#the-product-and-release-interfaces)
+ + [The Product and Release Interfaces](#the-product-and-release-interfaces)
 
-  [The Product License Offer Interface](#the-product-license-offer-interface)
+ + [The Product License Offer Interface](#the-product-license-offer-interface)
 
 [Part III: Monetization and Configuration](#part-iii:-monetization-and-configuration)
 
-  [The Token Block Offer](#the-token-block-offer)
+ + [The Token Block Offer](#the-token-block-offer)
 
-  [Token Escrows](#the-token-block-offer)
+ + [Token Escrows](#the-token-block-offer)
 
-  [Entity Configuration](#entity-configuration)
+ + [Entity Configuration](#entity-configuration)
 
 [Part IV: Developers and Embedding](#part-iv:-developers-and-embedding)
 
-  [Product Links](#product-links)
+ + [Product Links](#product-links)
 
-  [Entity Links](#entity-links)
+ + [Entity Links](#entity-links)
 
-  [Activation Validation](#activation-validation)
+ + [Activation Validation](#activation-validation)
 
 ## Why the Immutable Ecosystem?
 
