@@ -1,35 +1,51 @@
-### Immutable Ecosystem Documentation
+# Immutable Ecosystem Documentation
 
 ![image metamask](./images/BlocksSideView.PNG)
 
 ## Contents
 
-[Why the Immutable Ecosystem?](#why-the-immutable-ecosystem?)
+[Why the Immutable Ecosystem?](##why-the-immutable-ecosystem?)
 
-[Web3 Provider Requirement](#Web3-provider-requirement)
+[Web3 Provider Requirement](##web3-provider-requirement)
 
-[Part I: End User](#part-i:-end-user)
-  [The User Interface](#the-user-interface)
+[Part I: End User](##part-i:-end-user)
+
+  [The User Interface](###the-user-interface)
+
   [Download And Verify](#download-and-verify)
+
   [Purchase Tokens](#purchase-tokens)
+
   [Purchase an Activation License](#purchase-an-activation-license)
+
   [Change a Product Activation Identifier](#change-a-product-activation-identifier)
+
   [Resell Activation License](#resell-activation-license)
 
 [Part II: Digital Creators](#part-ii:-digital-creators)
+
   [Creator Requirements](#creator-requirements)
+
   [The Registration Process](#the-registration-process)
+
   [The Product and Release Interfaces](#the-product-and-release-interfaces)
+
   [The Product License Offer Interface](#the-product-license-offer-interface)
 
 [Part III: Monetization and Configuration](#part-iii:-monetization-and-configuration)
+
   [The Token Block Offer](#the-token-block-offer)
+
   [Token Escrows](#the-token-block-offer)
+
   [Entity Configuration](#entity-configuration)
 
 [Part IV: Developers and Embedding](#part-iv:-developers-and-embedding)
+
   [Product Links](#product-links)
+
   [Entity Links](#entity-links)
+
   [Activation Validation](#activation-validation)
 
 ## Why the Immutable Ecosystem?
@@ -60,31 +76,31 @@ If you get the above web page instead of the MetaMask Connect Notification and y
 
 The primary goal of the Ecosystem is to allow users to download, authenticate, install and purchase digital product activation assets safely and directly with the original digital creator. The Immutable Ecosystem allows users the ability to browse for all types of digital products. The goal of the Applications menu interface is to help users find their digital products quickly so they can install and purchase/activate those products securely. Each product displayed in the ecosystem has the product name, logo and link to the product website to learn more about a product before downloading.
 
-# The User Interface
+### The User Interface
 
 Once a browser has MetaMask installed and the Connect to MetaMask is approved for the Immutable Ecosystem and Ethereum network, the [Ecosystem](https://ecosystem.immutablesoft.org) will come alive when you browse to it.
 
 If everything is working you should see the website with the top banner displaying something like this.
 
-![image topbanner](./images/ImmutableBrowseApplications.png)
+![image topbanner](./images/ImmutableBrowseApplications.PNG)
 
 In the image above, the top bar contains the main menu button on the left and a global search box to quickly find an organization or product. On the right of the Immutable top banner is the current balance of Immute tokens in the Web3 Account followed by the balance of ETH. For now we have no need for tokens so let’s ignore the Add Tokens button on the far right.
 
 On the main Applications page, just below the top bar is the currently Showcased entity and their applications. The Showcased entity changes to a different entity with products every hour. Below the Showcased entity is a drop down list of license types and application categories. Below this is all the applications of the Ecosystem. Selecting a license type or category limits the displayed applications those of that license or category only. Clicking on an application, either in the featured entity or below, opens the interface to that particular digital product.
 
-![image applicationInterface](./images/ImmutableBrowseSelectedCommercial.png)
+![image applicationInterface](./images/ImmutableBrowseSelectedCommercial.PNG)
 
 In the product interface above the Version and Type list box will become populated with all available release versions and hardware platform types. If the “All Platforms” selection in the left list box is changed to a particular platform type, only release versions for that platform will be displayed. By default the most recently created releases are displayed in the list first, which are presumably the most recent releases of the software product.
 
-# Download and Verify
+### Download and Verify
 
 With a product selected, the Application interface shows a primary Get button is on the right and the Verify button below. To download the latest release file select the platform and press the Get button. Save the resulting file download and remember the name and location of the it. To verify the download, press the Verify button and select the local file that you just saved. The verification process will notify you if the file is authentic or not.
  
-![image applicationVerified](./images/ImmutableBrowseSelectedAndVerified.png)
+![image applicationVerified](./images/ImmutableBrowseSelectedAndVerified.PNG)
 
 Above is a screen shot of what to expect after selecting the Firefox application, Getting the release file and performing the Verify process on the file that was just downloaded. Note that the product button is highlighted (black outline) and should match between the product download URI and the locally saved file. After verifying the integrity of the downloaded file  it is safe to execute, install and use the downloaded product. The Immutable Ecosystem does not safeguard the user from network or email based attacks and is NOT a replacement for anti-virus software.
 
-# Purchase Tokens
+### Purchase Tokens
 
 Before we can purchase an activation license with tokens, we must first purchase tokens. With either a registered or unregistered Ethereum address you can exchange ETH for tokens by pressing the Add Tokens button on the right side of the top menu bar. This button will open an interface that will allow your Ethereum wallet to transfer ETH in exchange for new tokens from ImmutableSoft, or to exhange for a block of tokens from a registered entity that has offered tokens for sale.
 
@@ -92,7 +108,7 @@ When exchanging ETH for tokens, the ETH rate multiplier sets the current token p
 
 ![image purchasetokens](./images/ImmutablePurchaseTokens.PNG)
 
-# Purchase an Activation License
+### Purchase an Activation License
 
 If the digital product is commercial and the creator has configured an activation offer, the Purchase button will appear to the right of the Verify button. The Purchase button displays the digital product specific offers, a number of tokens for an activation time period defined by the digital creator. For a registered and approved Ecosystem end user or distributor, each digital product activation purchased includes the right to resell which transforms the activation into an asset. For unregistered users, once an activation is purchased there is no way resell it, even if you register later. Registration is free* (a small amount of ETH gas is required) so we highly recommend users register before purchasing activation licenses. To register with the Ecosystem see Part II, section [The Registration Process](#the-registration-process).
 
@@ -102,55 +118,55 @@ The product activation identifier is calculated to be repeatable and unique per 
 
 Follow the application link, or copy the unique activation identifier from the digital product to the Purchase an Activation License form, select the offer (standard or promotion) and submit the activation purchase with the Purchase Activation button. You will need to wait until the the activation is written to the blockchain before continuing. Once the transaction is written to the blockchain a restart of the digital product should succeed and the application be ready to use.
 
-![image activationMenu](./images/ImmutablePurchaseActivations.png)
+![image activationMenu](./images/ImmutablePurchaseActivations.PNG)
 
-# Change a Product Activation Identifier
+### Change a Product Activation Identifier
  
 At any time before expiration the product activation identifier can be changed. This allows the end user to upgrade computer hardware for example, and then reactivate the digital product (software) with their new identifier. This feature can also be used to loan an activation to a friend or colleague while still retaining ownership (the ability to change the identifier again at any time). To update to a new identifier select the Activations menu option. A list of purchased activations should be presented. Select the product activation to change and input the new identifier, obtained from executing the digital application, and press the Change button. To prevent abuse and discourage a short term rental market, one (1) token is charged whenever an activation identifier is changed.
  
 By design, when an activation identifier is changed, the old identifier is no longer valid. When an activation is offered for resale (see section below) the current identifier remains valid and will continue to activate the digital product and can still be changed with this interface. However, once the activation license is purchased by another user (see section below) the activation identifier will be changed to that specified by the new owner and the old identifier will no longer activate the digital product.
 
-![image activationChangeIdentifier](./images/ImmutableActivationChangeIdentifier.png)
+![image activationChangeIdentifier](./images/ImmutableActivationChangeIdentifier.PNG)
  
-# Resell Activation License
+### Resell Activation License
 
 At any time before an Activation license expires, a purchaser registered with the Ecosystem may offer the remaining time of a digital activation for resale within the Immutable Ecosystem. From the Activation menu, select the purchased activation to enter the Activation interface. Press the Resell button to open the Resell inteface. Enter an resale offer price, in whole tokens, and press the offer for Resale button.
  
-![image activationResale](./images/ImmutableOfferActivationForResale.png)
+![image activationResale](./images/ImmutableOfferActivationForResale.PNG)
 
 Once a purchased product activation is offered for resale, it will appear in the activation resale offer list on the Purchase Activation License interface whenever others using the Ecosystem wish to activate that particular product. If the seller does not have an active subscription with the Immutable Ecosystem, a 1 percent fee is charged the seller whenever an activation resale offer is purchased. The purchaser is unaware and unaffected by this fee although an event audit will show this fee transfer.
 
-![image activationResale](./images/ImmutableActivationForSale.png)
+![image activationResale](./images/ImmutableActivationForSale.PNG)
 
 Allowing a purchaser to securely and safely resell a previously purchased digital product activation license turns it into an asset of depreciable value similar to a bike, appliance or car. We at Immutable believe the decentralized assetization of digital activation licenses is an empowering technology that will change the future of software for the better. Go to the Configure menu page and Register with the Immutable Ecosystem today.
 
-![image activationResale](./images/ImmutableActivationDetails.png)
+![image activationResale](./images/ImmutableActivationDetails.PNG)
 
 ## Part II: Digital Creators
 
-# Creator Requirements
+### Creator Requirements
 
 A digital creator, in order to best use the Immutable Ecosystem, should have an existing web presence with a URL specific to each product that provides a description of the product. ImmutableSoft also recommends a product logo URL that is used for users to visually identify the product. Finally, a URI for each specific product release which must remain available for one year in order to earn escrow rewards. In some scenarios commercial software does not have direct URIs for download but instead requires the user to first register themselves for access to a unique URI. In these cases each release URI should be a URL leading the user to the start of the registration process. The requirement here is that the registration process must lead to a download of a file that can be identified within the Immutable Ecosystem and whose checksum can thus be verifiable after download.
 
 The registered administrator Ethereum wallet address for the Entity and a Web3 provider (MetaMask, Brave, etc.) is required on make changes to digital products. The Entity administrator wallet is your secure identity on the blockchain, turning this wallet private key into the digital product release signing key. This allows a software creator to use a $100 commercial Ethereum hardware wallet to achieve a similar level of operational and distribution security as a $10,000 Hardware Security Module (HSM).
 
-# The Registration Process
+### The Registration Process
  
 Before a digital Creator can begin to utilize the Ecosystem for digital distribution and sales, it must register their administrator Ethereum account address with the Immutable Ecosystem, along with their entity name, URL and optional referral entity. Drop down the menu and open the Configure page of the Immutable Ecosystem and press the Registration button. Please follow the instructions as this is a two step process, first writing the public information to the blockchain (name, URL) to prove ownership of your administrator Ethereum account. The second step is to then privately submit your contact information so ImmutableSoft can verify and activate your account. Be sure the active MetaMask Ethereum account address is the one you wish to use as the administrator for the registering entity. You can change the registered entity Ethereum account address at any time after registration, see Part III [Entity Configuration](#entity-configuration). Be sure to complete both steps of the registration process or your application will not be complete.
 
 The first requirement for a digital creator is to register your Entity (individual, organization or company) using the Ethereum Account that is to become the administrator for the Entity. Whatever Web3 account and network is currently active in MetaMask will be used for the registration.
 
-![image registration](./images/ImmutabeRegister.png)
+![image registration](./images/ImmutabeRegister.PNG)
 
 The registration page looks something like above. After writing your Entity name and URL to the blockchain and thus demonstrating your ownership of the wallet address, you will be redirected to the main immutablesoft.org website to submit your private contact information. The Entity name and your Ethereum Account address should be auto populated. Be sure to check the email or voicemail submitted for communications from ImmutableSoft as we will be following up and verifying your information.
 
-![image registrationUnapproved](./images/ImmutableRegisteredUnapproved.png)
+![image registrationUnapproved](./images/ImmutableRegisteredUnapproved.PNG)
 
 After registering your Entity with the Immutable Ecosystem, the Configure page and Registration interface should display something like above and a second tab opened in the browser for the Entity to submit their private contact information. If this second private contact information form is closed on accident, or you wish to resubmit or delegate this step, the link to submit your private information can be found on the Configure, Registrations page (in the Thank You note). A registration will be unapproved and incomplete until private contact information has been submitted on behalf of a Registered Entity and verified by ImmutableSoft.
 
-![image registrationSecondStep](./images/ImmutabeRegisterSecondStep.png)
+![image registrationSecondStep](./images/ImmutabeRegisterSecondStep.PNG)
 
-# The Product and Release Interfaces
+### The Product and Release Interfaces
 
 Once an Entity registration is approved the menu options Activations, Products (if Creator) and Token Offers appear when the Ecosystem is browsed with the Web3 account used for registration. Your Ethereum wallet becomes the access control mechanism to the Ecosystem, there is no login process and ImmutableSoft never knows your password or secret keywords. Each page in the Dapp menu provides a unique interface. The Products menu shows all products created by the Entity and allows the creator to Edit, set Licensing terms or create a New Release of the product.
 
@@ -164,11 +180,11 @@ After a product is created a new release for that product can be created. In the
  
 After reviewing this information and pressing Ok, MetaMask will pop up a blockchain write verification notification. Edit the gas, select Slow speed (to minimize gas costs) and Approve the transaction. The new product should become visible in the Ecosystem on a fresh page load. Selecting Melodicious will display the Product interface page with the Get primary button on the right and Verify button on the bottom left. Congratulations, we have created a digital product and release with the Immutable Ecosystem.
 
-![image productDetails](./images/ImmutableEntityProduct.png)
+![image productDetails](./images/ImmutableEntityProduct.PNG)
 
 Note that any icon we chose is scaled to fit 192x192 pixels or smaller in the Ecosystem. The logo URL should be in icon (square) format and at least 196x196 pixels but will scale any image, larger or smaller. If your digital product is released free of charge or your product will not be selling activations on the Immutable Ecosystem, this is the last step needed for a creator to distribute their software to the world. As new releases of your product come to fruitation you can revisit the Ecosystem and add them. Better yet to add a step to your release process that auto-populates a New Release page to nearly automate the process. See Part IV section [Product Links](#product-links) for more information on embedding links into the Immutable Ecosystem.
 
-# The Product License Offer Interface
+### The Product License Offer Interface
 
 Commercial software creators can include the Immutable library into their application to securely verify activation licenses on the blockchain, allowing the automation of product activation sales directly to end users. Transferring tokens (or ETH) from the user directly to the software creator in exchange for the creation of an activation license on the blockchain that will result in the unlocking of the software product. This section of the document will describe creating offers and automating the sales of activation licenses for your products. Once the Immutable activation check is integrated into your digital product the sales process can become automated as the application can verify activation licenses at run time. 
 
@@ -190,7 +206,7 @@ For more information on how to validate an activation license on the blockchain 
 
 Since ImmutableSoft is a US organization we are required to follow FEC/FinHub guidelines that essentially prevent a freely exchangeable token without registering the token as a security (an expensive legal process). To attempt to conform to SEC legal quidelines, ImmutableSoft is following all three core FinHub recommendations for ensuring a token is a utility token; a fixed value, specific use and restricted transfer rights. Tokens are fixed at $.25 and can ONLY be transferred to, from or used by the Immutable Ecosystem smart contracts. We hope to collect enough revenue to one day hire a legal team to navigate a path toward removing this restriction and allow an Immute token to be freely transferrable. We have a clear technological path to do so but are awaiting interest and participation from an active user base before incurring this expense. For now, the only way to transfer tokens is within the Ecosystem by purchasing tokens, purchasing activation licenses with tokens, and creating/purchasing token block offers. For ease of management and continuity it is also possible to transfer tokens whenever a registered and approved Entity changes their address (see [Entity Configuration](#entity-configuration) below).
 
-# The Token Block Offer
+### The Token Block Offer
 
 Converting between ETH and Immute tokens is required for Entities to monetize their digital products. Purchasing tokens exchanges ETH for tokens. To convert earned or excess tokens back into ETH requires the Entity to create a Token Block Offer. Token Block Offers put an Entities tokens into escrow within the smart contract and list those tokens as available in exchange for ETH for anyone else to purchase.
 
@@ -212,7 +228,7 @@ It is possible to Edit a previously created token offer to add or remove blocks 
 
 ![image tokenEdit](./images/ImmutabeTokenOfferEdit.PNG)
 
-# Token Escrows
+### Token Escrows
 
 The Immutable Ecosystem manages two escrow accounts for each registered and approved Entity. The first escrow account is for ETH earned from the sales of token block offers (or activation purchases directly with ETH). The second escrow account is for Immute tokens earned from Product Release escrows that have matured. Escrows deposited into product releases are refundable from the Ecosystem after maturity, ie. one year. Matured product release escrows are still available for challenge until they are withdrawn from escrow. Purchases of product activation licenses result in the direct transfer of tokens from the purchaser to the creating Entity, without the use of an escrow.
 
@@ -222,7 +238,7 @@ Token Escrows can be viewed at the top of the Configure page, Withdraw ETH will 
 
 ![image configureAll](./images/ImmutableConfigureAll.PNG)
 
-# Entity Configuration
+### Entity Configuration
 
 There are three Configure features for registered and approved Entities of the Ecosystem. Choosing Configure from the menu will open the Configure page (see picture above) which itself has interfaces to changing the ETH bank address, Entity address, or updating the Entity information itself. The Entity bank address is the recipient when transferring ETH out of the escrow of an Entity in the Ecosystem. The Entity bank address default is the Entity administrator address but can be changed at any time. Be sure to withdraw any ETH before changing the bank address or you will have to change back to to the old address in order to withdraw the ETH.
  
@@ -250,7 +266,7 @@ There are two main types of embedded functions, entity and product. Entity funct
 
 The Entity specific embeddable links have examples auto generated within the Ecosystem and available on the Configure page, Promoter button. The Product specific embedded links into the Ecosystem are generated and available on the Products menu. Select the product and at the bottom near the Edit button should be an Embed button. This will open an interface providing examples of the different functions and query string interfaces. Cut and paste from here to the creators web site. The Ecosystem supports being opened in an iframe so that there is no need for the web browser to ever leave the creators website to use the Ecosystem.
 
-# Entity Links
+### Entity Links
 
 Below is a list of the Entity specific functions and parameters currently supported by this embed interface.
 
@@ -260,7 +276,7 @@ Registration with referral
 https://ecosystem.immutablesoft.org/?func=registration&entity=<entity ID>&referral=<referredBy>
 ```
 
-# Product Links
+### Product Links
 
 Below is a list of the Product specific functions and parameters currently supported by this embed interface.
 
@@ -288,7 +304,7 @@ Or to open the Product Release page for a specific release.
 ```html
 https://ecosystem.immutablesoft.org/?func=release&entity=<entity ID>&product=<product ID>&release=<release ID>
 ```
-# Activation Validation
+### Activation Validation
 
 The activation check with the blockchain is typically done with a secure HTTPS request to an Infura node controlled by the digital product creator. For production releases a creator should register with Infura and receive a Product ID for their application to use to access the blockchain. While ImmutableSoft has and may have shared their Infura Product ID for testing, it is capped at 100,000 requests and could reach a limit and prevent activation checks and thus your application from working. It is recommended that each product, and required that each entity, use their own [Infura](https://infura.io) account when integrating the Immutable library for activation checks within their application.
 
