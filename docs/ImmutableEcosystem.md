@@ -4,11 +4,11 @@
 
 ## Contents
 
-[Why the Immutable Ecosystem?](#why-the-immutable-ecosystem?)
+[Why the Immutable Ecosystem?](#why-the-immutable-ecosystem)
 
 [Web3 Provider Requirement](#web3-provider-requirement)
 
-[Part I: End User](#part-i:-end-user)
+[End User Interface](#end-user-interface)
 
  + [The User Interface](#the-user-interface)
 
@@ -22,7 +22,7 @@
 
  + [Resell Activation License](#resell-activation-license)
 
-[Part II: Digital Creators](#part-ii:-digital-creators)
+[Digital Creator Interface](#digital-creator-interface)
 
  + [Creator Requirements](#creator-requirements)
 
@@ -32,7 +32,7 @@
 
  + [The Product License Offer Interface](#the-product-license-offer-interface)
 
-[Part III: Monetization and Configuration](#part-iii:-monetization-and-configuration)
+[Monetization and Configuration](#monetization-and-configuration)
 
  + [The Token Block Offer](#the-token-block-offer)
 
@@ -40,7 +40,7 @@
 
  + [Entity Configuration](#entity-configuration)
 
-[Part IV: Developers and Embedding](#part-iv:-developers-and-embedding)
+[Developers and Embedding](#developers-and-embedding)
 
  + [Product Links](#product-links)
 
@@ -72,7 +72,7 @@ If you get the above web page instead of the MetaMask Connect Notification and y
 
 ![image ropsten](./images/RopstenTestNetwork.PNG)
 
-## Part I: End User
+## End User Interface
 
 The primary goal of the Ecosystem is to allow users to download, authenticate, install and purchase digital product activation assets safely and directly with the original digital creator. The Immutable Ecosystem allows users the ability to browse for all types of digital products. The goal of the Applications menu interface is to help users find their digital products quickly so they can install and purchase/activate those products securely. Each product displayed in the ecosystem has the product name, logo and link to the product website to learn more about a product before downloading.
 
@@ -142,7 +142,7 @@ Allowing a purchaser to securely and safely resell a previously purchased digita
 
 ![image activationResale](./images/ImmutableActivationDetails.PNG)
 
-## Part II: Digital Creators
+## Digital Creator Interface
 
 ### Creator Requirements
 
@@ -202,7 +202,7 @@ To accept tokens as payment for secure digital product activations requires a so
 
 For more information on how to validate an activation license on the blockchain within your digital product, see Part IV [Activation Validation](#activation-validation).
 
-## Part III: Monetization and Configuration
+## Monetization and Configuration
 
 Since ImmutableSoft is a US organization we are required to follow FEC/FinHub guidelines that essentially prevent a freely exchangeable token without registering the token as a security (an expensive legal process). To attempt to conform to SEC legal quidelines, ImmutableSoft is following all three core FinHub recommendations for ensuring a token is a utility token; a fixed value, specific use and restricted transfer rights. Tokens are fixed at $.25 and can ONLY be transferred to, from or used by the Immutable Ecosystem smart contracts. We hope to collect enough revenue to one day hire a legal team to navigate a path toward removing this restriction and allow an Immute token to be freely transferrable. We have a clear technological path to do so but are awaiting interest and participation from an active user base before incurring this expense. For now, the only way to transfer tokens is within the Ecosystem by purchasing tokens, purchasing activation licenses with tokens, and creating/purchasing token block offers. For ease of management and continuity it is also possible to transfer tokens whenever a registered and approved Entity changes their address (see [Entity Configuration](#entity-configuration) below).
 
@@ -258,7 +258,7 @@ To update the Entity public information such as the name or URL of the Entity, s
 
 ![image entityAcceptMove](./images/ImmutableEntityEdit.PNG)
 
-## Part IV: Developers and Embedding
+## Developers and Embedding
 
 The Immutable Ecosystem is designed to integrate with digital product creator websites by embedding simple HTML links with query strings. Every function of the Ecosystem is potentially supported, from Download and Verify to Purchasing an Activaiton. The Ecosystem uses standard HTML query strings to pass the function and function parameters to the Ecosystem for execution and presentation.
 
