@@ -38,8 +38,8 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
   ImmutableEntity entityInterface;
   ImmutableProduct productInterface;
 
-//  function initialize(address entityContractAddr,
-  function initializeMe(address entityContractAddr,
+  function initialize(address entityContractAddr,
+//  function initializeMe(address entityContractAddr,
                         address productContractAddr)
     public initializer
   {
