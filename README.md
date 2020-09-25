@@ -16,8 +16,6 @@
 
  + [Download And Verify](#download-and-verify)
 
- + [Purchase Tokens](#purchase-tokens)
-
  + [Purchase an Activation License](#purchase-an-activation-license)
 
  + [Change a Product Activation Identifier](#change-a-product-activation-identifier)
@@ -36,9 +34,7 @@
 
 [Monetization and Configuration](#monetization-and-configuration)
 
- + [The Token Block Offer](#the-token-block-offer)
-
- + [Token Escrows](#the-token-block-offer)
+ + [Escrow](#escrow)
 
  + [Entity Configuration](#entity-configuration)
 
@@ -103,14 +99,6 @@ With a product selected, the Application interface shows a primary Get button is
 ![image applicationVerified](./docs/images/ImmutableBrowseSelectedAndVerified.PNG)
 
 Above is a screen shot of what to expect after selecting the Firefox application, Getting the release file and performing the Verify process on the file that was just downloaded. Note that the product button is highlighted (black outline) and should match between the product download URI and the locally saved file. After verifying the integrity of the downloaded file  it is safe to execute, install and use the downloaded product. The Immutable Ecosystem does not safeguard the user from network or email based attacks and is NOT a replacement for anti-virus software.
-
-### Purchase Tokens
-
-Before we can purchase an activation license with tokens, we must first purchase tokens. With either a registered or unregistered Ethereum address you can exchange ETH for tokens by pressing the Add Tokens button on the right side of the top menu bar. This button will open an interface that will allow your Ethereum wallet to transfer ETH in exchange for new tokens from ImmutableSoft, or to exhange for a block of tokens from a registered entity that has offered tokens for sale.
-
-When exchanging ETH for tokens, the ETH rate multiplier sets the current token price. The value of ETH sent is multiplied by the ETH rate multiplier to equal the number of tokens received in the exchange. The multiplier set by ImmutableSoft for new tokens will be periodically updated to maintain a cost per token of approximately 25 cents USD. Each token offer can set their own rate multiplier and the highest rate equals the lowest cost.
-
-![image purchasetokens](./docs/images/ImmutablePurchaseTokens.PNG)
 
 ### Purchase an Activation License
 
@@ -212,35 +200,13 @@ For more information on how to validate an activation license on the blockchain 
 
 Since ImmutableSoft is a US organization we are required to follow FEC/FinHub guidelines that essentially prevent a freely exchangeable token without registering the token as a security (an expensive legal process). To attempt to conform to SEC legal quidelines, ImmutableSoft is following all three core FinHub recommendations for ensuring a token is a utility token; a fixed value, specific use and restricted transfer rights. Tokens are fixed at $.25 and can ONLY be transferred to, from or used by the Immutable Ecosystem smart contracts. We hope to collect enough revenue to one day hire a legal team to navigate a path toward removing this restriction and allow an Immute token to be freely transferrable. We have a clear technological path to do so but are awaiting interest and participation from an active user base before incurring this expense. For now, the only way to transfer tokens is within the Ecosystem by purchasing tokens, purchasing activation licenses with tokens, and creating/purchasing token block offers. For ease of management and continuity it is also possible to transfer tokens whenever a registered and approved Entity changes their address (see [Entity Configuration](#entity-configuration) below).
 
-### The Token Block Offer
+### Escrow
 
-Converting between ETH and Immute tokens is required for Entities to monetize their digital products. Purchasing tokens exchanges ETH for tokens. To convert earned or excess tokens back into ETH requires the Entity to create a Token Block Offer. Token Block Offers put an Entities tokens into escrow within the smart contract and list those tokens as available in exchange for ETH for anyone else to purchase.
+The Immutable Ecosystem manages ab escrow account for each registered and approved Entity. This escrow account is for ETH earned from the sales of activation purchases. Purchases of product activation licenses in ERC20 tokens result in the direct transfer of tokens from the purchaser to the creating Entity, without the use of an escrow.
 
-![image tokenOffersMenu](./docs/images/ImmutableTokenOffers.PNG)
+The ETH in the Entity escrow account can be periodically transferred out of this escrow into the Entity bank address, where it can be exchanged for local currency through an exchange as desired.
 
-The ETH rate multiplier value is multiplied by the amount of ETH transferred to equal the number of tokens purchased. The number of tokens available for purchase from a token block offer is a multiple of the block size of the offer. The block size offered by an Entity is commonly the size of their products’ purchase price, or a common price point. The number of blocks is the number of tokens blocks available within a single offer. The number of blocks multiplied by the block size is the number of tokens transferred to escrow upon successful creation of the token block offer. As blocks are purchased from this offer, the number of blocks and escrow values decrease until the offer is exhausted. It is also possible to Edit an offer and change the number of blocks by transferring tokens to or from the token block offer escrow, however, the block size of an offer cannot be changed.
-
-![image tokenOffer](./docs/images/ImmutableTokenBlockOffer.PNG)
-
-Since ImmutableSoft only provides bonus tokens for large purchases there is room for a robust token resale market for smaller token sizes. The current ImmutableSoft ETH rate multiplier is displayed in the interface and any token block offer must be equal to or larger than this value, meaning any token offer must be priced as less expensive than purchasing from ImmmutableSoft. This ensures the token offer is competitive while preventing upward price movement of the token. At any time prior to purchase an Entity can revoke an offer, which will move the tokens from escrow back to the Entity address.
-
-![image tokenBrowse](./docs/images/ImmutableTokenOfferBrowse.PNG)
-
-To view the details of a token offer, click it from the display list of tokens (see picture above). This will bring up the Token Offer details page that allows Revoking or Editing a Token Offer.
-
-![image tokenSelected](./docs/images/ImmutableTokenOfferSelected.PNG)
-
-It is possible to Edit a previously created token offer to add or remove blocks of tokens or change the exchange rate relative to ETH (the ETH multipler rate).
-
-![image tokenEdit](./docs/images/ImmutableTokenOfferEdit.PNG)
-
-### Token Escrows
-
-The Immutable Ecosystem manages two escrow accounts for each registered and approved Entity. The first escrow account is for ETH earned from the sales of token block offers (or activation purchases directly with ETH). The second escrow account is for Immute tokens earned from Product Release escrows that have matured. Escrows deposited into product releases are refundable from the Ecosystem after maturity, ie. one year. Matured product release escrows are still available for challenge until they are withdrawn from escrow. Purchases of product activation licenses result in the direct transfer of tokens from the purchaser to the creating Entity, without the use of an escrow.
-
-Tokens earned by creators through product activation sales within the Ecosystem are monetized back into ETH through the sale of token block offers. The sale of token blocks will increase the Entities ETH escrow and the ETH can be periodically transferred out of this escrow into the Entity bank address, where it can be exchanged for local currency through an exchange as desired.
-
-Token Escrows can be viewed at the top of the Configure page, Withdraw ETH will withdraw ETH from token sales escrow, and Withdraw Tokens will withdraw Immute tokens from matured product release challenge escrows. Navigate to the Configure page with the menu botton on the top left.
+At the top of the Configure page is the Withdraw ETH button which will withdraw ETH from the escrow. Navigate to the Configure page with the menu botton on the top left.
 
 ![image configureAll](./docs/images/ImmutableConfigureAll.PNG)
 
@@ -250,15 +216,15 @@ There are three Configure features for registered and approved Entities of the E
  
 ![image changeBank](./docs/images/ImmutableChangeBank.PNG)
 
-Due to organizational or security reasons Entities may wish to change the Ethereum address they have registered as the owner (Administrator) of the Entity within the Ecosystem. For safety reasons (to prevent the loss of ownership), changing the address of an Entity is a two-step process. The first step is to use the current address and submit a transaction with the new address, proving that the current Entity owner is intending to move to the new address. During this first step the Admin can also choose to move the tokens as well (or not).
+Due to organizational or security reasons Entities may wish to change the Ethereum address they have registered as the owner (Administrator) of the Entity within the Ecosystem. For safety reasons (to prevent the loss of ownership), changing the address of an Entity is a two-step process. The first step is to use the current address and submit a transaction with the new address, proving that the current Entity owner is intending to move to the new address.
  
 ![image entityMove](./docs/images/ImmutableEntityMove.PNG)
 
-The second step is to use the new Ethereum address and access the Immutable Ecosystem. For an unregistered address, the Configure page will display a button to Accept Move. Press this Accept Move button and then enter the old (last) address and press the Accept Entity Move button. Once the new Ethereum address has completed this second step the new address will be recognized by the Ecosystem as the Entity Administrator, and any tokens will be transferred if selected in the fist step.
+The second step is to use the new Ethereum address and access the Immutable Ecosystem. For an unregistered address, the Configure page will display a button to Accept Move. Press this Accept Move button and then enter the old (last) address and press the Accept Entity Move button. Once the new Ethereum address has completed this second step the new address will be recognized by the Ecosystem as the Entity Administrator.
  
 ![image entityAcceptMove](./docs/images/ImmutableEntityAcceptMove.PNG)
 
-With this two-step process, if there is a mistake with Step 1 then it can be resolved by the Entity. Only once an Entity has demonstrated they have possession of both Ethereum addresses (and associated keys) will an Entity address be changed. Step 1 can be repeated as many times as necessary and can even be performed ahead of time as a managerial escape hatch. However, if tokens are transferred to escrow as part of Step 1, they remain in escrow until Step 2 is completed. The tokens in Entity escrow are correctly maintained even if multiple transactions for Step 1 are performed.
+With this two-step process, if there is a mistake with Step 1 then it can be resolved by the Entity. Only once an Entity has demonstrated they have possession of both Ethereum addresses (and associated keys) will an Entity address be changed. Step 1 can be repeated as many times as necessary and can even be performed ahead of time as a managerial escape hatch.
 
 To update the Entity public information such as the name or URL of the Entity, select the Edit Entity and fill in the new Entity information and press the Update Entity button. Updating the Entity public information resets the Entity back to unapproved status and requires ImmutableSoft validation. To ensure prompt approval please send an email to register@immutablesoft.org describing the nature of the Entity change. Sending this email and receiving a response BEFORE updating the Entity information is recommended for fastest re-approval.
 
