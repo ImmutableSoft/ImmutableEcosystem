@@ -1,17 +1,23 @@
 
 const StringCommon = artifacts.require("./StringCommon.sol");
 const ImmutableEntity = artifacts.require("./ImmutableEntity.sol");
-const ImmutableResolver = artifacts.require("./ImmutableResolver.sol");
+//const ImmutableResolver = artifacts.require("./ImmutableResolver.sol");
 const ImmutableProduct = artifacts.require("./ImmutableProduct.sol");
-const ImmutableLicense = artifacts.require("./ImmutableLicense.sol");
-const ImmuteToken = artifacts.require("./ImmuteToken.sol");
+//const ImmutableLicense = artifacts.require("./ImmutableLicense.sol");
+const ActivateToken = artifacts.require("./ActivateToken.sol");
+//const ImmuteToken = artifacts.require("./ImmuteToken.sol");
 const CustomToken = artifacts.require("./CustomToken.sol");
+
 var ENS = artifacts.require("@ensdomains/ens/ENSRegistry");
 const namehash = require('eth-ens-namehash');
 const FIFSRegistrar = artifacts.require("@ensdomains/ens/FIFSRegistrar");
 //const ReverseRegistrar = artifacts.require("@ensdomains/ens/ReverseRegistrar");
 //const OwnedResolver = artifacts.require("@ensdomains/resolver/contracts/OwnedResolver.sol");
 const utils = require('web3-utils');
+
+//require('openzeppelin-test-helpers/configure')({ web3 });
+
+//const { singletons } = require('@openzeppelin/test-helpers');
 
 const tld = "eth";
 
@@ -26,32 +32,13 @@ module.exports = function(deployer, network, accounts)
     let registrar;
     let entity;
     let product;
+    let activate;
+//    const erc1820 = singletons.ERC1820Registry(accounts[0]);
 
-    deployer.deploy(ImmuteToken)
-//        .then(function(tokenInstance) {
-//            token = tokenInstance;
-//            return deployer.deploy(ENS);
-//        })
-
-//        .then(function(ensInstance) {
-//            ens = ensInstance;
-//            return deployer.deploy(OwnedResolver);
-//        })
-//        .then(function(ensResolver) {
-//            return deployer.deploy(ImmutableBase, token.address,
-//                                   ens.address, ensResolver.address);
-//        })
-        .then(function(tokenInstance/*ensInstance*/) {
-//            ens = ensInstance;
-            token = tokenInstance;
-            return token.initializeMe(10000000000000);
-        })
-        .then(function() {
-            return deployer.deploy(StringCommon);
-        })
+    deployer.deploy(StringCommon)
         .then(function(commonInstance) {
             common = commonInstance;
-            return deployer.deploy(ImmutableEntity)
+            return deployer.deploy(ImmutableEntity);
         })
         // Registrar
 //        .then(function(entityInstance) {
@@ -65,23 +52,54 @@ module.exports = function(deployer, network, accounts)
 //        })
         .then(function(entityInstance) {
           entity = entityInstance; //
-          return entity.initialize(token.address, common.address);
+          return entity.initialize(common.address);
         })
         .then(function() {
             return deployer.deploy(ImmutableProduct);
         })
         .then(function(productInstance) {
             product = productInstance;
-            return product.initialize(entity.address, token.address, common.address);
+            return product.initialize(entity.address, common.address);
         })
         .then(function() {
-            return deployer.deploy(ImmutableLicense);
+            return deployer.deploy(ActivateToken); //ImmutableLicense
         })
-        .then(function(licenseInstance) {
-            return licenseInstance.initialize(product.address,entity.address, token.address);
+        .then(function(activateInstance) {
+            activate = activateInstance;
+            return activateInstance.initializeMe(entity.address, product.address);
         })
+//        .then(function() {
+          //return deployer.deploy(ImmuteToken);
+          //        .then(function(tokenInstance) {
+          //            token = tokenInstance;
+          //            return deployer.deploy(ENS);
+          //        })
+      
+          //        .then(function(ensInstance) {
+          //            ens = ensInstance;
+          //            return deployer.deploy(OwnedResolver);
+          //        })
+          //        .then(function(ensResolver) {
+          //            return deployer.deploy(ImmutableBase, token.address,
+          //                                   ens.address, ensResolver.address);
+          //        })
+//        })
+       // .then(function(tokenInstance/*ensInstance*/) {
+      //            ens = ensInstance;
+      //        token = tokenInstance;
+      //        return token.initializeMe(10000000000000, entity.address, product.address, activate.address);
+      //  })
+//        .then(function() {
+//              return entity.entityToken(token.address);
+//        })
+//        .then(function() {
+//              return product.productToken(token.address);
+//        })
+//        .then(function() {
+//              return activate.activateToken(token.address);
+//        })
         .then(function() {
-            return deployer.deploy(CustomToken);
+                return deployer.deploy(CustomToken);
         })
         .then(function(customInstance) {
             return customInstance.initialize();

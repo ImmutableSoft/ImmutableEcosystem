@@ -27,12 +27,13 @@
     "dotenv": "^8.2.0"
   },
   "dependencies": {
-    "@ensdomains/ens": "^0.4.4",
+    "@ensdomains/ens": "^0.4.5",
     "@ensdomains/resolver": "^0.2.4",
-    "@openzeppelin/cli": "^2.7.0",
+    "@openzeppelin/cli": "^2.8.2",
     "@openzeppelin/contracts-ethereum-package": "^2.5.0",
-    "@openzeppelin/test-helpers": "^0.5.5",
+    "@openzeppelin/test-helpers": "github:OpenZeppelin/openzeppelin-test-helpers",
     "@openzeppelin/upgrades": "^2.7.0",
+    "big-integer": "^1.6.48",
     "mem": ">=4.0.0",
     "truffle-assertions": "^0.9.2"
   }

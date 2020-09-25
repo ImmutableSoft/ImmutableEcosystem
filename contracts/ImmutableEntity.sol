@@ -5,10 +5,15 @@ pragma solidity 0.5.16;
 //   DO NOT release in production with compiler < 0.5.7
 pragma experimental ABIEncoderV2;
 
+// OpenZepellin upgradable contracts
+import "@openzeppelin/upgrades/contracts/Initializable.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts-ethereum-package/contracts/payment/PullPayment.sol";
+
 import "./StringCommon.sol";
-import "./ImmuteToken.sol";
 import "./ImmutableConstants.sol";
-import "./ImmutableResolver.sol";
+//import "./ImmutableResolver.sol";
+//import "./ImmuteToken.sol";
 
 //import "@ensdomains/ens/contracts/ENS.sol";
 //import "./AddrResolver.sol";
@@ -20,15 +25,9 @@ import "./ImmutableResolver.sol";
 /// @notice Token transfers use the ImmuteToken by default
 /// @dev Entity variables and methods
 contract ImmutableEntity is Initializable, Ownable, PullPayment,
-                               ImmutableConstants
+                            ImmutableConstants
 {
-  // Bonus token constants
-  uint256 constant ReferralEntityBonus =        4000000000000000000; //  4 IuT
-  uint256 constant ReferralSubscriptionBonus = 40000000000000000000; // 40 IuT
-  uint256 constant EntitySubscriptionBonus =   80000000000000000000; // 80 IuT
-
   // Error strings
-  string constant EntityIsZero = "EntityID zero";
   string constant BankNotConfigured = "Bank not configured";
 
   // Mapping between the organization address and the global entity index
@@ -46,68 +45,47 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     string name;
     string entityEnsName;
     string infoURL;
-    uint256 numberOfOffers;
-    uint256 escrow;
-    address erc20Token;
-    uint256 referral;
     uint256 createTime;
-    mapping(uint256 => TokenBlockOffer) offers;
-  }
-
-  // Offer of tokens for resale
-  struct TokenBlockOffer
-  {
-    uint256 rate;
-    uint256 blockSize;
-    uint256 escrow;
   }
 
   // Array of current entity addresses, indexable by local entity index
   //   ie. local entity index equals global entity index - 1
-  address[] private EntityArray;
+  mapping (uint256 => address) private EntityArray;
 
   // Array of entities, indexable by local entity index
-  Entity[] private Entities;
+  mapping (uint256 => Entity) private Entities;
+  uint256 NumberOfEntities;
 
   // External contract interfaces
-  ImmuteToken private tokenInterface;
   StringCommon private commonInterface;
   // Ethereum Name Service contract and variables
-  ImmutableResolver private resolver;
+//  ImmutableResolver private resolver;
 
   // Entity interface events
   event entityEvent(uint256 entityIndex,
                     string name, string url);
-  event entityTokenBlockOfferEvent(uint256 entityIndex, uint256 rate,
-                                   uint256 tokens, uint256 amount);
-  event entityTokenBlockPurchaseEvent(address indexed purchaserAddress,
-                              uint256 entityIndex, uint256 rate,
-                              uint256 tokens, uint256 amount);
   event entityTransferEvent(uint256 entityIndex, uint256 productIndex, uint256 amount);
-  event entityDonateEvent(uint256 entityIndex, uint256 productIndex, uint256 numTokens);
 
   /// @notice Contract initializer/constructor.
   /// Executed on contract creation only.
-  /// @param immuteToken the address of the IuT token contract
   /// @param commonAddr the address of the CommonString contract
   /*constructor(address immuteToken, address commonAddr)
     public PullPayment()
   {
 */
-  function initialize(address immuteToken, address commonAddr) public initializer
+  function initialize(/*address immuteToken,*/ address commonAddr) public initializer
   {
     Ownable.initialize(msg.sender);
     PullPayment.initialize();
 
     // Initialize string and token contract interfaces
     commonInterface = StringCommon(commonAddr);
-    tokenInterface = ImmuteToken(immuteToken);
   }
 
   ///////////////////////////////////////////////////////////
   /// ADMIN (onlyOwner)
   ///////////////////////////////////////////////////////////
-
+/*
   /// @notice Set ImmutableSoft ENS resolver. A zero address disables resolver.
   /// Administrator (onlyOwner)
   /// @param resolverAddr the address of the immutable resolver
@@ -117,6 +95,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     resolver = ImmutableResolver(resolverAddr);
     resolver.setRootNode(rootNode);
   }
+*/
 
   /// @notice Update an entity status, non-zero value is approval.
   /// See ImmutableConstants.sol for status values and flags.
@@ -126,13 +105,13 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
   function entityStatusUpdate(uint256 entityIndex, uint256 status)
     external onlyOwner
   {
-    entityIndex = entityIdToLocalId(entityIndex);
+//    uint eIndex = entityIdToLocalId(entityIndex);
     Entity storage entity = Entities[entityIndex];
-    uint256 previousStatus = EntityStatus[entityIndex];
 
     // Update the organization status
     EntityStatus[entityIndex] = status;
 
+/*
     // If ENS configured, add resolver
     if (address(resolver) != address(0))
     {
@@ -147,51 +126,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
 //      setName(subnode, normalName);
       entity.entityEnsName = normalName;
     }
-
-    // If entity is new then apply any token bonus
-    if ((previousStatus == 0) && (entity.createTime < now + 30 days))
-    {
-      // Check if a subscription
-      if (((status & Automatic) == Automatic) ||
-          ((status & CustomToken) == CustomToken))
-      {
-        // Subscription entities get a minted token bonus
-        tokenInterface.tokenMint(EntityArray[entityIndex],
-                                 EntitySubscriptionBonus);
-
-        // Subscription referrals get a minted token bonus
-        if (entity.referral > 0)
-          tokenInterface.tokenMint(EntityArray[entity.referral - 1],
-                                   ReferralSubscriptionBonus);
-      }
-
-      // Otherwise if referral mint standard entity bonus
-      else if (entity.referral > 0)
-
-      {
-        // Pay out 4 token escrow amount to the referral
-        tokenInterface.tokenMint(EntityArray[entity.referral - 1],
-                                 ReferralEntityBonus);
-      }
-    }
-  }
-
-  /// @notice Update entity with custom ERC20.
-  /// Must NOT be called if entity has existing product sales escrow.
-  /// Entity requires prior approval with custom token status.
-  /// Administrator (onlyOwner)
-  /// @param entityIndex The entity global index
-  /// @param tokenAddress The custom ERC20 contract address
-  function entityCustomToken(uint256 entityIndex, address tokenAddress)
-    external onlyOwner
-  {
-    uint256 entityStatus = entityIndexStatus(entityIndex);
-    entityIndex = entityIdToLocalId(entityIndex);
-    require((entityStatus & CustomToken) == CustomToken,
-            "CustomToken required");
-
-    // Assign the custom ERC20 token address
-    Entities[entityIndex].erc20Token = tokenAddress;
+*/
   }
 
   ///////////////////////////////////////////////////////////
@@ -207,31 +142,30 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
   /// @param entityName The legal name of the entity
   /// @param entityURL The valid URL of the entity
   function entityCreate(string memory entityName,
-                        string memory entityURL,
-                        uint256 referralEntityIndex)
+                        string memory entityURL)
     public returns (uint256)
   {
     require(bytes(entityName).length != 0, "Entity name empty");
     require(bytes(entityURL).length != 0, "Entity URL empty");
-    uint256 entityIndex = Entities.length + 1;
+    uint256 entityIndex = NumberOfEntities + 1;
     require(EntityIndex[msg.sender] == 0, "Entity already created");
 
     // Require the entity name be unique
-    for (uint256 i = 0; i < Entities.length; ++i)
+    for (uint256 i = 1; i < NumberOfEntities + 1; ++i)
       require(!commonInterface.stringsEqual(Entities[i].name, entityName),
               "Entity name already exists");
 
     // Push the entity to permenant storage on the blockchain
-    Entities.push(Entity(msg.sender, address(0), address(0), entityName,
-                         "", entityURL, 0, 0, address(0),
-                         referralEntityIndex, now));
+    Entities[entityIndex] = Entity(msg.sender, address(0), address(0), entityName,
+                         "", entityURL, now);
 
-    EntityIndex[msg.sender] = entityIndex;
     // Push the address to the entity array and clear status
-    EntityArray.push(msg.sender);
+    EntityArray[entityIndex] = msg.sender;
     EntityStatus[entityIndex] = 0;
+    EntityIndex[msg.sender] = entityIndex; // glbal entity id
+    NumberOfEntities++;
 
-    // Emit entity event
+    // Emit entity event, converting from local id to global (add 1)
     emit entityEvent(entityIndex, entityName, entityURL);
     return entityIndex;
   }
@@ -247,11 +181,10 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     require(bytes(entityName).length != 0, "Entity name empty");
     require(bytes(entityURL).length != 0, "Entity URL empty");
     uint256 entityIndex = EntityIndex[msg.sender];
-    require(entityIndex > 0, "Sender is not an entity owner");
-    entityIndex = entityIndex - 1;
+    require(entityIndex > 0, "Sender is not an entity");
 
     // Require the new entity name be unique
-    for (uint256 i = 0; i < Entities.length; ++i)
+    for (uint256 i = 0; i < NumberOfEntities; ++i)
     {
       // Skip the duplicate name check for sender entity
       //   ie. Allow only URL to be changed
@@ -263,9 +196,6 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     // Update entity name and/or URL
     Entities[entityIndex].name = entityName;
     Entities[entityIndex].infoURL = entityURL;
-
-    // Clear referral so re-approval does not trigger bonus
-    Entities[entityIndex].referral = 0;
 
     // Clear the entity status as re-validation required
     EntityStatus[entityIndex] = 0;
@@ -281,7 +211,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     external
   {
     uint256 entityIndex = EntityIndex[msg.sender];
-    entityIndex = entityIdToLocalId(entityIndex);
+    require(entityIndex > 0, EntityIsZero);
     Entity storage entity = Entities[entityIndex];
 
     // Only a validated entity can configue a bank address
@@ -294,16 +224,14 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
   /// To complete move, call entityMoveAddress with new address.
   /// msg.sender must be a registered entity.
   /// @param nextAddress The next address of the entity
-  /// @param numTokens The number of tokens to move to the new address
-  function entityAddressNext(address nextAddress, uint256 numTokens)
+  function entityAddressNext(address nextAddress)
     external
   {
     uint256 entityIndex = EntityIndex[msg.sender];
-    entityIndex = entityIdToLocalId(entityIndex);
+    require(entityIndex > 0, EntityIsZero);
     Entity storage entity = Entities[entityIndex];
 
-    // Ensure tokens are available and next address is valid
-    require(tokenInterface.balanceOf(msg.sender) >= numTokens, "Too many tokens");
+    // Ensure next address and status and status are valid
     require(msg.sender != nextAddress, "Next address not different");
     require(nextAddress != address(0), "Next address is zero");
     require(entityAddressStatus(msg.sender) > 0, EntityNotValidated);
@@ -313,15 +241,6 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
 
     // Assign the new address to the organization
     entity.nextAddress = nextAddress;
-
-    // Transfer tokens to the contract escrow
-    if (numTokens > 0)
-    {
-      if (tokenInterface.transferFrom(msg.sender, address(this), numTokens))
-        entity.escrow += numTokens;
-      else
-        revert("Token transfer failed");
-    }
   }
 
   /// @notice Admin override for moving an entity (change addresses).
@@ -329,18 +248,15 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
   /// msg.sender must be Administrator (owner).
   /// @param entityAddress The address of the entity to move
   /// @param nextAddress The next address of the entity
-  /// @param numTokens The number of tokens to move to the new address
   function entityAdminAddressNext(address entityAddress,
-                                address nextAddress, uint256 numTokens)
+                                  address nextAddress)//, uint256 numTokens)
     external onlyOwner
   {
     uint256 entityIndex = EntityIndex[entityAddress];
-    entityIndex = entityIdToLocalId(entityIndex);
+    require(entityIndex > 0, EntityIsZero);
     Entity storage entity = Entities[entityIndex];
 
-    // Ensure tokens are available and next address is valid
-    require(tokenInterface.balanceOf(entityAddress) >= numTokens,
-            "Too many tokens");
+    // Ensure next address is valid
     require(entityAddress != nextAddress, "Next address not different");
     require(nextAddress != address(0), "Next address is zero");
     // Require next address to have no entity configured
@@ -348,15 +264,6 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
 
     // Assign the new address to the organization
     entity.nextAddress = nextAddress;
-
-    // Transfer tokens to the contract escrow
-    if (numTokens > 0)
-    {
-      if (tokenInterface.transferFrom(entityAddress, address(this), numTokens))
-        entity.escrow += numTokens;
-      else
-        revert("Token transfer failed");
-    }
   }
 
   /// @notice Finish moving an entity (change addresses).
@@ -367,14 +274,14 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     external
   {
     uint256 entityIndex = EntityIndex[oldAddress];
-    entityIndex = entityIdToLocalId(entityIndex);
+    require(entityIndex > 0, EntityIsZero);
     Entity storage entity = Entities[entityIndex];
     require(entity.nextAddress == msg.sender, "Next address not sender");
     uint256 entityStatus = entityAddressStatus(oldAddress);
     require(entityStatus > 0, EntityNotValidated);
 
     // Assign the indexing for the new address
-    EntityIndex[msg.sender] = entityIndex + 1;
+    EntityIndex[msg.sender] = entityIndex;// + 1;
     // Clear the old address
     EntityIndex[oldAddress] = 0;
     EntityArray[entityIndex] = msg.sender;
@@ -383,19 +290,6 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     // If old bank address was adminstrator, move bank to new address
     if (entity.bank == oldAddress)
       entity.bank = msg.sender;
-
-    // All the products and releases are unchanged
-
-    // Move tokens if any in escrow
-    if (entity.escrow > 0)
-    {
-      // Transfer tokens out of escrow into the new account
-      if (tokenInterface.transfer(msg.sender, entity.escrow))
-        entity.escrow = 0;
-//    Don't revert as that might prevent recovery if transfer fails
-//      else
-//        revert("Token transfer failed");
-    }
   }
 
   /// @notice Withdraw all payments (ETH) into entity bank.
@@ -404,7 +298,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     external
   {
     uint256 entityIndex = EntityIndex[msg.sender];
-    entityIndex = entityIdToLocalId(entityIndex);
+    require(entityIndex > 0, EntityIsZero);
     Entity storage entity = Entities[entityIndex];
     uint256 entityStatus = entityAddressStatus(msg.sender);
     require(entityStatus > 0, EntityNotValidated);
@@ -416,110 +310,6 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
       withdrawPayments/*WithGas*/(entity.bank);
   }
 
-  /// @notice Offer a block of tokens in exchange for ETH.
-  /// Purchasers can buy any multiple of 'tokens' up to 'count'.
-  /// 'tokens' multipled by 'count' will be escrowed in offer.
-  /// msg.sender must be a registered entity.
-  /// @param rate The rate of exchange (multiplyer of ETH)
-  /// @param tokens The minimum multiplyer of tokens offered
-  /// @param count The number of blocks, or 'tokens' amounts
-  function entityTokenBlockOffer(uint256 rate, uint256 tokens,
-                                 uint256 count)
-    external
-  {
-    uint256 amount = tokens * count;
-    uint256 entityIndex = EntityIndex[msg.sender];
-    entityIndex = entityIdToLocalId(entityIndex);
-    Entity storage entity = Entities[entityIndex];
-    require(entityAddressStatus(msg.sender) > 0, EntityNotValidated);
-    require(rate >= tokenInterface.currentRate(), "Rate less than currentRate");
-
-    // Ensure entity has a configured bank
-    require(entity.bank != address(0), BankNotConfigured);
-
-    // Transfer tokens to the contract escrow
-    if (tokenInterface.transferFrom(msg.sender, address(this), amount))
-    {
-      uint256 i;
-      for (i = 0; i < entity.numberOfOffers; ++i)
-      {
-        // Reuse an old offer if escrow empty
-        if (entity.offers[i].escrow == 0)
-          break;
-      }
-      if (i == entity.numberOfOffers)
-        ++entity.numberOfOffers;
-
-      entity.offers[i] = TokenBlockOffer(rate, tokens, amount);
-      emit entityTokenBlockOfferEvent(entityIndex + 1, rate, tokens, amount);
-    }
-    else
-      revert("TransferFrom failed");
-
-  }
-
-  /// @notice Change rate and/or number of blocks of token offer.
-  /// Offer must already exist and owned by msg.sender.
-  /// @param offerIndex The identifier of the offer to revoke
-  function entityTokenBlockOfferChange(uint256 offerIndex, uint256 rate,
-                                       uint256 count)
-    external
-  {
-    uint256 entityIndex = EntityIndex[msg.sender];
-    entityIndex = entityIdToLocalId(entityIndex);
-    Entity storage entity = Entities[entityIndex];
-
-    require(entityAddressStatus(msg.sender) > 0, EntityNotValidated);
-    require(entity.numberOfOffers > offerIndex, OfferNotFound);
-    require((count == 0) || (rate >= tokenInterface.currentRate()),
-            "Rate less than currentRate");
-
-    uint256 blockSize = entity.offers[offerIndex].blockSize;
-
-    // If we are increasing the escrow, transfer more tokens
-    if (count * blockSize > entity.offers[offerIndex].escrow)
-    {
-      uint256 amount = (count * blockSize) - entity.offers[offerIndex].escrow;
-
-      // Transfer additional tokens from entity into escrow
-      if (!tokenInterface.transferFrom(msg.sender, address(this), amount))
-        revert("Escrow increase failed");
-    }
-
-    // If we are decreasing the escrow, transfer tokens out of escrow
-    else if (count * blockSize < entity.offers[offerIndex].escrow)
-    {
-      uint256 amount = entity.offers[offerIndex].escrow - (count * blockSize);
-
-      // Transfer excess offer escrow tokens back to the entity
-      if (tokenInterface.transfer(msg.sender, amount))
-      {
-        // Reduce number of offers if this is the last one in array
-        if ((count == 0) && (offerIndex == entity.numberOfOffers - 1))
-        {
-          entity.numberOfOffers--;
-
-          // Remove all stranded empty offers before this one
-          while ((entity.numberOfOffers > 0) &&
-                 (entity.offers[entity.numberOfOffers - 1].escrow == 0))
-            entity.numberOfOffers--;
-        }
-      }
-      else
-        revert("Escrow decrease failed");
-    }
-
-    // Update the token offer escrow amount
-    entity.offers[offerIndex].escrow = count * blockSize;
-
-    // Update the offer ETH rate multiplier
-    entity.offers[offerIndex].rate = rate;
-
-    // Send event for token offer, zero number of blocks revokes offer
-    emit entityTokenBlockOfferEvent(entityIndex + 1, rate, blockSize,
-                                    entity.offers[offerIndex].escrow);
-  }
-
   /// @notice Transfer ETH to an entity.
   /// Entity must exist and have bank configured.
   /// Payable, requires ETH transfer.
@@ -529,120 +319,18 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     public payable
   {
     uint256 entityStatus = entityIndexStatus(entityIndex);
-    entityIndex = entityIdToLocalId(entityIndex);
+    require(entityIndex > 0, EntityIsZero);
     Entity storage entity = Entities[entityIndex];
-    uint256 fee = 0;
 
     require(entityStatus > 0, EntityNotValidated);
     require(msg.value > 0, "ETH value zero");
     require(entity.bank != address(0), BankNotConfigured);
 
-    // If not an Automation entity subtract the 1% fee
-    if ((entityStatus & Automatic) != Automatic)
-      fee = (msg.value * 1) / 100;
-
-    // Transfer ETH funds minus the fee if any
-    _asyncTransfer(entity.bank, msg.value - fee);
-
-    // If a fee charged, transfer it to Immutable escrow bank
-    if (fee > 0)
-      tokenInterface.transferToEscrow.value(fee)();
-
-    // Send event for transfer
-    emit entityTransferEvent(entityIndex + 1, productIndex, msg.value);
-  }
-
-  /// @notice Donate tokens to an entity.
-  /// Entity must exist
-  /// msg.sender is the payee
-  /// @param entityIndex The index of entity
-  /// @param productIndex The index of product
-  /// @param numTokens The number of tokens to donate
-  function entityDonate(uint256 entityIndex, uint256 productIndex,
-                        uint256 numTokens)
-    external
-  {
-    uint256 entityStatus = entityIndexStatus(entityIndex);
-    entityIndex = entityIdToLocalId(entityIndex);
-
-    require(entityStatus > 0, EntityNotValidated);
-    require(((entityStatus & Nonprofit) == Nonprofit),
-            "Can donate to nonprofits only.");
-
-    // Transfer tokens to the entity
-    if (!tokenInterface.transferFrom(msg.sender, EntityArray[entityIndex], numTokens))
-      revert("Transfer failed");
-
-    // Send event for donation
-    emit entityDonateEvent(entityIndex + 1, productIndex, numTokens);
-  }
-
-  /// @notice Purchase an block of tokens offered for ETH.
-  /// Offer must already exist. Payable, requires ETH transfer.
-  /// msg.sender is the purchaser.
-  /// @param entityIndex The index of the entity with offer
-  /// @param offerIndex The specific offer
-  /// @param count The number of blocks of the offer to purchase
-  function entityTokenBlockPurchase(uint256 entityIndex,
-                                    uint256 offerIndex, uint256 count)
-    external payable
-  {
-    entityIndex = entityIdToLocalId(entityIndex);
-    Entity storage entity = Entities[entityIndex];
-    require(EntityStatus[entityIndex] > 0, EntityNotValidated);
-    require(entity.numberOfOffers > offerIndex, OfferNotFound);
-    uint256 numTokens = entity.offers[offerIndex].blockSize * count;
-
-    // Ensure enough ETH was sent to purchase the tokens
-    require(msg.value * entity.offers[offerIndex].rate >= numTokens,
-            "Not enough ETH");
-
-    // Ensure entity has a configured bank
-    require(entity.bank != address(0), BankNotConfigured);
-
-    require(entity.offers[offerIndex].escrow >= numTokens,
-            "Not enough tokens in escrow");
-
-    // Transfer the ETH to the offering entity bank
+    // Transfer ETH funds
     _asyncTransfer(entity.bank, msg.value);
 
-    // Transfer tokens to the purchaser
-    if (tokenInterface.transfer(msg.sender, numTokens))
-    {
-      // Reduce offer escrow
-      if (entity.offers[offerIndex].escrow == numTokens)
-      {
-        entity.offers[offerIndex].escrow = 0;
-
-        // If last offer, decrease the numberOfOffers
-        if (offerIndex == entity.numberOfOffers - 1)
-          entity.numberOfOffers--;
-      }
-      else
-        entity.offers[offerIndex].escrow -= numTokens;
-
-      // Send an event for the purchase
-      emit entityTokenBlockPurchaseEvent(msg.sender, entityIndex + 1,
-                                        entity.offers[offerIndex].rate,
-                           entity.offers[offerIndex].blockSize, count);
-    }
-    else
-      revert("Transfer failed");
-  }
-
-  /// All entity functions below are view type (read only)
-
-  /// @notice Return the local entity ID (index).
-  /// Entity must exist and id be valid.
-  /// @param entityIndex The global index of the entity
-  /// @return The local index of the entity
-  function entityIdToLocalId(uint256 entityIndex)
-    public view returns (uint256)
-  {
-    require(entityIndex > 0, EntityIsZero);
-    require(entityIndex <= entityNumberOf(), "Entity index not valid");
-
-    return entityIndex - 1;
+    // Send event for transfer
+    emit entityTransferEvent(entityIndex, productIndex, msg.value);
   }
 
   /// @notice Retrieve official entity status.
@@ -652,8 +340,8 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
   function entityIndexStatus(uint256 entityIndex)
     public view returns (uint256)
   {
-    if ((entityIndex > 0) && (entityIndex <= Entities.length))
-      return EntityStatus[entityIndex - 1];
+    if ((entityIndex > 0) && (entityIndex <= NumberOfEntities))
+      return EntityStatus[entityIndex];
     else
       return 0;
   }
@@ -687,11 +375,10 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
   function entityIndexToAddress(uint256 entityIndex)
     public view returns (address)
   {
-    if ((entityIndex == 0) || (entityIndex > Entities.length))
+    if ((entityIndex == 0) || (entityIndex > NumberOfEntities))
       return (address(0));
-    return EntityArray[entityIndex - 1];
+    return EntityArray[entityIndex];
   }
-
 
   /// @notice Retrieve entity details from index.
   /// @param entityIndex The index of the entity
@@ -700,9 +387,9 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
   function entityDetailsByIndex(uint256 entityIndex)
     public view returns (string memory, string memory)
   {
-    if ((entityIndex == 0) || (entityIndex > Entities.length))
+    if ((entityIndex == 0) || (entityIndex > NumberOfEntities))
       return ("", "");
-    Entity storage entity = Entities[entityIndex - 1];
+    Entity storage entity = Entities[entityIndex];
     string memory name;
     string memory infoURL;
 
@@ -712,94 +399,12 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     return (name, infoURL);
   }
 
-  /// @notice Retrieve entity referral details.
-  /// @param entityIndex The index of the entity
-  /// @return the entity referral
-  /// @return the entity creation date
-  function entityReferralByIndex(uint256 entityIndex)
-    public view returns (address, uint256)
-  {
-    // Return empty referral if entityIndex invalid
-    if ((entityIndex == 0) || (entityIndex > Entities.length))
-      return (address(0), 0);
-    Entity storage entity = Entities[entityIndex - 1];
-
-    // Return empty referral if referral not set or invalid
-    if ((entity.referral == 0) || (entity.referral > Entities.length))
-      return (address(0), 0);
-
-    // Return referral address and creation time
-    return (EntityArray[entity.referral - 1], entity.createTime);
-  }
-
   /// @notice Retrieve number of entities.
   /// @return the number of entities
   function entityNumberOf()
     public view returns (uint256)
   {
-    return Entities.length;
-  }
-
-  /// @notice Return the number of token offers for an entity.
-  /// Entity must exist and index be valid.
-  /// @param entityIndex The index of the entity
-  /// @return the current number of token offers
-  function entityNumberOfOffers(uint256 entityIndex)
-    external view returns (uint256)
-  {
-    entityIndex = entityIdToLocalId(entityIndex);
-    Entity storage entity = Entities[entityIndex];
-
-    // Return the number of products for this entity
-    return entity.numberOfOffers;
-  }
-
-  /// @notice Retrieve details of a token offer.
-  /// Returns empty name and URL if not found.
-  /// @param entityIndex The index of the entity to lookup
-  /// @return the ETH to token exchange rate
-  /// @return the block size
-  /// @return the remaining size of escrow
-  function entityOfferDetails(uint256 entityIndex,
-                              uint256 offerId)
-    external view returns (uint256, uint256, uint256)
-  {
-    entityIndex = entityIdToLocalId(entityIndex);
-    Entity storage entity = Entities[entityIndex];
-
-    require(entity.numberOfOffers > offerId, OfferNotFound);
-
-    // Return the name and URL for this organization
-    return (entity.offers[offerId].rate,
-            entity.offers[offerId].blockSize,
-            entity.offers[offerId].escrow);
-  }
-
-  /// @notice Retrieve all entity token offer details
-  /// Status of empty arrays if none found.
-  /// @param entityIndex The index of the entity to lookup
-  /// @return array of ETH to token exchange rate
-  /// @return array of block size
-  /// @return array of size of escrow
-  function entityAllOfferDetails(uint256 entityIndex)
-    external view returns (uint256[] memory, uint256[] memory,
-                           uint256[] memory)
-  {
-    entityIndex = entityIdToLocalId(entityIndex);
-    Entity storage entity = Entities[entityIndex];
-
-    uint256[] memory resultRate = new uint256[](entity.numberOfOffers);
-    uint256[] memory resultBlockSize = new uint256[](entity.numberOfOffers);
-    uint256[] memory resultEscrow = new uint256[](entity.numberOfOffers);
-
-    for (uint i = 0; i < entity.numberOfOffers; ++i)
-    {
-      resultRate[i] = entity.offers[i].rate;
-      resultBlockSize[i] = entity.offers[i].blockSize;
-      resultEscrow[i] = entity.offers[i].escrow;
-    }
-
-    return (resultRate, resultBlockSize, resultEscrow);
+    return NumberOfEntities;
   }
 
   /// @notice Check payment (ETH) due entity bank.
@@ -811,7 +416,6 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     uint256 entityIndex = EntityIndex[msg.sender];
     if (entityIndex == 0)
       return 0;
-    entityIndex = entityIdToLocalId(entityIndex);
     Entity storage entity = Entities[entityIndex];
     uint256 entityStatus = entityAddressStatus(msg.sender);
     require(entityStatus > 0, EntityNotValidated);
@@ -824,18 +428,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     return payments(entity.bank);
   }
 
-  /// @notice Return the entity custom ERC20 contract address.
-  /// @param entityIndex The index of the entity to lookup
-  /// @return the entity custom ERC20 token or zero address
-  function entityCustomTokenAddress(uint256 entityIndex)
-    external view returns (address)
-  {
-    if (entityIndex > 0)
-      return Entities[entityIndex - 1].erc20Token;
-    else
-      return address(0);
-  }
-
+/*
   /// @notice Return ENS immutablesoft root node.
   /// @return the bytes32 ENS root node for immutablesoft.eth
   function entityRootNode()
@@ -846,6 +439,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     else
       return 0;
   }
+*/
 
   /// @notice Retrieve all entity details
   /// Status of empty arrays if none found.
@@ -856,18 +450,17 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     external view returns (uint256[] memory, string[] memory,
                            string[] memory)
   {
-    uint256[] memory resultStatus = new uint256[](Entities.length);
-    string[] memory resultName = new string[](Entities.length);
-    string[] memory resultURL = new string[](Entities.length);
+    uint256[] memory resultStatus = new uint256[](NumberOfEntities);
+    string[] memory resultName = new string[](NumberOfEntities);
+    string[] memory resultURL = new string[](NumberOfEntities);
 
-    for (uint i = 0; i < Entities.length; ++i)
+    for (uint i = 1; i <= NumberOfEntities; ++i)
     {
-      resultStatus[i] = EntityStatus[i];
-      resultName[i] = Entities[i].name;
-      resultURL[i] = Entities[i].infoURL;
+      resultStatus[i - 1] = EntityStatus[i];
+      resultName[i- 1] = Entities[i].name;
+      resultURL[i - 1] = Entities[i].infoURL;
     }
 
     return (resultStatus, resultName, resultURL);
   }
-
 }

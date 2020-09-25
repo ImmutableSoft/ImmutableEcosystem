@@ -9,7 +9,7 @@ contract("ImmutableEcosystemEvents", accounts => {
     
     // Create a new test organization
     let newEntity = await immutableEntityInstance.entityCreate("Test Org Event",
-             "http://exampleEvent.com", 0, { from: accounts[1] });
+             "http://exampleEvent.com", { from: accounts[1] });
  
     truffleAssert.eventEmitted(newEntity, 'entityEvent', (ev) => {
         return ev.entityIndex == 1 && ev.name === "Test Org Event";

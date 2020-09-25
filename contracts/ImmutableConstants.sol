@@ -98,7 +98,69 @@ contract ImmutableConstants
 
   // Bits 160 through 256 are available for expansion
 
+  // Product License Activation Flags
+  
+  // Flags begin at bit 160 and go until bit 191
+  uint256 constant ExpirationFlag =     (1 << 160); // Activation expiration
+  uint256 constant LimitationFlag =     (1 << 161); // Version/language limitations
+                                                    // Cannot be used with feature
+  uint256 constant NoResaleFlag =       (1 << 162); // Disallow resale after purchase
+                                                    // Per EU "first sale" law, cannot
+                                                    // be set if expiration NOT set
+  uint256 constant FeatureFlag =        (1 << 163); // Specific application feature
+                                                    // ie. Value is feature specific
+                                                    // CANNOT be used with Limitation
+                                                    // flag
+  uint256 constant LimitedOffersFlag =  (1 << 164); // Limited number of offers
+                                                    // UniqueId is used for number
+                                                    // Offer flag only, not used in
+                                                    // activate token id
+  uint256 constant BulkOffersFlag =     (1 << 165); // Limited number of offers
+                                                    // UniqueId is used for number
+                                                    // Offer flag only, not used in
+                                                    // activate token id. Cannot be
+                                                    // used with LimitedOffersFlag
+
+  // Offset and mask of entity and product identifiers
+  uint256 constant EntityIdOffset = 224;
+  uint256 constant EntityIdMask =  (0xFFFFFFFF << EntityIdOffset);
+  uint256 constant ProductIdOffset = 192;
+  uint256 constant ProductIdMask =  (0xFFFFFFFF << ProductIdOffset);
+  uint256 constant UniqueIdOffset = 176;
+  uint256 constant UniqueIdMask =  (0xFFFF << UniqueIdOffset);
+  uint256 constant FlagsOffset = 160;
+  uint256 constant FlagsMask =  (0xFFFF << FlagsOffset);
+
+  // Expiration immediately follows the 128 bit value
+  uint256 constant ExpirationOffset = 128;
+  uint256 constant ExpirationMask = (0xFFFFFFFF << ExpirationOffset);
+
+  // If limitation flag set, the value is entirely utilized
+
+  // Bits 64 - 127 are for language (as defined above)
+  uint256 constant LanguageOffset = 64;
+  uint256 constant LanguageMask =  (0xFFFFFFFFFFFFFFFF << LanguageOffset);
+
+  // Final 64 bits of value is version (4 different 16 bit values)
+  uint256 constant LimitVersionOffset = 0;
+  uint256 constant LimitVersionMask =  (0xFFFFFFFFFFFFFFFF << LimitVersionOffset);
+
+  // The value is the 128 LSBs
+  //   32 bits if limitations flag set (96 bits version/language)
+  //   All 128 bits if limitations flag not set
+  //   
+  uint256 constant ValueOffset = 0;
+  uint256 constant ValueMask =  0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+
   // Error strings
+  string constant EntityIsZero = "EntityID zero";
   string constant OfferNotFound = "Offer not found";
   string constant EntityNotValidated = "Entity not validated";
+
+  string constant HashCannotBeZero = "Hash cannot be zero";
+  string constant TokenEntityNoMatch = "Token entity does not match";
+  string constant TokenProductNoMatch = "Token product id does not match";
+  string constant TokenNotUnique = "TokenId is NOT unique";
+
+
 }
