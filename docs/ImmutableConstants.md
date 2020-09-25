@@ -2,7 +2,7 @@
 
 View Source: [contracts/ImmutableConstants.sol](../contracts/ImmutableConstants.sol)
 
-**↘ Derived Contracts: [ImmutableEntity](ImmutableEntity.md), [ImmutableLicense](ImmutableLicense.md), [ImmutableProduct](ImmutableProduct.md)**
+**↘ Derived Contracts: [ActivateToken](ActivateToken.md), [ImmutableEntity](ImmutableEntity.md), [ImmutableProduct](ImmutableProduct.md)**
 
 **ImmutableConstants**
 
@@ -70,8 +70,35 @@ uint256 internal constant SourceCode;
 uint256 internal constant Agnostic;
 uint256 internal constant NotApplicable;
 uint256 internal constant Other;
+uint256 internal constant ExpirationFlag;
+uint256 internal constant LimitationFlag;
+uint256 internal constant NoResaleFlag;
+uint256 internal constant FeatureFlag;
+uint256 internal constant LimitedOffersFlag;
+uint256 internal constant BulkOffersFlag;
+uint256 internal constant EntityIdOffset;
+uint256 internal constant EntityIdMask;
+uint256 internal constant ProductIdOffset;
+uint256 internal constant ProductIdMask;
+uint256 internal constant UniqueIdOffset;
+uint256 internal constant UniqueIdMask;
+uint256 internal constant FlagsOffset;
+uint256 internal constant FlagsMask;
+uint256 internal constant ExpirationOffset;
+uint256 internal constant ExpirationMask;
+uint256 internal constant LanguageOffset;
+uint256 internal constant LanguageMask;
+uint256 internal constant LimitVersionOffset;
+uint256 internal constant LimitVersionMask;
+uint256 internal constant ValueOffset;
+uint256 internal constant ValueMask;
+string internal constant EntityIsZero;
 string internal constant OfferNotFound;
 string internal constant EntityNotValidated;
+string internal constant HashCannotBeZero;
+string internal constant TokenEntityNoMatch;
+string internal constant TokenProductNoMatch;
+string internal constant TokenNotUnique;
 
 ```
 
@@ -79,29 +106,32 @@ string internal constant EntityNotValidated;
 
 ## Contracts
 
+* [ActivateToken](ActivateToken.md)
 * [Address](Address.md)
-* [AddrResolver](AddrResolver.md)
 * [Context](Context.md)
+* [Counters](Counters.md)
 * [CustomToken](CustomToken.md)
-* [ENS](ENS.md)
+* [ERC165](ERC165.md)
 * [ERC20](ERC20.md)
 * [ERC20Detailed](ERC20Detailed.md)
 * [ERC20Mintable](ERC20Mintable.md)
-* [ERC20Pausable](ERC20Pausable.md)
+* [ERC721](ERC721.md)
+* [ERC721Burnable](ERC721Burnable.md)
+* [ERC721Enumerable](ERC721Enumerable.md)
+* [ERC721Mintable](ERC721Mintable.md)
 * [Escrow](Escrow.md)
+* [IERC165](IERC165.md)
 * [IERC20](IERC20.md)
+* [IERC721](IERC721.md)
+* [IERC721Enumerable](IERC721Enumerable.md)
+* [IERC721Receiver](IERC721Receiver.md)
 * [ImmutableConstants](ImmutableConstants.md)
 * [ImmutableEntity](ImmutableEntity.md)
-* [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
-* [ImmutableResolver](ImmutableResolver.md)
-* [ImmuteToken](ImmuteToken.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)
-* [Pausable](Pausable.md)
-* [PauserRole](PauserRole.md)
 * [PullPayment](PullPayment.md)
 * [ResolverBase](ResolverBase.md)
 * [Roles](Roles.md)

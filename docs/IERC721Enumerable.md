@@ -1,75 +1,64 @@
-# Roles (Roles.sol)
+# ERC-721 Non-Fungible Token Standard, optional enumeration extension (IERC721Enumerable.sol)
 
-View Source: [@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol](../@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Enumerable.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Enumerable.sol)
 
-**Roles**
+**↗ Extends: [Initializable](Initializable.md), [IERC721](IERC721.md)**
+**↘ Derived Contracts: [ERC721Enumerable](ERC721Enumerable.md)**
 
-Library for managing addresses assigned to a Role.
+**IERC721Enumerable**
 
-## Structs
-### Role
-
-```js
-struct Role {
- mapping(address => bool) bearer
-}
-```
+See https://eips.ethereum.org/EIPS/eip-721
 
 ## Functions
 
-- [add(struct Roles.Role role, address account)](#add)
-- [remove(struct Roles.Role role, address account)](#remove)
-- [has(struct Roles.Role role, address account)](#has)
+- [totalSupply()](#totalsupply)
+- [tokenOfOwnerByIndex(address owner, uint256 index)](#tokenofownerbyindex)
+- [tokenByIndex(uint256 index)](#tokenbyindex)
 
-### add
+### totalSupply
 
-Give an account access to this role.
+⤿ Overridden Implementation(s): [ERC721Enumerable.totalSupply](ERC721Enumerable.md#totalsupply)
 
 ```js
-function add(struct Roles.Role role, address account) internal nonpayable
+function totalSupply() public view
+returns(uint256)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| role | struct Roles.Role |  | 
-| account | address |  | 
 
-### remove
+### tokenOfOwnerByIndex
 
-Remove an account's access to this role.
+⤿ Overridden Implementation(s): [ERC721Enumerable.tokenOfOwnerByIndex](ERC721Enumerable.md#tokenofownerbyindex)
 
 ```js
-function remove(struct Roles.Role role, address account) internal nonpayable
+function tokenOfOwnerByIndex(address owner, uint256 index) public view
+returns(tokenId uint256)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| role | struct Roles.Role |  | 
-| account | address |  | 
+| owner | address |  | 
+| index | uint256 |  | 
 
-### has
+### tokenByIndex
 
-Check if an account has this role.
+⤿ Overridden Implementation(s): [ERC721Enumerable.tokenByIndex](ERC721Enumerable.md#tokenbyindex)
 
 ```js
-function has(struct Roles.Role role, address account) internal view
-returns(bool)
+function tokenByIndex(uint256 index) public view
+returns(uint256)
 ```
-
-**Returns**
-
-bool
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| role | struct Roles.Role |  | 
-| account | address |  | 
+| index | uint256 |  | 
 
 ## Contracts
 

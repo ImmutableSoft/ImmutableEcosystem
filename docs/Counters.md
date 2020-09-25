@@ -1,75 +1,67 @@
-# Roles (Roles.sol)
+# Counters (Counters.sol)
 
-View Source: [@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol](../@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/drafts/Counters.sol](../@openzeppelin/contracts-ethereum-package/contracts/drafts/Counters.sol)
 
-**Roles**
+**Counters**
 
-Library for managing addresses assigned to a Role.
+Provides counters that can only be incremented or decremented by one. This can be used e.g. to track the number
+of elements in a mapping, issuing ERC721 ids, or counting request ids.
+ * Include with `using Counters for Counters.Counter;`
+Since it is not possible to overflow a 256 bit integer with increments of one, `increment` can skip the {SafeMath}
+overflow check, thereby saving gas. This does assume however correct usage, in that the underlying `_value` is never
+directly accessed.
 
 ## Structs
-### Role
+### Counter
 
 ```js
-struct Role {
- mapping(address => bool) bearer
+struct Counter {
+ uint256 _value
 }
 ```
 
 ## Functions
 
-- [add(struct Roles.Role role, address account)](#add)
-- [remove(struct Roles.Role role, address account)](#remove)
-- [has(struct Roles.Role role, address account)](#has)
+- [current(struct Counters.Counter counter)](#current)
+- [increment(struct Counters.Counter counter)](#increment)
+- [decrement(struct Counters.Counter counter)](#decrement)
 
-### add
-
-Give an account access to this role.
+### current
 
 ```js
-function add(struct Roles.Role role, address account) internal nonpayable
+function current(struct Counters.Counter counter) internal view
+returns(uint256)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| role | struct Roles.Role |  | 
-| account | address |  | 
+| counter | struct Counters.Counter |  | 
 
-### remove
-
-Remove an account's access to this role.
+### increment
 
 ```js
-function remove(struct Roles.Role role, address account) internal nonpayable
+function increment(struct Counters.Counter counter) internal nonpayable
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| role | struct Roles.Role |  | 
-| account | address |  | 
+| counter | struct Counters.Counter |  | 
 
-### has
-
-Check if an account has this role.
+### decrement
 
 ```js
-function has(struct Roles.Role role, address account) internal view
-returns(bool)
+function decrement(struct Counters.Counter counter) internal nonpayable
 ```
-
-**Returns**
-
-bool
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| role | struct Roles.Role |  | 
-| account | address |  | 
+| counter | struct Counters.Counter |  | 
 
 ## Contracts
 

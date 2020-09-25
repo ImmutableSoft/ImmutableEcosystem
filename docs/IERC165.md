@@ -1,73 +1,41 @@
-# Migrations.sol
+# IERC165.sol
 
-View Source: [contracts/Migrations.sol](../contracts/Migrations.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/introspection/IERC165.sol](../@openzeppelin/contracts-ethereum-package/contracts/introspection/IERC165.sol)
 
-**Migrations**
+**↘ Derived Contracts: [ERC165](ERC165.md), [IERC721](IERC721.md)**
 
-## Contract Members
-**Constants & Variables**
+**IERC165**
 
-```js
-address public owner;
-uint256 public last_completed_migration;
-
-```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
+Interface of the ERC165 standard, as defined in the
+https://eips.ethereum.org/EIPS/eip-165[EIP].
+ * Implementers can declare support of contract interfaces, which can then be
+queried by others ({ERC165Checker}).
+ * For an implementation, see {ERC165}.
 
 ## Functions
 
-- [()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [supportsInterface(bytes4 interfaceId)](#supportsinterface)
 
-### 
+### supportsInterface
+
+⤿ Overridden Implementation(s): [ERC165.supportsInterface](ERC165.md#supportsinterface)
+
+Returns true if this contract implements the interface defined by
+`interfaceId`. See the corresponding
+https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]
+to learn more about how these ids are created.
+     * This function call must use less than 30 000 gas.
 
 ```js
-function () public nonpayable
+function supportsInterface(bytes4 interfaceId) external view
+returns(bool)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-
-### setCompleted
-
-```js
-function setCompleted(uint256 completed) public nonpayable restricted 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| completed | uint256 |  | 
-
-### upgrade
-
-```js
-function upgrade(address new_address) public nonpayable restricted 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| new_address | address |  | 
+| interfaceId | bytes4 |  | 
 
 ## Contracts
 

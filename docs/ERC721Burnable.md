@@ -1,73 +1,39 @@
-# Migrations.sol
+# ERC721 Burnable Token (ERC721Burnable.sol)
 
-View Source: [contracts/Migrations.sol](../contracts/Migrations.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Burnable.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Burnable.sol)
 
-**Migrations**
+**↗ Extends: [Initializable](Initializable.md), [Context](Context.md), [ERC721](ERC721.md)**
+**↘ Derived Contracts: [ActivateToken](ActivateToken.md)**
+
+**ERC721Burnable**
+
+ERC721 Token that can be irreversibly burned (destroyed).
 
 ## Contract Members
 **Constants & Variables**
 
 ```js
-address public owner;
-uint256 public last_completed_migration;
+uint256[50] private ______gap;
 
 ```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
 
 ## Functions
 
-- [()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [burn(uint256 tokenId)](#burn)
 
-### 
+### burn
+
+Burns a specific ERC721 token.
 
 ```js
-function () public nonpayable
+function burn(uint256 tokenId) public nonpayable
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-
-### setCompleted
-
-```js
-function setCompleted(uint256 completed) public nonpayable restricted 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| completed | uint256 |  | 
-
-### upgrade
-
-```js
-function upgrade(address new_address) public nonpayable restricted 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| new_address | address |  | 
+| tokenId | uint256 | uint256 id of the ERC721 token to be burned. | 
 
 ## Contracts
 

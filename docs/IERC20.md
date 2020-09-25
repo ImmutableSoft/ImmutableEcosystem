@@ -60,7 +60,7 @@ returns(uint256)
 
 ### transfer
 
-⤿ Overridden Implementation(s): [ERC20.transfer](ERC20.md#transfer),[ERC20Pausable.transfer](ERC20Pausable.md#transfer),[ImmuteToken.transfer](ImmuteToken.md#transfer)
+⤿ Overridden Implementation(s): [ERC20.transfer](ERC20.md#transfer)
 
 Moves `amount` tokens from the caller's account to `recipient`.
      * Returns a boolean value indicating whether the operation succeeded.
@@ -101,7 +101,7 @@ returns(uint256)
 
 ### approve
 
-⤿ Overridden Implementation(s): [ERC20.approve](ERC20.md#approve),[ERC20Pausable.approve](ERC20Pausable.md#approve)
+⤿ Overridden Implementation(s): [ERC20.approve](ERC20.md#approve)
 
 Sets `amount` as the allowance of `spender` over the caller's tokens.
      * Returns a boolean value indicating whether the operation succeeded.
@@ -127,7 +127,7 @@ returns(bool)
 
 ### transferFrom
 
-⤿ Overridden Implementation(s): [ERC20.transferFrom](ERC20.md#transferfrom),[ERC20Pausable.transferFrom](ERC20Pausable.md#transferfrom),[ImmuteToken.transferFrom](ImmuteToken.md#transferfrom)
+⤿ Overridden Implementation(s): [ERC20.transferFrom](ERC20.md#transferfrom)
 
 Moves `amount` tokens from `sender` to `recipient` using the
 allowance mechanism. `amount` is then deducted from the caller's
@@ -150,29 +150,32 @@ returns(bool)
 
 ## Contracts
 
+* [ActivateToken](ActivateToken.md)
 * [Address](Address.md)
-* [AddrResolver](AddrResolver.md)
 * [Context](Context.md)
+* [Counters](Counters.md)
 * [CustomToken](CustomToken.md)
-* [ENS](ENS.md)
+* [ERC165](ERC165.md)
 * [ERC20](ERC20.md)
 * [ERC20Detailed](ERC20Detailed.md)
 * [ERC20Mintable](ERC20Mintable.md)
-* [ERC20Pausable](ERC20Pausable.md)
+* [ERC721](ERC721.md)
+* [ERC721Burnable](ERC721Burnable.md)
+* [ERC721Enumerable](ERC721Enumerable.md)
+* [ERC721Mintable](ERC721Mintable.md)
 * [Escrow](Escrow.md)
+* [IERC165](IERC165.md)
 * [IERC20](IERC20.md)
+* [IERC721](IERC721.md)
+* [IERC721Enumerable](IERC721Enumerable.md)
+* [IERC721Receiver](IERC721Receiver.md)
 * [ImmutableConstants](ImmutableConstants.md)
 * [ImmutableEntity](ImmutableEntity.md)
-* [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
-* [ImmutableResolver](ImmutableResolver.md)
-* [ImmuteToken](ImmuteToken.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)
-* [Pausable](Pausable.md)
-* [PauserRole](PauserRole.md)
 * [PullPayment](PullPayment.md)
 * [ResolverBase](ResolverBase.md)
 * [Roles](Roles.md)

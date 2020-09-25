@@ -2,8 +2,6 @@
 
 View Source: [contracts/ResolverBase.sol](../contracts/ResolverBase.sol)
 
-**↘ Derived Contracts: [AddrResolver](AddrResolver.md)**
-
 **ResolverBase**
 
 ## Contract Members
@@ -39,8 +37,6 @@ modifier authorised(bytes32 node) internal
 
 ### supportsInterface
 
-⤿ Overridden Implementation(s): [AddrResolver.supportsInterface](AddrResolver.md#supportsinterface)
-
 ```js
 function supportsInterface(bytes4 interfaceID) public pure
 returns(bool)
@@ -53,8 +49,6 @@ returns(bool)
 | interfaceID | bytes4 |  | 
 
 ### isAuthorised
-
-⤿ Overridden Implementation(s): [ImmutableResolver.isAuthorised](ImmutableResolver.md#isauthorised)
 
 ```js
 function isAuthorised(bytes32 node) internal view
@@ -95,29 +89,32 @@ returns(b bytes)
 
 ## Contracts
 
+* [ActivateToken](ActivateToken.md)
 * [Address](Address.md)
-* [AddrResolver](AddrResolver.md)
 * [Context](Context.md)
+* [Counters](Counters.md)
 * [CustomToken](CustomToken.md)
-* [ENS](ENS.md)
+* [ERC165](ERC165.md)
 * [ERC20](ERC20.md)
 * [ERC20Detailed](ERC20Detailed.md)
 * [ERC20Mintable](ERC20Mintable.md)
-* [ERC20Pausable](ERC20Pausable.md)
+* [ERC721](ERC721.md)
+* [ERC721Burnable](ERC721Burnable.md)
+* [ERC721Enumerable](ERC721Enumerable.md)
+* [ERC721Mintable](ERC721Mintable.md)
 * [Escrow](Escrow.md)
+* [IERC165](IERC165.md)
 * [IERC20](IERC20.md)
+* [IERC721](IERC721.md)
+* [IERC721Enumerable](IERC721Enumerable.md)
+* [IERC721Receiver](IERC721Receiver.md)
 * [ImmutableConstants](ImmutableConstants.md)
 * [ImmutableEntity](ImmutableEntity.md)
-* [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
-* [ImmutableResolver](ImmutableResolver.md)
-* [ImmuteToken](ImmuteToken.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)
-* [Pausable](Pausable.md)
-* [PauserRole](PauserRole.md)
 * [PullPayment](PullPayment.md)
 * [ResolverBase](ResolverBase.md)
 * [Roles](Roles.md)

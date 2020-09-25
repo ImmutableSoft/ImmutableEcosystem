@@ -3,7 +3,7 @@
 
 View Source: [@openzeppelin/upgrades/contracts/Initializable.sol](../@openzeppelin/upgrades/contracts/Initializable.sol)
 
-**↘ Derived Contracts: [Context](Context.md), [ERC20](ERC20.md), [ERC20Detailed](ERC20Detailed.md), [ERC20Mintable](ERC20Mintable.md), [ERC20Pausable](ERC20Pausable.md), [Escrow](Escrow.md), [ImmutableEntity](ImmutableEntity.md), [ImmutableLicense](ImmutableLicense.md), [ImmutableProduct](ImmutableProduct.md), [ImmutableResolver](ImmutableResolver.md), [ImmuteToken](ImmuteToken.md), [MinterRole](MinterRole.md), [Ownable](Ownable.md), [Pausable](Pausable.md), [PauserRole](PauserRole.md), [PullPayment](PullPayment.md), [Secondary](Secondary.md)**
+**↘ Derived Contracts: [ActivateToken](ActivateToken.md), [Context](Context.md), [ERC165](ERC165.md), [ERC20](ERC20.md), [ERC20Detailed](ERC20Detailed.md), [ERC20Mintable](ERC20Mintable.md), [ERC721](ERC721.md), [ERC721Burnable](ERC721Burnable.md), [ERC721Enumerable](ERC721Enumerable.md), [ERC721Mintable](ERC721Mintable.md), [Escrow](Escrow.md), [IERC721](IERC721.md), [IERC721Enumerable](IERC721Enumerable.md), [ImmutableEntity](ImmutableEntity.md), [ImmutableProduct](ImmutableProduct.md), [MinterRole](MinterRole.md), [Ownable](Ownable.md), [PullPayment](PullPayment.md), [Secondary](Secondary.md)**
 
 **Initializable**
 
@@ -63,29 +63,32 @@ returns(bool)
 
 ## Contracts
 
+* [ActivateToken](ActivateToken.md)
 * [Address](Address.md)
-* [AddrResolver](AddrResolver.md)
 * [Context](Context.md)
+* [Counters](Counters.md)
 * [CustomToken](CustomToken.md)
-* [ENS](ENS.md)
+* [ERC165](ERC165.md)
 * [ERC20](ERC20.md)
 * [ERC20Detailed](ERC20Detailed.md)
 * [ERC20Mintable](ERC20Mintable.md)
-* [ERC20Pausable](ERC20Pausable.md)
+* [ERC721](ERC721.md)
+* [ERC721Burnable](ERC721Burnable.md)
+* [ERC721Enumerable](ERC721Enumerable.md)
+* [ERC721Mintable](ERC721Mintable.md)
 * [Escrow](Escrow.md)
+* [IERC165](IERC165.md)
 * [IERC20](IERC20.md)
+* [IERC721](IERC721.md)
+* [IERC721Enumerable](IERC721Enumerable.md)
+* [IERC721Receiver](IERC721Receiver.md)
 * [ImmutableConstants](ImmutableConstants.md)
 * [ImmutableEntity](ImmutableEntity.md)
-* [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
-* [ImmutableResolver](ImmutableResolver.md)
-* [ImmuteToken](ImmuteToken.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)
-* [Pausable](Pausable.md)
-* [PauserRole](PauserRole.md)
 * [PullPayment](PullPayment.md)
 * [ResolverBase](ResolverBase.md)
 * [Roles](Roles.md)

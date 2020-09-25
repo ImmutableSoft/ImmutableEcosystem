@@ -15,12 +15,17 @@ Collection of functions related to the address type
 ### isContract
 
 Returns true if `account` is a contract.
-     * This test is non-exhaustive, and there may be false-negatives: during the
-execution of a contract's constructor, its address will be reported as
-not containing a contract.
-     * IMPORTANT: It is unsafe to assume that an address for which this
-function returns false is an externally-owned account (EOA) and not a
-contract.
+     * [IMPORTANT]
+====
+It is unsafe to assume that an address for which this function returns
+false is an externally-owned account (EOA) and not a contract.
+     * Among others, `isContract` will return false for the following 
+types of addresses:
+     *  - an externally-owned account
+ - a contract in construction
+ - an address where a contract will be created
+ - an address where a contract lived, but was destroyed
+====
 
 ```js
 function isContract(address account) internal view
@@ -78,29 +83,32 @@ function sendValue(address payable recipient, uint256 amount) internal nonpayabl
 
 ## Contracts
 
+* [ActivateToken](ActivateToken.md)
 * [Address](Address.md)
-* [AddrResolver](AddrResolver.md)
 * [Context](Context.md)
+* [Counters](Counters.md)
 * [CustomToken](CustomToken.md)
-* [ENS](ENS.md)
+* [ERC165](ERC165.md)
 * [ERC20](ERC20.md)
 * [ERC20Detailed](ERC20Detailed.md)
 * [ERC20Mintable](ERC20Mintable.md)
-* [ERC20Pausable](ERC20Pausable.md)
+* [ERC721](ERC721.md)
+* [ERC721Burnable](ERC721Burnable.md)
+* [ERC721Enumerable](ERC721Enumerable.md)
+* [ERC721Mintable](ERC721Mintable.md)
 * [Escrow](Escrow.md)
+* [IERC165](IERC165.md)
 * [IERC20](IERC20.md)
+* [IERC721](IERC721.md)
+* [IERC721Enumerable](IERC721Enumerable.md)
+* [IERC721Receiver](IERC721Receiver.md)
 * [ImmutableConstants](ImmutableConstants.md)
 * [ImmutableEntity](ImmutableEntity.md)
-* [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
-* [ImmutableResolver](ImmutableResolver.md)
-* [ImmuteToken](ImmuteToken.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)
-* [Pausable](Pausable.md)
-* [PauserRole](PauserRole.md)
 * [PullPayment](PullPayment.md)
 * [ResolverBase](ResolverBase.md)
 * [Roles](Roles.md)

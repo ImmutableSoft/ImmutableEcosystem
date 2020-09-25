@@ -19,22 +19,7 @@ struct Entity {
  string name,
  string entityEnsName,
  string infoURL,
- uint256 numberOfOffers,
- uint256 escrow,
- address erc20Token,
- uint256 referral,
- uint256 createTime,
- mapping(uint256 => struct ImmutableEntity.TokenBlockOffer) offers
-}
-```
-
-### TokenBlockOffer
-
-```js
-struct TokenBlockOffer {
- uint256 rate,
- uint256 blockSize,
- uint256 escrow
+ uint256 createTime
 }
 ```
 
@@ -43,20 +28,15 @@ struct TokenBlockOffer {
 
 ```js
 //internal members
-uint256 internal constant ReferralEntityBonus;
-uint256 internal constant ReferralSubscriptionBonus;
-uint256 internal constant EntitySubscriptionBonus;
-string internal constant EntityIsZero;
 string internal constant BankNotConfigured;
+uint256 internal NumberOfEntities;
 
 //private members
 mapping(address => uint256) private EntityIndex;
 mapping(uint256 => uint256) private EntityStatus;
-address[] private EntityArray;
-struct ImmutableEntity.Entity[] private Entities;
-contract ImmuteToken private tokenInterface;
+mapping(uint256 => address) private EntityArray;
+mapping(uint256 => struct ImmutableEntity.Entity) private Entities;
 contract StringCommon private commonInterface;
-contract ImmutableResolver private resolver;
 
 ```
 
@@ -64,77 +44,46 @@ contract ImmutableResolver private resolver;
 
 ```js
 event entityEvent(uint256  entityIndex, string  name, string  url);
-event entityTokenBlockOfferEvent(uint256  entityIndex, uint256  rate, uint256  tokens, uint256  amount);
-event entityTokenBlockPurchaseEvent(address indexed purchaserAddress, uint256  entityIndex, uint256  rate, uint256  tokens, uint256  amount);
 event entityTransferEvent(uint256  entityIndex, uint256  productIndex, uint256  amount);
-event entityDonateEvent(uint256  entityIndex, uint256  productIndex, uint256  numTokens);
 ```
 
 ## Functions
 
-- [initialize(address immuteToken, address commonAddr)](#initialize)
-- [entityResolver(address resolverAddr, bytes32 rootNode)](#entityresolver)
+- [initialize(address commonAddr)](#initialize)
 - [entityStatusUpdate(uint256 entityIndex, uint256 status)](#entitystatusupdate)
-- [entityCustomToken(uint256 entityIndex, address tokenAddress)](#entitycustomtoken)
-- [entityCreate(string entityName, string entityURL, uint256 referralEntityIndex)](#entitycreate)
+- [entityCreate(string entityName, string entityURL)](#entitycreate)
 - [entityUpdate(string entityName, string entityURL)](#entityupdate)
 - [entityBankChange(address payable newBank)](#entitybankchange)
-- [entityAddressNext(address nextAddress, uint256 numTokens)](#entityaddressnext)
-- [entityAdminAddressNext(address entityAddress, address nextAddress, uint256 numTokens)](#entityadminaddressnext)
+- [entityAddressNext(address nextAddress)](#entityaddressnext)
+- [entityAdminAddressNext(address entityAddress, address nextAddress)](#entityadminaddressnext)
 - [entityAddressMove(address oldAddress)](#entityaddressmove)
 - [entityPaymentsWithdraw()](#entitypaymentswithdraw)
-- [entityTokenBlockOffer(uint256 rate, uint256 tokens, uint256 count)](#entitytokenblockoffer)
-- [entityTokenBlockOfferChange(uint256 offerIndex, uint256 rate, uint256 count)](#entitytokenblockofferchange)
 - [entityTransfer(uint256 entityIndex, uint256 productIndex)](#entitytransfer)
-- [entityDonate(uint256 entityIndex, uint256 productIndex, uint256 numTokens)](#entitydonate)
-- [entityTokenBlockPurchase(uint256 entityIndex, uint256 offerIndex, uint256 count)](#entitytokenblockpurchase)
-- [entityIdToLocalId(uint256 entityIndex)](#entityidtolocalid)
 - [entityIndexStatus(uint256 entityIndex)](#entityindexstatus)
 - [entityAddressStatus(address entityAddress)](#entityaddressstatus)
 - [entityAddressToIndex(address entityAddress)](#entityaddresstoindex)
 - [entityIndexToAddress(uint256 entityIndex)](#entityindextoaddress)
 - [entityDetailsByIndex(uint256 entityIndex)](#entitydetailsbyindex)
-- [entityReferralByIndex(uint256 entityIndex)](#entityreferralbyindex)
 - [entityNumberOf()](#entitynumberof)
-- [entityNumberOfOffers(uint256 entityIndex)](#entitynumberofoffers)
-- [entityOfferDetails(uint256 entityIndex, uint256 offerId)](#entityofferdetails)
-- [entityAllOfferDetails(uint256 entityIndex)](#entityallofferdetails)
 - [entityPaymentsCheck()](#entitypaymentscheck)
-- [entityCustomTokenAddress(uint256 entityIndex)](#entitycustomtokenaddress)
-- [entityRootNode()](#entityrootnode)
 - [entityAllDetails()](#entityalldetails)
 
 ### initialize
+
+⤾ overrides [Ownable.initialize](Ownable.md#initialize)
 
 Contract initializer/constructor.
  Executed on contract creation only.
 
 ```js
-function initialize(address immuteToken, address commonAddr) public nonpayable initializer 
+function initialize(address commonAddr) public nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| immuteToken | address | the address of the IuT token contract | 
 | commonAddr | address | the address of the CommonString contract | 
-
-### entityResolver
-
-Set ImmutableSoft ENS resolver. A zero address disables resolver.
- Administrator (onlyOwner)
-
-```js
-function entityResolver(address resolverAddr, bytes32 rootNode) external nonpayable onlyOwner 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| resolverAddr | address | the address of the immutable resolver | 
-| rootNode | bytes32 |  | 
 
 ### entityStatusUpdate
 
@@ -153,31 +102,13 @@ function entityStatusUpdate(uint256 entityIndex, uint256 status) external nonpay
 | entityIndex | uint256 | index of entity to change status | 
 | status | uint256 | The new complete status aggregate value | 
 
-### entityCustomToken
-
-Update entity with custom ERC20.
- Must NOT be called if entity has existing product sales escrow.
- Entity requires prior approval with custom token status.
- Administrator (onlyOwner)
-
-```js
-function entityCustomToken(uint256 entityIndex, address tokenAddress) external nonpayable onlyOwner 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The entity global index | 
-| tokenAddress | address | The custom ERC20 contract address | 
-
 ### entityCreate
 
 Create an organization.
  Entities require approval (entityStatusUpdate) after create.
 
 ```js
-function entityCreate(string entityName, string entityURL, uint256 referralEntityIndex) public nonpayable
+function entityCreate(string entityName, string entityURL) public nonpayable
 returns(uint256)
 ```
 
@@ -187,7 +118,6 @@ returns(uint256)
 | ------------- |------------- | -----|
 | entityName | string | The legal name of the entity | 
 | entityURL | string | The valid URL of the entity | 
-| referralEntityIndex | uint256 |  | 
 
 ### entityUpdate
 
@@ -227,7 +157,7 @@ Propose to move an entity (change addresses).
  msg.sender must be a registered entity.
 
 ```js
-function entityAddressNext(address nextAddress, uint256 numTokens) external nonpayable
+function entityAddressNext(address nextAddress) external nonpayable
 ```
 
 **Arguments**
@@ -235,7 +165,6 @@ function entityAddressNext(address nextAddress, uint256 numTokens) external nonp
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 | nextAddress | address | The next address of the entity | 
-| numTokens | uint256 | The number of tokens to move to the new address | 
 
 ### entityAdminAddressNext
 
@@ -244,7 +173,7 @@ Admin override for moving an entity (change addresses).
  msg.sender must be Administrator (owner).
 
 ```js
-function entityAdminAddressNext(address entityAddress, address nextAddress, uint256 numTokens) external nonpayable onlyOwner 
+function entityAdminAddressNext(address entityAddress, address nextAddress) external nonpayable onlyOwner 
 ```
 
 **Arguments**
@@ -253,7 +182,6 @@ function entityAdminAddressNext(address entityAddress, address nextAddress, uint
 | ------------- |------------- | -----|
 | entityAddress | address | The address of the entity to move | 
 | nextAddress | address | The next address of the entity | 
-| numTokens | uint256 | The number of tokens to move to the new address | 
 
 ### entityAddressMove
 
@@ -285,42 +213,6 @@ function entityPaymentsWithdraw() external nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### entityTokenBlockOffer
-
-Offer a block of tokens in exchange for ETH.
- Purchasers can buy any multiple of 'tokens' up to 'count'.
- 'tokens' multipled by 'count' will be escrowed in offer.
- msg.sender must be a registered entity.
-
-```js
-function entityTokenBlockOffer(uint256 rate, uint256 tokens, uint256 count) external nonpayable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| rate | uint256 | The rate of exchange (multiplyer of ETH) | 
-| tokens | uint256 | The minimum multiplyer of tokens offered | 
-| count | uint256 | The number of blocks, or 'tokens' amounts | 
-
-### entityTokenBlockOfferChange
-
-Change rate and/or number of blocks of token offer.
- Offer must already exist and owned by msg.sender.
-
-```js
-function entityTokenBlockOfferChange(uint256 offerIndex, uint256 rate, uint256 count) external nonpayable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| offerIndex | uint256 | The identifier of the offer to revoke | 
-| rate | uint256 |  | 
-| count | uint256 |  | 
-
 ### entityTransfer
 
 Transfer ETH to an entity.
@@ -338,62 +230,6 @@ function entityTransfer(uint256 entityIndex, uint256 productIndex) public payabl
 | ------------- |------------- | -----|
 | entityIndex | uint256 | The index of entity recipient bank | 
 | productIndex | uint256 |  | 
-
-### entityDonate
-
-Donate tokens to an entity.
- Entity must exist
- msg.sender is the payee
-
-```js
-function entityDonate(uint256 entityIndex, uint256 productIndex, uint256 numTokens) external nonpayable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of entity | 
-| productIndex | uint256 | The index of product | 
-| numTokens | uint256 | The number of tokens to donate | 
-
-### entityTokenBlockPurchase
-
-Purchase an block of tokens offered for ETH.
- Offer must already exist. Payable, requires ETH transfer.
- msg.sender is the purchaser.
-
-```js
-function entityTokenBlockPurchase(uint256 entityIndex, uint256 offerIndex, uint256 count) external payable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity with offer | 
-| offerIndex | uint256 | The specific offer | 
-| count | uint256 | The number of blocks of the offer to purchase | 
-
-### entityIdToLocalId
-
-Return the local entity ID (index).
- Entity must exist and id be valid.
-
-```js
-function entityIdToLocalId(uint256 entityIndex) public view
-returns(uint256)
-```
-
-**Returns**
-
-The local index of the entity
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The global index of the entity | 
 
 ### entityIndexStatus
 
@@ -494,25 +330,6 @@ the entity name
 | ------------- |------------- | -----|
 | entityIndex | uint256 | The index of the entity | 
 
-### entityReferralByIndex
-
-Retrieve entity referral details.
-
-```js
-function entityReferralByIndex(uint256 entityIndex) public view
-returns(address, uint256)
-```
-
-**Returns**
-
-the entity referral
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity | 
-
 ### entityNumberOf
 
 Retrieve number of entities.
@@ -531,67 +348,6 @@ the number of entities
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### entityNumberOfOffers
-
-Return the number of token offers for an entity.
- Entity must exist and index be valid.
-
-```js
-function entityNumberOfOffers(uint256 entityIndex) external view
-returns(uint256)
-```
-
-**Returns**
-
-the current number of token offers
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity | 
-
-### entityOfferDetails
-
-Retrieve details of a token offer.
- Returns empty name and URL if not found.
-
-```js
-function entityOfferDetails(uint256 entityIndex, uint256 offerId) external view
-returns(uint256, uint256, uint256)
-```
-
-**Returns**
-
-the ETH to token exchange rate
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity to lookup | 
-| offerId | uint256 |  | 
-
-### entityAllOfferDetails
-
-Retrieve all entity token offer details
- Status of empty arrays if none found.
-
-```js
-function entityAllOfferDetails(uint256 entityIndex) external view
-returns(uint256[], uint256[], uint256[])
-```
-
-**Returns**
-
-array of ETH to token exchange rate
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity to lookup | 
-
 ### entityPaymentsCheck
 
 Check payment (ETH) due entity bank.
@@ -605,43 +361,6 @@ returns(uint256)
 **Returns**
 
 the amount of ETH in the entity escrow
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-
-### entityCustomTokenAddress
-
-Return the entity custom ERC20 contract address.
-
-```js
-function entityCustomTokenAddress(uint256 entityIndex) external view
-returns(address)
-```
-
-**Returns**
-
-the entity custom ERC20 token or zero address
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity to lookup | 
-
-### entityRootNode
-
-Return ENS immutablesoft root node.
-
-```js
-function entityRootNode() public view
-returns(bytes32)
-```
-
-**Returns**
-
-the bytes32 ENS root node for immutablesoft.eth
 
 **Arguments**
 
@@ -669,29 +388,32 @@ array of entity status
 
 ## Contracts
 
+* [ActivateToken](ActivateToken.md)
 * [Address](Address.md)
-* [AddrResolver](AddrResolver.md)
 * [Context](Context.md)
+* [Counters](Counters.md)
 * [CustomToken](CustomToken.md)
-* [ENS](ENS.md)
+* [ERC165](ERC165.md)
 * [ERC20](ERC20.md)
 * [ERC20Detailed](ERC20Detailed.md)
 * [ERC20Mintable](ERC20Mintable.md)
-* [ERC20Pausable](ERC20Pausable.md)
+* [ERC721](ERC721.md)
+* [ERC721Burnable](ERC721Burnable.md)
+* [ERC721Enumerable](ERC721Enumerable.md)
+* [ERC721Mintable](ERC721Mintable.md)
 * [Escrow](Escrow.md)
+* [IERC165](IERC165.md)
 * [IERC20](IERC20.md)
+* [IERC721](IERC721.md)
+* [IERC721Enumerable](IERC721Enumerable.md)
+* [IERC721Receiver](IERC721Receiver.md)
 * [ImmutableConstants](ImmutableConstants.md)
 * [ImmutableEntity](ImmutableEntity.md)
-* [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
-* [ImmutableResolver](ImmutableResolver.md)
-* [ImmuteToken](ImmuteToken.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)
-* [Pausable](Pausable.md)
-* [PauserRole](PauserRole.md)
 * [PullPayment](PullPayment.md)
 * [ResolverBase](ResolverBase.md)
 * [Roles](Roles.md)

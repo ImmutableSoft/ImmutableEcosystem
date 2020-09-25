@@ -3,7 +3,7 @@
 View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [Context](Context.md), [IERC20](IERC20.md)**
-**↘ Derived Contracts: [ERC20Mintable](ERC20Mintable.md), [ERC20Pausable](ERC20Pausable.md)**
+**↘ Derived Contracts: [ERC20Mintable](ERC20Mintable.md)**
 
 **ERC20**
 
@@ -89,8 +89,6 @@ returns(uint256)
 
 ⤾ overrides [IERC20.transfer](IERC20.md#transfer)
 
-⤿ Overridden Implementation(s): [ERC20Pausable.transfer](ERC20Pausable.md#transfer),[ImmuteToken.transfer](ImmuteToken.md#transfer)
-
 See {IERC20-transfer}.
      * Requirements:
      * - `recipient` cannot be the zero address.
@@ -130,8 +128,6 @@ returns(uint256)
 
 ⤾ overrides [IERC20.approve](IERC20.md#approve)
 
-⤿ Overridden Implementation(s): [ERC20Pausable.approve](ERC20Pausable.md#approve)
-
 See {IERC20-approve}.
      * Requirements:
      * - `spender` cannot be the zero address.
@@ -151,8 +147,6 @@ returns(bool)
 ### transferFrom
 
 ⤾ overrides [IERC20.transferFrom](IERC20.md#transferfrom)
-
-⤿ Overridden Implementation(s): [ERC20Pausable.transferFrom](ERC20Pausable.md#transferfrom),[ImmuteToken.transferFrom](ImmuteToken.md#transferfrom)
 
 See {IERC20-transferFrom}.
      * Emits an {Approval} event indicating the updated allowance. This is not
@@ -178,8 +172,6 @@ returns(bool)
 
 ### increaseAllowance
 
-⤿ Overridden Implementation(s): [ERC20Pausable.increaseAllowance](ERC20Pausable.md#increaseallowance)
-
 Atomically increases the allowance granted to `spender` by the caller.
      * This is an alternative to {approve} that can be used as a mitigation for
 problems described in {IERC20-approve}.
@@ -200,8 +192,6 @@ returns(bool)
 | addedValue | uint256 |  | 
 
 ### decreaseAllowance
-
-⤿ Overridden Implementation(s): [ERC20Pausable.decreaseAllowance](ERC20Pausable.md#decreaseallowance)
 
 Atomically decreases the allowance granted to `spender` by the caller.
      * This is an alternative to {approve} that can be used as a mitigation for
@@ -327,29 +317,32 @@ function _burnFrom(address account, uint256 amount) internal nonpayable
 
 ## Contracts
 
+* [ActivateToken](ActivateToken.md)
 * [Address](Address.md)
-* [AddrResolver](AddrResolver.md)
 * [Context](Context.md)
+* [Counters](Counters.md)
 * [CustomToken](CustomToken.md)
-* [ENS](ENS.md)
+* [ERC165](ERC165.md)
 * [ERC20](ERC20.md)
 * [ERC20Detailed](ERC20Detailed.md)
 * [ERC20Mintable](ERC20Mintable.md)
-* [ERC20Pausable](ERC20Pausable.md)
+* [ERC721](ERC721.md)
+* [ERC721Burnable](ERC721Burnable.md)
+* [ERC721Enumerable](ERC721Enumerable.md)
+* [ERC721Mintable](ERC721Mintable.md)
 * [Escrow](Escrow.md)
+* [IERC165](IERC165.md)
 * [IERC20](IERC20.md)
+* [IERC721](IERC721.md)
+* [IERC721Enumerable](IERC721Enumerable.md)
+* [IERC721Receiver](IERC721Receiver.md)
 * [ImmutableConstants](ImmutableConstants.md)
 * [ImmutableEntity](ImmutableEntity.md)
-* [ImmutableLicense](ImmutableLicense.md)
 * [ImmutableProduct](ImmutableProduct.md)
-* [ImmutableResolver](ImmutableResolver.md)
-* [ImmuteToken](ImmuteToken.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
 * [MinterRole](MinterRole.md)
 * [Ownable](Ownable.md)
-* [Pausable](Pausable.md)
-* [PauserRole](PauserRole.md)
 * [PullPayment](PullPayment.md)
 * [ResolverBase](ResolverBase.md)
 * [Roles](Roles.md)

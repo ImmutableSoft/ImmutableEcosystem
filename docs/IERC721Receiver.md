@@ -1,73 +1,37 @@
-# Migrations.sol
+# ERC721 token receiver interface (IERC721Receiver.sol)
 
-View Source: [contracts/Migrations.sol](../contracts/Migrations.sol)
+View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Receiver.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Receiver.sol)
 
-**Migrations**
+**IERC721Receiver**
 
-## Contract Members
-**Constants & Variables**
-
-```js
-address public owner;
-uint256 public last_completed_migration;
-
-```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
+Interface for any contract that wants to support safeTransfers
+from ERC721 asset contracts.
 
 ## Functions
 
-- [()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [onERC721Received(address operator, address from, uint256 tokenId, bytes data)](#onerc721received)
 
-### 
+### onERC721Received
+
+Handle the receipt of an NFT
 
 ```js
-function () public nonpayable
+function onERC721Received(address operator, address from, uint256 tokenId, bytes data) public nonpayable
+returns(bytes4)
 ```
+
+**Returns**
+
+bytes4 `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-
-### setCompleted
-
-```js
-function setCompleted(uint256 completed) public nonpayable restricted 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| completed | uint256 |  | 
-
-### upgrade
-
-```js
-function upgrade(address new_address) public nonpayable restricted 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| new_address | address |  | 
+| operator | address | The address which called `safeTransferFrom` function | 
+| from | address | The address which previously owned the token | 
+| tokenId | uint256 | The NFT identifier which is being transferred | 
+| data | bytes | Additional data with no specified format | 
 
 ## Contracts
 
