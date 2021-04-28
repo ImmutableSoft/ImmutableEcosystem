@@ -308,12 +308,17 @@ contract("ImmutableEcosystem", accounts => {
 
 //                                  external view returns (uint256, uint256, uint256, uint256, string memory)
 
+    var version = bigInt(details[3]);
+
     assert.equal(details[0], 1, "Failed! Entity ID not 1.");
     assert.equal(details[1], 0, "Failed! Product ID not 0.");
     assert.equal(details[2], 0, "Failed! Release ID not 0.");
-    assert.equal(details[3], 3, "Failed! Version not 3.");
+
+    // Skip over timestamp to check last byte of version
+    assert.equal(version.toString(16)[version.toString(16).length - 1],
+                 "3", "Failed! Version not 3.");
     assert.equal(details[4], "http://example.com/releases/TestProduct.zip",
-                                "Failed! URL does not match");
+                                "Failed! URI does not match");
   });
 
   it("Create three (3) products and verify", async () => {

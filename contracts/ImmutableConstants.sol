@@ -72,7 +72,7 @@ contract ImmutableConstants
 
   // Language bits from above form bits 64 to 127
 
-  // The Type of Version begins at bit 128 and goes until bit 159
+  // The Platform Type begins at bit 128 and goes until bit 159
   uint256 constant Windows_x86 =    (1 << 128);
   uint256 constant Windows_amd64 =  (1 << 129);
   uint256 constant Windows_aarch64 =(1 << 130);
@@ -87,6 +87,7 @@ contract ImmutableConstants
   uint256 constant BIOS_aarch64 =   (1 << 139);
   uint256 constant BIOS_arm64 =     (1 << 140);
   uint256 constant Mac_amd64 =      (1 << 141);
+  uint256 constant Mac_arm64 =      (1 << 142);
   // Room here for expansion
 
   // End with general types
@@ -126,24 +127,31 @@ contract ImmutableConstants
   uint256 constant EntityIdMask =  (0xFFFFFFFF << EntityIdOffset);
   uint256 constant ProductIdOffset = 192;
   uint256 constant ProductIdMask =  (0xFFFFFFFF << ProductIdOffset);
+
+  // Bits to help enforce non fungible (unique) token
   uint256 constant UniqueIdOffset = 176;
   uint256 constant UniqueIdMask =  (0xFFFF << UniqueIdOffset);
+
+  // Flags allow different activation types and Value layout
   uint256 constant FlagsOffset = 160;
   uint256 constant FlagsMask =  (0xFFFF << FlagsOffset);
 
-  // Expiration immediately follows the 128 bit value
+  // Expiration is just before common 128 bit Value
   uint256 constant ExpirationOffset = 128;
-  uint256 constant ExpirationMask = (0xFFFFFFFF << ExpirationOffset);
+  uint256 constant ExpirationMask = (0xFFFFFFFF <<
+                                     ExpirationOffset);
 
-  // If limitation flag set, the value is entirely utilized
+  // If limitation flag set, the Value is entirely utilized
 
   // Bits 64 - 127 are for language (as defined above)
   uint256 constant LanguageOffset = 64;
-  uint256 constant LanguageMask =  (0xFFFFFFFFFFFFFFFF << LanguageOffset);
+  uint256 constant LanguageMask =  (0xFFFFFFFFFFFFFFFF <<
+                                    LanguageOffset);
 
   // Final 64 bits of value is version (4 different 16 bit values)
   uint256 constant LimitVersionOffset = 0;
-  uint256 constant LimitVersionMask =  (0xFFFFFFFFFFFFFFFF << LimitVersionOffset);
+  uint256 constant LimitVersionMask =  (0xFFFFFFFFFFFFFFFF <<
+                                        LimitVersionOffset);
 
   // The value is the 128 LSBs
   //   32 bits if limitations flag set (96 bits version/language)

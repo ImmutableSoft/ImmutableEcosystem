@@ -414,6 +414,7 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
   {
     uint256 entityIndex = entityInterface.entityAddressToIndex(msg.sender);
     uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
+    uint256 version = newVersion | (now << 160); // add timestamp
 
     // Only a validated entity can create a release
     require(entityStatus > 0, "Entity is not validated");
@@ -425,14 +426,14 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
     // Populate the release
     Products[entityIndex][productIndex].
         releases[Products[entityIndex][productIndex].numberOfReleases++] =
-                                      Release(newHash, newFileUri, newVersion);
+                                      Release(newHash, newFileUri, version);
 
     // Populate the reverse lookup (entityId, productId, releaseId)
     HashToRelease[newHash] = (((entityIndex & 0xFFFFFFFF) << 64) |
                               ((productIndex & 0xFFFFFFFF) << 32) |
       (((Products[entityIndex][productIndex].numberOfReleases - 1) & 0xFFFFFFFF) << 0));
 
-    emit productReleaseEvent(entityIndex/* + 1*/, productIndex, newVersion);
+    emit productReleaseEvent(entityIndex, productIndex, version);
   }
 
   /// @notice Return version, URI and hash of existing product release.
