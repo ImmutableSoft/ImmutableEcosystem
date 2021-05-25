@@ -1,4 +1,6 @@
-pragma solidity 0.5.16;
+pragma solidity ^0.8.4;
+
+// SPDX-License-Identifier: UNLICENSED
 
 // Optimized ecosystem read interface returns arrays and
 // requires experimental ABIEncoderV2
@@ -6,9 +8,9 @@ pragma solidity 0.5.16;
 pragma experimental ABIEncoderV2;
 
 // OpenZepellin upgradable contracts
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/payment/PullPayment.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol";
 
 import "./StringCommon.sol";
 import "./ImmutableConstants.sol";
@@ -24,8 +26,8 @@ import "./ImmutableConstants.sol";
 /// @author Sean Lawless for ImmutableSoft Inc.
 /// @notice Token transfers use the ImmuteToken by default
 /// @dev Entity variables and methods
-contract ImmutableEntity is Initializable, Ownable, PullPayment,
-                            ImmutableConstants
+contract ImmutableEntity is Initializable, OwnableUpgradeable,
+                            PullPaymentUpgradeable, ImmutableConstants
 {
   // Error strings
   string constant BankNotConfigured = "Bank not configured";
@@ -69,14 +71,14 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
   /// @notice Contract initializer/constructor.
   /// Executed on contract creation only.
   /// @param commonAddr the address of the CommonString contract
-  /*constructor(address immuteToken, address commonAddr)
+  /*constructor(address commonAddr)
     public PullPayment()
   {
 */
-  function initialize(/*address immuteToken,*/ address commonAddr) public initializer
+  function initialize(address commonAddr) public initializer
   {
-    Ownable.initialize(msg.sender);
-    PullPayment.initialize();
+    __Ownable_init();//.initialize(msg.sender);
+    __PullPayment_init();//.initialize();
 
     // Initialize string and token contract interfaces
     commonInterface = StringCommon(commonAddr);
@@ -106,7 +108,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
     external onlyOwner
   {
 //    uint eIndex = entityIdToLocalId(entityIndex);
-    Entity storage entity = Entities[entityIndex];
+//    Entity storage entity = Entities[entityIndex];
 
     // Update the organization status
     EntityStatus[entityIndex] = status;
@@ -156,8 +158,8 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
               "Entity name already exists");
 
     // Push the entity to permenant storage on the blockchain
-    Entities[entityIndex] = Entity(msg.sender, address(0), address(0), entityName,
-                         "", entityURL, now);
+    Entities[entityIndex] = Entity(payable(msg.sender), address(0), address(0), entityName,
+                         "", entityURL, block.timestamp);
 
     // Push the address to the entity array and clear status
     EntityArray[entityIndex] = msg.sender;
@@ -289,7 +291,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment,
 
     // If old bank address was adminstrator, move bank to new address
     if (entity.bank == oldAddress)
-      entity.bank = msg.sender;
+      entity.bank = payable(msg.sender);
   }
 
   /// @notice Withdraw all payments (ETH) into entity bank.

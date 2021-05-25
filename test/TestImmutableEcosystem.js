@@ -2,8 +2,10 @@
 const truffleAssert = require('truffle-assertions');
 //const createKeccakHash = require('keccak');
 const { singletons, BN, expectEvent } = require('@openzeppelin/test-helpers');
+const { deployProxy, upgradeProxy } = require('@openzeppelin/truffle-upgrades');
 
 //const ImmuteToken = artifacts.require("./ImmuteToken.sol");
+const StringCommon = artifacts.require("./StringCommon.sol");
 const ImmutableEntity = artifacts.require("./ImmutableEntity.sol");
 const ImmutableProduct = artifacts.require("./ImmutableProduct.sol");
 //const ImmutableLicense = artifacts.require("./ImmutableLicense.sol");
@@ -37,6 +39,7 @@ contract("ImmutableEcosystem", accounts => {
 //    immutableEcosystemInstance = await ImmutableEcosystem.new(immuteTokenInstance.address,
 //                             ensInstance.address, {from: accounts[0]});
 //    immuteTokenInstance = await ImmuteToken.deployed();
+    stringCommonInstance = await StringCommon.deployed();
     immutableEntityInstance = await ImmutableEntity.deployed();
     immutableProductInstance = await ImmutableProduct.deployed();
     activateTokenInstance = await ActivateToken.deployed();
@@ -52,6 +55,27 @@ contract("ImmutableEcosystem", accounts => {
              immutableProductInstance.address, activateTokenInstance.address, { from: accounts[0] });
   });
 */
+  it('Check if upgradeable contracts work', async () => {
+    lastCommon = await StringCommon.deployed();
+    const common2 = await upgradeProxy(lastCommon.address, StringCommon);
+    assert.equal(lastCommon.address, common2.address,
+                 "Upgraded common contract address changed");
+
+    lastEntity = await ImmutableEntity.deployed();
+    const entity2 = await upgradeProxy(lastEntity.address, ImmutableEntity);
+    assert.equal(lastEntity.address, entity2.address,
+                 "Upgraded entity contract address changed");
+
+    lastProduct = await ImmutableProduct.deployed();
+    const product2 = await upgradeProxy(lastProduct.address, ImmutableProduct);
+    assert.equal(lastProduct.address, product2.address,
+                 "Upgraded product contract address changed");
+
+    lastActivate = await ActivateToken.deployed();
+    const activate2 = await upgradeProxy(lastActivate.address, ActivateToken);
+    assert.equal(lastActivate.address, activate2.address,
+                 "Upgraded activate contract address changed");
+  });
   it("Change ImmutableEcosystem owner", async () => {
     // Change the owner
     await immutableProductInstance.transferOwnership(Owner, { from: accounts[0] });

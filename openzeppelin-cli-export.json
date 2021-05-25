@@ -1,0 +1,64 @@
+{
+  "networks": {
+    "ropsten": {
+      "proxies": {
+        "ImmutableEcosystem/StringCommon": [
+          {
+            "address": "0x7c7136B44067e3004D947672e5B253309BA312a9",
+            "version": "2.0.0",
+            "implementation": "0xF6eB751531249E3BB6bc597369F77Fc2cAB4144A",
+            "admin": "0xF44d87A1ae06CEd01e88c8Eb6F0BEA65bEFCc9C7",
+            "kind": "Upgradeable"
+          }
+        ],
+        "ImmutableEcosystem/ImmutableEntity": [
+          {
+            "address": "0x6C25eD314e0714B13CF9ac42B6A54c14C634EDB7",
+            "version": "2.0.0",
+            "implementation": "0x0517E1B1402230633131bB3FB30f8Cd58a712351",
+            "admin": "0xF44d87A1ae06CEd01e88c8Eb6F0BEA65bEFCc9C7",
+            "kind": "Upgradeable"
+          }
+        ],
+        "ImmutableEcosystem/ImmutableProduct": [
+          {
+            "address": "0x4DA001F154683A67F5B817229c34Ce50aa6F3281",
+            "version": "2.0.0",
+            "implementation": "0xfd7a1e6085E52eaac9934442a078AFc19f52edDC",
+            "admin": "0xF44d87A1ae06CEd01e88c8Eb6F0BEA65bEFCc9C7",
+            "kind": "Upgradeable"
+          }
+        ],
+        "ImmutableEcosystem/ActivateToken": [
+          {
+            "address": "0x5A516379F798b1D5b1875fb3efDCdbCfe199De42",
+            "version": "2.0.0",
+            "implementation": "0x906C7985Af6799b0AF643b232D690F52532932e2",
+            "admin": "0xF44d87A1ae06CEd01e88c8Eb6F0BEA65bEFCc9C7",
+            "kind": "Upgradeable"
+          }
+        ]
+      },
+      "dependencies": {
+        "@openzeppelin/contracts-ethereum-package": {
+          "package": "0x2a9e7B63514438906A83a1e320dBBD814D417002",
+          "version": "2.5.0"
+        }
+      }
+    }
+  },
+  "compiler": {
+    "compilerSettings": {
+      "optimizer": {
+        "enabled": false,
+        "runs": "200"
+      }
+    },
+    "typechain": {
+      "enabled": false
+    },
+    "manager": "truffle",
+    "artifactsDir": "build\\contracts",
+    "contractsDir": "contracts"
+  }
+}

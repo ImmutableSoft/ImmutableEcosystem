@@ -1,4 +1,6 @@
-pragma solidity 0.5.16;
+pragma solidity ^0.8.4;
+
+// SPDX-License-Identifier: UNLICENSED
 
 /// @title Immutable Constants - authentic software from the source
 /// @author Sean Lawless for ImmutableSoft Inc.
@@ -136,7 +138,7 @@ contract ImmutableConstants
   uint256 constant FlagsOffset = 160;
   uint256 constant FlagsMask =  (0xFFFF << FlagsOffset);
 
-  // Expiration is just before common 128 bit Value
+  // Expiration is common, last before common 128 bit Value
   uint256 constant ExpirationOffset = 128;
   uint256 constant ExpirationMask = (0xFFFFFFFF <<
                                      ExpirationOffset);

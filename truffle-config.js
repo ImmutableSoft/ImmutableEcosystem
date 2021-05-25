@@ -15,7 +15,7 @@ module.exports = {
       host: "127.0.0.1",     // Localhost (default: none)
       port: 8545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
-//      gas: 700000,
+//      gas: 7000000,
 //      gasPrice: 20000000000
     },
     ropsten: {
@@ -31,10 +31,15 @@ module.exports = {
       networkId: 1,
     }
   },
-  solc: {
-    optimizer: {
-      enabled: true,
-      runs: 200
+  compilers: {
+    solc: {
+      version: "0.8.4", // change this to download new compiler, cool!
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 200
+        }
+      }
     }
   }
 };

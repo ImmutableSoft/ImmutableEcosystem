@@ -1,4 +1,6 @@
-pragma solidity ^0.5.16;
+pragma solidity ^0.8.4;
+
+// SPDX-License-Identifier: UNLICENSED
 
 import "./ImmutableProduct.sol";
 
@@ -8,9 +10,11 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 */
 
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Mintable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Burnable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721Enumerable.sol";
+
+//import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Mintable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+
 
 /*
   The ActivateToken unique token id is a conglomeration of the entity, product,
@@ -21,9 +25,9 @@ import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721En
                       (activationIdFlags << 96) | (licenseValue << 128);
 */
 
-contract ActivateToken is Initializable, Ownable, PullPayment,
-                          ERC721Enumerable, ERC721Mintable,
-                          ERC721Burnable, ImmutableConstants
+contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradeable,
+                          ERC721EnumerableUpgradeable,
+                          ERC721BurnableUpgradeable, ImmutableConstants
 {
   address payable private Bank;
   uint256 private EthFee;
@@ -43,20 +47,20 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
                         address productContractAddr)
     public initializer
   {
-    Ownable.initialize(msg.sender);
-    PullPayment.initialize();
-    ERC721.initialize();
-    ERC721Mintable.initialize(msg.sender);
-    ERC721Enumerable.initialize();
+    __Ownable_init();//.initialize(msg.sender);
+    __PullPayment_init();//.initialize();
+    __ERC721_init("Activate", "ACT");//.initialize();
+//    ERC721Mintable.initialize(msg.sender);
+    __ERC721Enumerable_init();//.initialize();
 
     // Initialize the entity contract interface
     entityInterface = ImmutableEntity(entityContractAddr);
     productInterface = ImmutableProduct(productContractAddr);
 
     // Add this contract as a minter
-    addMinter(address(this));
+//    addMinter(address(this));
     EthFee = 1000000000000000; // Default $.40 with ETH $400
-    Bank = msg.sender;
+    Bank = payable(msg.sender);
   }
 
   /// @notice Burn a product activation license.
@@ -110,7 +114,7 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
       if (TokenIdToActivateId[tokenId] != 0)
       {
         uint256 theDuration = ((licenseValue & ExpirationMask) >> ExpirationOffset);
-        theDuration -= now % 0xFF;
+        theDuration -= block.timestamp % 0xFF;
 
         // Update tokenId to include new expiration
         //  Clear the expiration
@@ -131,7 +135,7 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
     require(ActivateIdToTokenId[licenseHash] == 0, TokenNotUnique);
 
     // Mint the new activate token
-    this.mint(msg.sender, tokenId);
+    _mint(msg.sender, tokenId);
 
     // Assign mappings for id-to-hash and hash-to-id
     TokenIdToActivateId[tokenId] = licenseHash;
@@ -259,8 +263,10 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
         feeAmount = (priceInTokens * 1) / 100;
 
       // Transfer the ETH to the entity bank address
-      entityInterface.entityTransfer.value(priceInTokens -
-                                           feeAmount)(entityIndex,
+      entityInterface.entityTransfer{value: priceInTokens -
+                                           feeAmount}
+                                    /*.value(priceInTokens -
+                                           feeAmount)*/(entityIndex,
                                                       productIndex);
 
       // Move fee, if any, into ImmutableSoft bank account
@@ -271,7 +277,7 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
     // Otherwise the purchase is an exchange of ERCXXX tokens
     else
     {
-      IERC20 erc20TokenInterface = IERC20(erc20token);
+      IERC20Upgradeable erc20TokenInterface = IERC20Upgradeable(erc20token);
 
       // Transfer tokens to the sender and revert if failure
       erc20TokenInterface.transferFrom(msg.sender, entityInterface.
@@ -296,8 +302,8 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
               "Token to extend does not match offer");
 
       // Extend time duration by whatever was remaining, if any
-      if (((tokenId & ExpirationMask) >> ExpirationOffset) > now)
-        theDuration += ((tokenId & ExpirationMask) >> ExpirationOffset) - now;
+      if (((tokenId & ExpirationMask) >> ExpirationOffset) > block.timestamp)
+        theDuration += ((tokenId & ExpirationMask) >> ExpirationOffset) - block.timestamp;
 
       // burn the old token
       activation_burn(tokenId);
@@ -306,7 +312,7 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
     // Update tokenId to include new expiration
     //  First clear then set expiration based on duration and now
     value &= ~ExpirationMask;
-    value |= ((theDuration + now) << ExpirationOffset) & ExpirationMask;
+    value |= ((theDuration + block.timestamp) << ExpirationOffset) & ExpirationMask;
 
     // If a limited amount of offers, inform product offer of purchase
     if ((value << UniqueIdOffset) & UniqueIdMask > 0)
@@ -370,7 +376,6 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
   /// @param productIndex The specific ID of the product
   /// @param licenseHash the existing activation identifier
   /// @param priceInEth The ETH cost to purchase license
-  /// @return The product license offer identifier
   function activateOfferResale(uint256 entityIndex, uint256 productIndex,
                                uint256 licenseHash, uint256 priceInEth)
     external
@@ -421,7 +426,7 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
     require(TokenIdToOfferPrice[tokenId] > 0, "License not for sale");
     if ((tokenId & ExpirationFlag) == ExpirationFlag)
       require((((tokenId & ExpirationMask) >> ExpirationOffset) == 0) ||
-              (((tokenId & ExpirationMask) >> ExpirationOffset) > now), "Resale of expired license invalid");
+              (((tokenId & ExpirationMask) >> ExpirationOffset) > block.timestamp), "Resale of expired license invalid");
 
     // Ensure new identifier is different from current
     require(licenseHash != newLicenseHash, "Identifier identical");
@@ -437,7 +442,7 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
     // Look up the license owner and their entity status
     uint256 fee = 0;
     address licenseOwner = ownerOf(tokenId);
-    address payable payableOwner = address(uint256(licenseOwner));
+    address payable payableOwner = payable(licenseOwner);//address(uint256(licenseOwner));
     uint256 ownerStatus = entityInterface.entityAddressStatus(licenseOwner);
 
     require(msg.value >= TokenIdToOfferPrice[tokenId], "Not enough ETH");
@@ -448,7 +453,8 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
       if ((ownerStatus & Automatic) != Automatic)
         fee = (msg.value * 1) / 100;
 
-      entityInterface.entityTransfer.value(msg.value - fee)
+      entityInterface.entityTransfer{value: msg.value - fee}
+                                    /*.value(msg.value - fee)*/
                                     (entityInterface.entityAddressToIndex(licenseOwner),
                                      0);
 
@@ -611,4 +617,20 @@ contract ActivateToken is Initializable, Ownable, PullPayment,
     return (resultEntityId, resultProductId, resultHash,
             resultValue, resultPrice);
   }
+  
+  function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(ERC721Upgradeable, ERC721EnumerableUpgradeable) {
+        super._beforeTokenTransfer(from, to, amount);
+    }
+
+  function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721Upgradeable, ERC721EnumerableUpgradeable) returns (bool) {
+    return super.supportsInterface(interfaceId);
+  }
+
+/*
+  function _beforeTokenTransfer(address from, address to,
+                                uint256 tokenId) override internal virtual { }
+  
+  function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165Upgradeable, ERC721Upgradeable) returns (bool) {
+                                }
+*/
 }

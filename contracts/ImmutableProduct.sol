@@ -1,4 +1,6 @@
-pragma solidity 0.5.16;
+pragma solidity ^0.8.4;
+
+// SPDX-License-Identifier: UNLICENSED
 
 // Optimized ecosystem read interface returns arrays and
 // requires experimental ABIEncoderV2
@@ -8,7 +10,7 @@ pragma experimental ABIEncoderV2;
 import "./ImmutableEntity.sol";
 
 // OpenZepellin upgradable contracts
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 /// Comments within /*  */ are for toggling upgradable contracts */
 
@@ -16,7 +18,7 @@ import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol
 /// @author Sean Lawless for ImmutableSoft Inc.
 /// @notice Token transfers use the ImmuteToken only
 /// @dev Ecosystem is split in three, Entities, Releases and Licenses
-contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
+contract ImmutableProduct is Initializable, OwnableUpgradeable, ImmutableConstants
 {
   struct Product
   {
@@ -83,7 +85,7 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
   function initialize(address entityAddr, /*address tokenAddr,*/
                       address commonAddr) public initializer
   {
-    Ownable.initialize(msg.sender);
+    __Ownable_init();//.initialize(msg.sender);
 
     entityInterface = ImmutableEntity(entityAddr);
     commonInterface = StringCommon(commonAddr);
@@ -94,15 +96,16 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
   /// @param productName The name of the new product
   /// @param productURL The primary URL of the product
   /// @param logoURL The logo URL of the product
-  /// @param productDetails the product category, languages, etc.
+  /// @param details the product category, languages, etc.
   function productCreate(string calldata productName,
                          string calldata productURL,
                          string calldata logoURL,
-                         uint256 productDetails)
+                         uint256 details)
     external returns (uint256)
   {
     uint256 entityIndex = entityInterface.entityAddressToIndex(msg.sender);
     uint256 productID;
+    uint256 lastProduct = NumberOfProducts[entityIndex];
 
     // Only a validated entity can create a product
     require(entityInterface.entityAddressStatus(msg.sender) > 0,
@@ -123,13 +126,18 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
       }
     }
 
-    Products[entityIndex][NumberOfProducts[entityIndex]] = Product(productName,
-                                     productURL, logoURL, productDetails, 0, 0);
+    Products[entityIndex][lastProduct].name = productName;
+    Products[entityIndex][lastProduct].infoURL = productURL;
+    Products[entityIndex][lastProduct].logoURL = logoURL;
+    Products[entityIndex][lastProduct].numberOfReleases = 0;
+    Products[entityIndex][lastProduct].numberOfOffers = 0;
+//    Products[entityIndex][lastProduct] = Product(productName,
+//                                     productURL, logoURL, details, 0, 0);
     NumberOfProducts[entityIndex]++;
 
     // Emit an new product event and return the product index
     emit productEvent(entityIndex, productID, productName,
-                      productURL, productDetails);
+                      productURL, details);
     return productID;
   }
 
@@ -211,7 +219,7 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
     if (erc20token != address(0))
     {
       require((entityStatus & CustomToken) == CustomToken, "Token offers require custom status.");
-      ERC20 theToken = ERC20(erc20token);
+      IERC20Upgradeable theToken = IERC20Upgradeable(erc20token);
 
       require(theToken.totalSupply() > 0, "Address is not ERC20 token or no supply");
     }
@@ -331,12 +339,12 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
   /// @param productName The name of the new product
   /// @param productURL The primary URL of the product
   /// @param logoURL The logo URL of the product
-  /// @param productDetails the product category, languages, etc.
+  /// @param details the product category, languages, etc.
   function productEdit(uint256 productIndex,
                        string calldata productName,
                        string calldata productURL,
                        string calldata logoURL,
-                       uint256 productDetails)
+                       uint256 details)
     external
   {
     uint256 entityIndex = entityInterface.entityAddressToIndex(msg.sender);
@@ -369,7 +377,7 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
       Products[entityIndex][productIndex].name = productName;
       Products[entityIndex][productIndex].infoURL = productURL;
       Products[entityIndex][productIndex].logoURL = logoURL;
-      Products[entityIndex][productIndex].details = productDetails;
+      Products[entityIndex][productIndex].details = details;
     }
 
     // Else if name is empty then a delete, so clear entire product
@@ -398,7 +406,7 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
 
     // Emit an new product event and return the product index
     emit productEvent(entityIndex, productIndex, productName,
-                      productURL, productDetails);
+                      productURL, details);
     return;
   }
 
@@ -414,7 +422,7 @@ contract ImmutableProduct is Initializable, Ownable, ImmutableConstants
   {
     uint256 entityIndex = entityInterface.entityAddressToIndex(msg.sender);
     uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
-    uint256 version = newVersion | (now << 160); // add timestamp
+    uint256 version = newVersion | (block.timestamp << 160); // add timestamp
 
     // Only a validated entity can create a release
     require(entityStatus > 0, "Entity is not validated");
