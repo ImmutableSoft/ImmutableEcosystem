@@ -11,7 +11,7 @@ module.exports = async function (deployer, network) {
   console.log('  Using entity ', entityInstance.address);
 
   const productInstance = await Product.deployed();
-  console.log('  Using common ', commonInstance.address);
+  console.log('  Using product ', productInstance.address);
 
   const activateInstance = await deployProxy(Activate, [entityInstance.address, productInstance.address], { deployer });
   console.log('Deployed activate token ', activateInstance.address);
