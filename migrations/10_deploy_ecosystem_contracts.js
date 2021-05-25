@@ -21,7 +21,7 @@ module.exports = async function (deployer, network) {
   const activateInstance = await deployProxy(Activate, [entityInstance.address, productInstance.address], { deployer });
   console.log('Deployed activate token ', activateInstance.address);
 
-  if (network == 'development')
+  if (network != 'mainnet')
   {
     const customInstance = await deployProxy(Custom, [], { deployer });
     console.log('Deployed custom token ', customInstance.address);
