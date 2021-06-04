@@ -1,10 +1,10 @@
 # ImmutableEcosystem
 
-The [Immutable Ecosystem](https://immutablesoft.org) is a hardware and language agnostic Ethereum based application store. This decentralized ecosystem has two main components, the Solidity smart contracts and the Distributed Application (Dapp). This repository is for the Smart Contracts only. The generated API documentation for the smart contracts is located in the 'docs' directory. The unit tests of the smart contracts are located in the 'tests' directory.
+The [ImmutableSoft](https://www.immutablesoft.org) has created a hardware and language agnostic Ethereum based application store. This decentralized ecosystem has two main components, the Solidity smart contracts and the Distributed Application (Dapp). This repository is for the Smart Contracts only. The generated API documentation for the smart contracts is located in the 'docs' directory. The unit tests of the smart contracts are located in the 'tests' directory.
 
 ## <img src="./images/disclosure-logo-outline-black.png" alt="disclosure" width="100" height="100"/> Bug Bounty 
 
-A bug bounty is in effect for the smart contracts within the Immutable Ecosystem. Adopting vulnerability disclosure best practices we have followed the disclose.io [framework](./core-terms-USA.md) to safeguard security researchers.
+A bug bounty is in effect for the smart contracts within the Immutable Ecosystem. Adopting vulnerability disclosure best practices we have followed the disclose.io [framework](./core-terms-USA.md) to safeguard security researchers. While the [Immutable Ecosystem Dapp](https://ecosystem.immutablesoft.org) front end to the smart contracts is not part of the bug bounty, it is covered by the disclosure and you are encouraged to report bugs and use it to find vulnerabilities within the smart contracts. **Any bug reported in the Dapp that results in a smart contract change is eligible for bug bounty payout**. MetaMask or other Web3 provider recommended when using the Dapp. To further clarify, please do not probe and report vulnerabilities for our main website [ImmutableSoft](https://www.immutablesoft.org).
 
 To receive the maximum payout the report should include a fix to the problem if possible. Specific payouts to the bug bounty depend on the impact of the bug as well as the general likelihood of the bug. In general, the theft of ETH, tokens or Entity accounts are considered of the highest impact. When calculating the severity and thus payout for reported issues we will utilize the common impact vs. likelihood chart below.
 
