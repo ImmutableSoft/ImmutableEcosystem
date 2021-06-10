@@ -1,6 +1,6 @@
 pragma solidity ^0.8.4;
 
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 abstract contract ResolverBase {
     bytes4 private constant INTERFACE_META_ID = 0x01ffc9a7;

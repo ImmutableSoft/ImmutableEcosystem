@@ -1,17 +1,10 @@
 pragma solidity ^0.8.4;
 
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 import "./ImmutableProduct.sol";
 
-/*
-//For truffle testing
-import "@openzeppelin/contracts/ownership/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
-*/
-
-
-//import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Mintable.sol";
+// OpenZepellin upgradable contracts
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 
@@ -25,7 +18,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Enumer
                       (activationIdFlags << 96) | (licenseValue << 128);
 */
 
-contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradeable,
+contract ActivateToken is Initializable, OwnableUpgradeable,
+                          PullPaymentUpgradeable,
                           ERC721EnumerableUpgradeable,
                           ERC721BurnableUpgradeable, ImmutableConstants
 {
@@ -43,22 +37,19 @@ contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradea
   ImmutableProduct productInterface;
 
   function initialize(address entityContractAddr,
-//  function initializeMe(address entityContractAddr,
-                        address productContractAddr)
+                      address productContractAddr)
     public initializer
   {
-    __Ownable_init();//.initialize(msg.sender);
-    __PullPayment_init();//.initialize();
-    __ERC721_init("Activate", "ACT");//.initialize();
-//    ERC721Mintable.initialize(msg.sender);
-    __ERC721Enumerable_init();//.initialize();
+    __Ownable_init();
+    __PullPayment_init();
+    __ERC721_init("Activate", "ACT");
+    __ERC721Enumerable_init();
 
     // Initialize the entity contract interface
     entityInterface = ImmutableEntity(entityContractAddr);
     productInterface = ImmutableProduct(productContractAddr);
 
-    // Add this contract as a minter
-//    addMinter(address(this));
+    // Set default fee and add the deployer as the bank
     EthFee = 1000000000000000; // Default $.40 with ETH $400
     Bank = payable(msg.sender);
   }
@@ -126,7 +117,7 @@ contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradea
                   ((activationId << UniqueIdOffset) & UniqueIdMask) |
                   (licenseValue & (FlagsMask | ExpirationMask | ValueMask));
       }
-      */
+*/
     }
 
     // Require a unique tokenId
@@ -217,7 +208,7 @@ contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradea
     {
       // Send ETH to configured ImmutableSoft bank
       require(msg.value >= EthFee, "Owner not automatic, ETH required");
-      activateDonate(msg.value);//_asyncTransfer(Bank, msg.value);
+      activateDonate(msg.value);
     }
     else
       require(msg.value == 0, "ETH not required");
@@ -263,11 +254,8 @@ contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradea
         feeAmount = (priceInTokens * 1) / 100;
 
       // Transfer the ETH to the entity bank address
-      entityInterface.entityTransfer{value: priceInTokens -
-                                           feeAmount}
-                                    /*.value(priceInTokens -
-                                           feeAmount)*/(entityIndex,
-                                                      productIndex);
+      entityInterface.entityTransfer{value: priceInTokens - feeAmount}
+                                    (entityIndex, productIndex);
 
       // Move fee, if any, into ImmutableSoft bank account
       if (feeAmount > 0)
@@ -454,9 +442,7 @@ contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradea
         fee = (msg.value * 1) / 100;
 
       entityInterface.entityTransfer{value: msg.value - fee}
-                                    /*.value(msg.value - fee)*/
-                                    (entityInterface.entityAddressToIndex(licenseOwner),
-                                     0);
+               (entityInterface.entityAddressToIndex(licenseOwner), 0);
 
       // Move fee, if any, into ImmutableSoft bank account
       if (fee > 0)
@@ -617,7 +603,9 @@ contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradea
     return (resultEntityId, resultProductId, resultHash,
             resultValue, resultPrice);
   }
-  
+
+  // Pass through the overrides to inherited super class
+  //   To add per-transfer fee's/logic in the future do so here
   function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(ERC721Upgradeable, ERC721EnumerableUpgradeable) {
         super._beforeTokenTransfer(from, to, amount);
     }
@@ -625,12 +613,4 @@ contract ActivateToken is Initializable, OwnableUpgradeable, PullPaymentUpgradea
   function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721Upgradeable, ERC721EnumerableUpgradeable) returns (bool) {
     return super.supportsInterface(interfaceId);
   }
-
-/*
-  function _beforeTokenTransfer(address from, address to,
-                                uint256 tokenId) override internal virtual { }
-  
-  function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165Upgradeable, ERC721Upgradeable) returns (bool) {
-                                }
-*/
 }

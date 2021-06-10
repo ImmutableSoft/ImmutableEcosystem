@@ -1,6 +1,6 @@
 pragma solidity ^0.8.4;
 
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 contract Migrations {
   address public owner;

@@ -1,18 +1,11 @@
 pragma solidity ^0.8.4;
 
-// SPDX-License-Identifier: UNLICENSED
-
-// Optimized ecosystem read interface returns arrays and
-// requires experimental ABIEncoderV2
-//   DO NOT release in production with compiler < 0.5.7
-pragma experimental ABIEncoderV2;
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 import "./ImmutableEntity.sol";
 
 // OpenZepellin upgradable contracts
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-
-/// Comments within /*  */ are for toggling upgradable contracts */
 
 /// @title The Immutable Product - authentic product distribution
 /// @author Sean Lawless for ImmutableSoft Inc.
@@ -76,16 +69,10 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable, ImmutableConstan
   /// Executed on contract creation only.
   /// @param entityAddr the address of the ImmutableEntity contract
   /// @param commonAddr the address of the StringCommon contract
-/*
-  constructor(address entityAddr, address tokenAddr,
-              address commonAddr)
-    public
-  {
-*/
-  function initialize(address entityAddr, /*address tokenAddr,*/
+  function initialize(address entityAddr,
                       address commonAddr) public initializer
   {
-    __Ownable_init();//.initialize(msg.sender);
+    __Ownable_init();
 
     entityInterface = ImmutableEntity(entityAddr);
     commonInterface = StringCommon(commonAddr);
@@ -126,19 +113,18 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable, ImmutableConstan
       }
     }
 
+    // Populate information for new product and increment index
     Products[entityIndex][lastProduct].name = productName;
     Products[entityIndex][lastProduct].infoURL = productURL;
     Products[entityIndex][lastProduct].logoURL = logoURL;
     Products[entityIndex][lastProduct].numberOfReleases = 0;
     Products[entityIndex][lastProduct].numberOfOffers = 0;
-//    Products[entityIndex][lastProduct] = Product(productName,
-//                                     productURL, logoURL, details, 0, 0);
     NumberOfProducts[entityIndex]++;
 
     // Emit an new product event and return the product index
     emit productEvent(entityIndex, productID, productName,
                       productURL, details);
-    return productID;
+    return lastProduct;
   }
 
   /// @notice Offer a software product license for sale.
@@ -218,10 +204,12 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable, ImmutableConstan
     // If token configured specified, do a quick validity check
     if (erc20token != address(0))
     {
-      require((entityStatus & CustomToken) == CustomToken, "Token offers require custom status.");
+      require((entityStatus & CustomToken) == CustomToken,
+              "Token offers require custom status.");
       IERC20Upgradeable theToken = IERC20Upgradeable(erc20token);
 
-      require(theToken.totalSupply() > 0, "Address is not ERC20 token or no supply");
+      require(theToken.totalSupply() > 0,
+              "Address is not ERC20 token or no supply");
     }
 
     require(NumberOfProducts[entityIndex] > productIndex,
@@ -359,7 +347,7 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable, ImmutableConstan
     if (bytes(productName).length > 0)
     {
       // If product exists with same name then fatal error so revert
-      for (productID = 0; productID < NumberOfProducts[entityIndex]/*Products[entityIndex].length*/;
+      for (productID = 0; productID < NumberOfProducts[entityIndex];
            ++productID)
       {
         if (productIndex != productID)

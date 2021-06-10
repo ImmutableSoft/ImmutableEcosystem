@@ -1,11 +1,6 @@
 pragma solidity ^0.8.4;
 
-// SPDX-License-Identifier: UNLICENSED
-
-// Optimized ecosystem read interface returns arrays and
-// requires experimental ABIEncoderV2
-//   DO NOT release in production with compiler < 0.5.7
-pragma experimental ABIEncoderV2;
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 // OpenZepellin upgradable contracts
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -14,13 +9,11 @@ import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol"
 
 import "./StringCommon.sol";
 import "./ImmutableConstants.sol";
-//import "./ImmutableResolver.sol";
-//import "./ImmuteToken.sol";
-
-//import "@ensdomains/ens/contracts/ENS.sol";
-//import "./AddrResolver.sol";
-
-/// Comments within /*  */ are for toggling upgradable contracts */
+/* //ENS integration (old/deprecated)
+import "./ImmutableResolver.sol";
+import "@ensdomains/ens/contracts/ENS.sol";
+import "./AddrResolver.sol";
+*/
 
 /// @title Immutable Entity - managed trust zone for the ecosystem
 /// @author Sean Lawless for ImmutableSoft Inc.
@@ -66,19 +59,16 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
   // Entity interface events
   event entityEvent(uint256 entityIndex,
                     string name, string url);
-  event entityTransferEvent(uint256 entityIndex, uint256 productIndex, uint256 amount);
+  event entityTransferEvent(uint256 entityIndex, uint256 productIndex,
+                            uint256 amount);
 
-  /// @notice Contract initializer/constructor.
+  /// @notice Contract initializer
   /// Executed on contract creation only.
   /// @param commonAddr the address of the CommonString contract
-  /*constructor(address commonAddr)
-    public PullPayment()
-  {
-*/
   function initialize(address commonAddr) public initializer
   {
-    __Ownable_init();//.initialize(msg.sender);
-    __PullPayment_init();//.initialize();
+    __Ownable_init();
+    __PullPayment_init();
 
     // Initialize string and token contract interfaces
     commonInterface = StringCommon(commonAddr);
@@ -88,7 +78,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
   /// ADMIN (onlyOwner)
   ///////////////////////////////////////////////////////////
 /*
-  /// @notice Set ImmutableSoft ENS resolver. A zero address disables resolver.
+  /// @notice Set ENS resolver. Zero address disables resolver.
   /// Administrator (onlyOwner)
   /// @param resolverAddr the address of the immutable resolver
   function entityResolver(address resolverAddr, bytes32 rootNode)
@@ -158,8 +148,8 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
               "Entity name already exists");
 
     // Push the entity to permenant storage on the blockchain
-    Entities[entityIndex] = Entity(payable(msg.sender), address(0), address(0), entityName,
-                         "", entityURL, block.timestamp);
+    Entities[entityIndex] = Entity(payable(msg.sender), address(0),
+                address(0), entityName, "", entityURL, block.timestamp);
 
     // Push the address to the entity array and clear status
     EntityArray[entityIndex] = msg.sender;
@@ -251,7 +241,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
   /// @param entityAddress The address of the entity to move
   /// @param nextAddress The next address of the entity
   function entityAdminAddressNext(address entityAddress,
-                                  address nextAddress)//, uint256 numTokens)
+                                  address nextAddress)
     external onlyOwner
   {
     uint256 entityIndex = EntityIndex[entityAddress];
@@ -283,7 +273,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     require(entityStatus > 0, EntityNotValidated);
 
     // Assign the indexing for the new address
-    EntityIndex[msg.sender] = entityIndex;// + 1;
+    EntityIndex[msg.sender] = entityIndex;
     // Clear the old address
     EntityIndex[oldAddress] = 0;
     EntityArray[entityIndex] = msg.sender;

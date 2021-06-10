@@ -1,8 +1,8 @@
 pragma solidity ^0.8.4;
 
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: GPL-3.0-or-later
 
-/// @title Immutable Constants - authentic software from the source
+/// @title Immutable Constants - common constant definitions
 /// @author Sean Lawless for ImmutableSoft Inc.
 /// @dev Constants for structures across contracts
 contract ImmutableConstants
@@ -171,6 +171,4 @@ contract ImmutableConstants
   string constant TokenEntityNoMatch = "Token entity does not match";
   string constant TokenProductNoMatch = "Token product id does not match";
   string constant TokenNotUnique = "TokenId is NOT unique";
-
-
 }

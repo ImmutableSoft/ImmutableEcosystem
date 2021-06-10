@@ -1,7 +1,8 @@
 pragma solidity ^0.8.4;
 
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: GPL-3.0-or-later
 
+// OpenZepellin upgradable contracts
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /// @title Immutable String - common string routines for ecosystem
@@ -80,11 +81,17 @@ contract StringCommon is Initializable
   {
     bytes memory a = bytes(_a);
     bytes memory b = bytes(_b);
+
+    // Return false if length mismatch
     if (a.length != b.length)
-      return false; // @todo unroll this loop
+      return false;
+
+    // Loop and return false if any character does not match
     for (uint i = 0; i < a.length; i ++)
       if (a[i] != b[i])
         return false;
+
+    // Otherwise strings match so return true
     return true;
   }
 
