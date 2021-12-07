@@ -1,10 +1,9 @@
 const path = require("path");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const { projectID, mnemonic } = require('./secrets.json');
+const { projectID, mnemonicPhrase } = require('./secrets.json');
 
+var optimism_mnemonic = 'test test test test test test test test test test test junk'
 module.exports = {
-
-  plugins: ["truffle-security"],
 
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
@@ -15,17 +14,29 @@ module.exports = {
       host: "127.0.0.1",     // Localhost (default: none)
       port: 8545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
-//      gas: 7000000,
-//      gasPrice: 20000000000
     },
-
+    optimistic: {
+      provider: () => new HDWalletProvider(optimism_mnemonic, "http://127.0.0.1:8545/"),
+      network_id: "*"
+    },
+    optimistic_kovan: {
+      provider: () => new HDWalletProvider(
+        mnemonicPhrase, 'https://kovan.optimism.io'
+      ),
+      networkId: '*'
+    },
     ropsten: {
       provider: () => new HDWalletProvider(
-        mnemonic, 'https://ropsten.infura.io/v3/' + projectID
+        mnemonicPhrase, 'https://ropsten.infura.io/v3/' + projectID
       ),
-      networkId: 3,
+      network_id: '3',
     },
-
+    kovan: {
+      provider: () => new HDWalletProvider(
+        mnemonicPhrase, 'https://kovan.infura.io/v3/' + projectID
+      ),
+      network_id: '42',
+    },
     mainnet: {
       provider: () => new HDWalletProvider(
         mnemonic, 'https://mainnet.infura.io/v3/' + projectID
@@ -33,13 +44,14 @@ module.exports = {
       networkId: 1,
     }
   },
+
   compilers: {
     solc: {
-      version: "0.8.4", // change this to download new compiler, cool!
+      version: "0.8.9", // change this to download new compiler, cool!
       settings: {
         optimizer: {
           enabled: true,
-          runs: 200
+          runs: 1
         }
       }
     }

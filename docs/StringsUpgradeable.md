@@ -1,73 +1,70 @@
-# Migrations.sol
+# StringsUpgradeable.sol
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\utils\StringsUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\StringsUpgradeable.sol)
 
-**Migrations**
+**StringsUpgradeable**
+
+String operations.
 
 ## Contract Members
 **Constants & Variables**
 
 ```js
-address public owner;
-uint256 public last_completed_migration;
+bytes16 private constant alphabet;
 
 ```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [toString(uint256 value)](#tostring)
+- [toHexString(uint256 value)](#tohexstring)
+- [toHexString(uint256 value, uint256 length)](#tohexstring)
 
-### 
+### toString
+
+Converts a `uint256` to its ASCII `string` decimal representation.
 
 ```js
-function () public nonpayable
+function toString(uint256 value) internal pure
+returns(string)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
+| value | uint256 |  | 
 
-### setCompleted
+### toHexString
+
+Converts a `uint256` to its ASCII `string` hexadecimal representation.
 
 ```js
-function setCompleted(uint256 completed) external nonpayable
+function toHexString(uint256 value) internal pure
+returns(string)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| completed | uint256 |  | 
+| value | uint256 |  | 
 
-### upgrade
+### toHexString
+
+Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.
 
 ```js
-function upgrade(address new_address) external nonpayable
+function toHexString(uint256 value, uint256 length) internal pure
+returns(string)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| new_address | address |  | 
+| value | uint256 |  | 
+| length | uint256 |  | 
 
 ## Contracts
 

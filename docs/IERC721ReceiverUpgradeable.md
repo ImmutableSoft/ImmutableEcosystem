@@ -1,73 +1,37 @@
-# Migrations.sol
+# ERC721 token receiver interface (IERC721ReceiverUpgradeable.sol)
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\IERC721ReceiverUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\IERC721ReceiverUpgradeable.sol)
 
-**Migrations**
+**IERC721ReceiverUpgradeable**
 
-## Contract Members
-**Constants & Variables**
-
-```js
-address public owner;
-uint256 public last_completed_migration;
-
-```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
+Interface for any contract that wants to support safeTransfers
+ from ERC721 asset contracts.
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [onERC721Received(address operator, address from, uint256 tokenId, bytes data)](#onerc721received)
 
-### 
+### onERC721Received
+
+Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
+ by `operator` from `from`, this function is called.
+ It must return its Solidity selector to confirm the token transfer.
+ If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
+ The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
 
 ```js
-function () public nonpayable
+function onERC721Received(address operator, address from, uint256 tokenId, bytes data) external nonpayable
+returns(bytes4)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-
-### setCompleted
-
-```js
-function setCompleted(uint256 completed) external nonpayable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| completed | uint256 |  | 
-
-### upgrade
-
-```js
-function upgrade(address new_address) external nonpayable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| new_address | address |  | 
+| operator | address |  | 
+| from | address |  | 
+| tokenId | uint256 |  | 
+| data | bytes |  | 
 
 ## Contracts
 

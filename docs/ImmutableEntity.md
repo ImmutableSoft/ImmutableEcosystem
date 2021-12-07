@@ -1,8 +1,8 @@
 # Immutable Entity - managed trust zone for the ecosystem (ImmutableEntity.sol)
 
-View Source: [contracts/ImmutableEntity.sol](../contracts/ImmutableEntity.sol)
+View Source: [\contracts\ImmutableEntity.sol](..\contracts\ImmutableEntity.sol)
 
-**↗ Extends: [Initializable](Initializable.md), [Ownable](Ownable.md), [PullPayment](PullPayment.md), [ImmutableConstants](ImmutableConstants.md)**
+**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [PullPaymentUpgradeable](PullPaymentUpgradeable.md)**
 
 **ImmutableEntity**
 
@@ -70,9 +70,7 @@ event entityTransferEvent(uint256  entityIndex, uint256  productIndex, uint256  
 
 ### initialize
 
-⤾ overrides [Ownable.initialize](Ownable.md#initialize)
-
-Contract initializer/constructor.
+Contract initializer
  Executed on contract creation only.
 
 ```js
@@ -83,7 +81,7 @@ function initialize(address commonAddr) public nonpayable initializer
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| commonAddr | address | the address of the CommonString contract | 
+| commonAddr | address |  | 
 
 ### entityStatusUpdate
 
@@ -111,6 +109,10 @@ Create an organization.
 function entityCreate(string entityName, string entityURL) public nonpayable
 returns(uint256)
 ```
+
+**Returns**
+
+the new entity unique identifier (index)
 
 **Arguments**
 
@@ -317,12 +319,14 @@ Retrieve entity details from index.
 
 ```js
 function entityDetailsByIndex(uint256 entityIndex) public view
-returns(string, string)
+returns(name string, URL string)
 ```
 
 **Returns**
 
-the entity name
+name and URL are return values.\
+         **name** the entity name\
+         **URL** the entity name\
 
 **Arguments**
 
@@ -374,12 +378,15 @@ Retrieve all entity details
 
 ```js
 function entityAllDetails() external view
-returns(uint256[], string[], string[])
+returns(status uint256[], name string[], URL string[])
 ```
 
 **Returns**
 
-array of entity status
+status , name and URL arrays are return values.\
+         **status** Array of entity status\
+         **name** Array of entity names\
+         **URL** Array of entity URLs
 
 **Arguments**
 
@@ -389,34 +396,30 @@ array of entity status
 ## Contracts
 
 * [ActivateToken](ActivateToken.md)
-* [Address](Address.md)
-* [Context](Context.md)
-* [Counters](Counters.md)
+* [AddressUpgradeable](AddressUpgradeable.md)
+* [ContextUpgradeable](ContextUpgradeable.md)
+* [CreatorToken](CreatorToken.md)
 * [CustomToken](CustomToken.md)
-* [ERC165](ERC165.md)
-* [ERC20](ERC20.md)
-* [ERC20Detailed](ERC20Detailed.md)
-* [ERC20Mintable](ERC20Mintable.md)
-* [ERC721](ERC721.md)
-* [ERC721Burnable](ERC721Burnable.md)
-* [ERC721Enumerable](ERC721Enumerable.md)
-* [ERC721Mintable](ERC721Mintable.md)
-* [Escrow](Escrow.md)
-* [IERC165](IERC165.md)
-* [IERC20](IERC20.md)
-* [IERC721](IERC721.md)
-* [IERC721Enumerable](IERC721Enumerable.md)
-* [IERC721Receiver](IERC721Receiver.md)
-* [ImmutableConstants](ImmutableConstants.md)
+* [ERC165Upgradeable](ERC165Upgradeable.md)
+* [ERC20Upgradeable](ERC20Upgradeable.md)
+* [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md)
+* [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
+* [ERC721Upgradeable](ERC721Upgradeable.md)
+* [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
+* [EscrowUpgradeable](EscrowUpgradeable.md)
+* [IERC165Upgradeable](IERC165Upgradeable.md)
+* [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
+* [IERC20Upgradeable](IERC20Upgradeable.md)
+* [IERC721EnumerableUpgradeable](IERC721EnumerableUpgradeable.md)
+* [IERC721MetadataUpgradeable](IERC721MetadataUpgradeable.md)
+* [IERC721ReceiverUpgradeable](IERC721ReceiverUpgradeable.md)
+* [IERC721Upgradeable](IERC721Upgradeable.md)
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableProduct](ImmutableProduct.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
-* [MinterRole](MinterRole.md)
-* [Ownable](Ownable.md)
-* [PullPayment](PullPayment.md)
-* [ResolverBase](ResolverBase.md)
-* [Roles](Roles.md)
-* [SafeMath](SafeMath.md)
-* [Secondary](Secondary.md)
+* [OwnableUpgradeable](OwnableUpgradeable.md)
+* [ProductActivate](ProductActivate.md)
+* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
+* [StringsUpgradeable](StringsUpgradeable.md)

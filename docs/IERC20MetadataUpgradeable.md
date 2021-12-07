@@ -1,43 +1,28 @@
-# Migrations.sol
+# IERC20MetadataUpgradeable.sol
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC20\extensions\IERC20MetadataUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC20\extensions\IERC20MetadataUpgradeable.sol)
 
-**Migrations**
+**↗ Extends: [IERC20Upgradeable](IERC20Upgradeable.md)**
+**↘ Derived Contracts: [ERC20Upgradeable](ERC20Upgradeable.md)**
 
-## Contract Members
-**Constants & Variables**
+**IERC20MetadataUpgradeable**
 
-```js
-address public owner;
-uint256 public last_completed_migration;
-
-```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
+Interface for the optional metadata functions from the ERC20 standard.
+ _Available since v4.1._
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [name()](#name)
+- [symbol()](#symbol)
+- [decimals()](#decimals)
 
-### 
+### name
+
+Returns the name of the token.
 
 ```js
-function () public nonpayable
+function name() external view
+returns(string)
 ```
 
 **Arguments**
@@ -45,29 +30,33 @@ function () public nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### setCompleted
+### symbol
+
+Returns the symbol of the token.
 
 ```js
-function setCompleted(uint256 completed) external nonpayable
+function symbol() external view
+returns(string)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| completed | uint256 |  | 
 
-### upgrade
+### decimals
+
+Returns the decimals places of the token.
 
 ```js
-function upgrade(address new_address) external nonpayable
+function decimals() external view
+returns(uint8)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| new_address | address |  | 
 
 ## Contracts
 

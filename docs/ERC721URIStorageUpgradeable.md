@@ -1,43 +1,35 @@
-# Migrations.sol
+# ERC721URIStorageUpgradeable.sol
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721URIStorageUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721URIStorageUpgradeable.sol)
 
-**Migrations**
+**↗ Extends: [Initializable](Initializable.md), [ERC721Upgradeable](ERC721Upgradeable.md)**
+**↘ Derived Contracts: [CreatorToken](CreatorToken.md)**
+
+**ERC721URIStorageUpgradeable**
+
+ERC721 token with storage based token URI management.
 
 ## Contract Members
 **Constants & Variables**
 
 ```js
-address public owner;
-uint256 public last_completed_migration;
+mapping(uint256 => string) private _tokenURIs;
+uint256[49] private __gap;
 
 ```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [__ERC721URIStorage_init()](#__erc721uristorage_init)
+- [__ERC721URIStorage_init_unchained()](#__erc721uristorage_init_unchained)
+- [tokenURI(uint256 tokenId)](#tokenuri)
+- [_setTokenURI(uint256 tokenId, string _tokenURI)](#_settokenuri)
+- [_burn(uint256 tokenId)](#_burn)
 
-### 
+### __ERC721URIStorage_init
 
 ```js
-function () public nonpayable
+function __ERC721URIStorage_init() internal nonpayable initializer 
 ```
 
 **Arguments**
@@ -45,29 +37,66 @@ function () public nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### setCompleted
+### __ERC721URIStorage_init_unchained
 
 ```js
-function setCompleted(uint256 completed) external nonpayable
+function __ERC721URIStorage_init_unchained() internal nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| completed | uint256 |  | 
 
-### upgrade
+### tokenURI
+
+See {IERC721Metadata-tokenURI}.
 
 ```js
-function upgrade(address new_address) external nonpayable
+function tokenURI(uint256 tokenId) public view
+returns(string)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| new_address | address |  | 
+| tokenId | uint256 |  | 
+
+### _setTokenURI
+
+Sets `_tokenURI` as the tokenURI of `tokenId`.
+ Requirements:
+ - `tokenId` must exist.
+
+```js
+function _setTokenURI(uint256 tokenId, string _tokenURI) internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| tokenId | uint256 |  | 
+| _tokenURI | string |  | 
+
+### _burn
+
+Destroys `tokenId`.
+ The approval is cleared when the token is burned.
+ Requirements:
+ - `tokenId` must exist.
+ Emits a {Transfer} event.
+
+```js
+function _burn(uint256 tokenId) internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| tokenId | uint256 |  | 
 
 ## Contracts
 

@@ -5,13 +5,15 @@ const { singletons, BN, expectEvent } = require('@openzeppelin/test-helpers');
 const { deployProxy, upgradeProxy } = require('@openzeppelin/truffle-upgrades');
 
 //const ImmuteToken = artifacts.require("./ImmuteToken.sol");
-const StringCommon = artifacts.require("./StringCommon.sol");
-const ImmutableEntity = artifacts.require("./ImmutableEntity.sol");
-const ImmutableProduct = artifacts.require("./ImmutableProduct.sol");
-//const ImmutableLicense = artifacts.require("./ImmutableLicense.sol");
-const ActivateToken = artifacts.require("./ActivateToken.sol");
+const StringCommon = artifacts.require("StringCommon.sol");
+const ImmutableEntity = artifacts.require("ImmutableEntity.sol");
+const ImmutableProduct = artifacts.require("ImmutableProduct");
+const CreatorToken = artifacts.require("CreatorToken.sol");
+const ActivateToken = artifacts.require("ActivateToken.sol");
+const ProductActivate = artifacts.require("ProductActivate.sol");
 //const ENS = artifacts.require("@ensdomains/ens/ENSRegistry");
-const CustomToken = artifacts.require("./CustomToken.sol");
+const CustomToken = artifacts.require("CustomToken.sol");
+
 var bigInt = require("big-integer");
 
 contract("ImmutableEcosystem", accounts => {
@@ -26,7 +28,9 @@ contract("ImmutableEcosystem", accounts => {
 
   let immuteTokenInstance;
   let immutableEntityInstance;
-  let immutableProductInstance;
+  let creatorTokenInstance;
+  let activateTokenInstance;
+  let productActivateInstance;
 //  let immutableLicenseInstance;
 //  let activateTokenInstance;
   let customTokenInstance;
@@ -34,27 +38,16 @@ contract("ImmutableEcosystem", accounts => {
   let ensInstance;
 
   beforeEach('setup contract for each test case', async () => {
-//    ensInstance = await ENS.new({from: accounts[0]});
-//    immuteTokenInstance = await ImmuteToken.new("1000000000000000000", {from: accounts[0]});
-//    immutableEcosystemInstance = await ImmutableEcosystem.new(immuteTokenInstance.address,
-//                             ensInstance.address, {from: accounts[0]});
-//    immuteTokenInstance = await ImmuteToken.deployed();
     stringCommonInstance = await StringCommon.deployed();
     immutableEntityInstance = await ImmutableEntity.deployed();
     immutableProductInstance = await ImmutableProduct.deployed();
+    creatorTokenInstance = await CreatorToken.deployed();
     activateTokenInstance = await ActivateToken.deployed();
-//    immutableLicenseInstance = await ImmutableLicense.deployed();
+    productActivateInstance = await ProductActivate.deployed();
     customTokenInstance = await CustomToken.deployed();
 //    ensInstance = await ENS.deployed();
   })
 
-  /*
-  it("Restrict ImmuteToken transfer to ImmutableEcosystem", async () => {
-    // Restrict the transfer of tokens to the contracts
-    await immuteTokenInstance.restrictTransferToContracts(immutableEntityInstance.address,
-             immutableProductInstance.address, activateTokenInstance.address, { from: accounts[0] });
-  });
-*/
   it('Check if upgradeable contracts work', async () => {
     lastCommon = await StringCommon.deployed();
     const common2 = await upgradeProxy(lastCommon.address, StringCommon);
@@ -66,9 +59,9 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(lastEntity.address, entity2.address,
                  "Upgraded entity contract address changed");
 
-    lastProduct = await ImmutableProduct.deployed();
-    const product2 = await upgradeProxy(lastProduct.address, ImmutableProduct);
-    assert.equal(lastProduct.address, product2.address,
+    lastCreator = await CreatorToken.deployed();
+    const creator2 = await upgradeProxy(lastCreator.address, CreatorToken);
+    assert.equal(lastCreator.address, creator2.address,
                  "Upgraded product contract address changed");
 
     lastActivate = await ActivateToken.deployed();
@@ -76,12 +69,23 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(lastActivate.address, activate2.address,
                  "Upgraded activate contract address changed");
   });
+
+  it("Restrict the activate token (required)", async () => {
+
+    //  const activateTokenInstance = await Activate.deployed();
+    await activateTokenInstance.restrictToken(productActivateInstance.address,
+                                       creatorTokenInstance.address, { from: accounts[0] });
+  });
+
   it("Change ImmutableEcosystem owner", async () => {
-    // Change the owner
-    await immutableProductInstance.transferOwnership(Owner, { from: accounts[0] });
+
     // Change the entity owner
     await immutableEntityInstance.transferOwnership(Owner, { from: accounts[0] });
-    // Change the owner
+
+    // Change the product owner
+    await immutableProductInstance.transferOwnership(Owner, { from: accounts[0] });
+
+    // Change the activate token owner
     await activateTokenInstance.transferOwnership(Owner, { from: accounts[0] });
   });
 /*
@@ -108,27 +112,6 @@ contract("ImmutableEcosystem", accounts => {
   });
   */
 
-/*
-  it("Restrict ImmuteToken transfer with new Owner and different contract addresses", async () => {
-    // Restrict the transfer of tokens to the contracts
-    await immuteTokenInstance.restrictTransferToContracts(immutableEntityInstance.address,
-      activateTokenInstance.address, immutableProductInstance.address, { from: TokenOwner });
-  });
-
-  it("Restrict ImmuteToken transfer to ImmutableEcosystem again", async () => {
-    // Restrict the transfer of tokens to the contracts
-    await immuteTokenInstance.restrictTransferToContracts(immutableEntityInstance.address,
-             immutableProductInstance.address, activateTokenInstance.address, { from: TokenOwner });
-  });
-
-// Uncomment to test ecosystem with unrestricted transfers
-  it("Unrestrict ImmuteToken transfer to ImmutableEcosystem", async () => {
-    // Unrestrict the transfer of tokens to the contracts
-    await immuteTokenInstance.restrictTransferToContracts('0x0000000000000000000000000000000000000000',
-             '0x0000000000000000000000000000000000000000',
-             '0x0000000000000000000000000000000000000000', { from: TokenOwner});
-  });
-*/
   it("Find or create new entity", async () => {
     // Get the organization name
     var storedData = await immutableEntityInstance.entityDetailsByIndex(1);
@@ -136,8 +119,12 @@ contract("ImmutableEcosystem", accounts => {
     if (storedData[0] == "")
     {
       // Create a new test organization
-      await immutableEntityInstance.entityCreate("Test Org",
+      let newEntity = await immutableEntityInstance.entityCreate("Test Org",
              "http://example.com", { from: Account });
+
+      truffleAssert.eventEmitted(newEntity, 'entityEvent', (ev) => {
+          return ev.entityIndex == 1 && ev.name === "Test Org";
+      });
 
       // Get all entities
       entities = await immutableEntityInstance.entityNumberOf();
@@ -187,6 +174,7 @@ contract("ImmutableEcosystem", accounts => {
 //    assert.equal(address, Account, "Failed! ENS address not Account.");
   });
 */
+
   it("Find or create a new product ", async () => {
     // Read back the organization status
     const status = await immutableEntityInstance.entityIndexStatus(1);
@@ -202,9 +190,13 @@ contract("ImmutableEcosystem", accounts => {
     if (numProducts == 0)
     {
       // Create a new test product
-      await immutableProductInstance.productCreate("Test Product0",
+      let newProduct = await immutableProductInstance.productCreate("Test Product0",
               "http://example.com/TestProduct0",
               "http://example.com/TestProduct0/favicon.ico", 0, { from: Account });
+
+      truffleAssert.eventEmitted(newProduct, 'productEvent', (ev) => {
+          return ev.entityIndex == 1 && ev.name === "Test Product0";
+      });
     }
 
     // Get the product name
@@ -256,39 +248,7 @@ contract("ImmutableEcosystem", accounts => {
     
     assert.equal(storedData[0], "Test Product 0", "Failed! Name mismatch.");
   });
-/*
-  it("Purchase tokens", async () => {
-    // Purchase tokens (auto-approved for use in immutable ecosystem)
-    // TODO: Move from ERC20 to ERC777?
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 20000000000; // 2 tokens, one for activateCreate
-                                             // "Create and teset a license"
-    await immuteTokenInstance.tokenPurchase({ from: Account,
-                                            value: bigPurchase });
-  });
-*/
-  /*
-  it("Pause token contract", async () => {
-    await immuteTokenInstance.pause({ from: TokenOwner });
 
-    // Attempt token transfer, ensure it reverts
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 10000000000;
-    await truffleAssert.reverts(immuteTokenInstance.transferFrom(Account,
-        immutableEntityInstance.address, 10000000000, { from: Account }));
-
-    await immuteTokenInstance.unpause({ from: TokenOwner });
-  });
-  */
-/*
-  it("Ensure minting fails from addresses", async () => {
-    // Attempt token transfer, ensure it reverts
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 10000000000;
-    await truffleAssert.reverts(immuteTokenInstance.tokenMint(Account,
-                                10000000000, { from: Account }));
-  });
-*/
   it("Create a new product release", async () => {
     // Get the number of products
     const numProducts = await immutableProductInstance.productNumberOf('1');
@@ -300,17 +260,49 @@ contract("ImmutableEcosystem", accounts => {
       return;
     }
 
-    var bigEscrow = new BN(100000000)
-    bigEscrow = bigEscrow * 10000000000;
-
     // Create the release
-    await immutableProductInstance.productRelease(0, 3, 0x900DF00D,
-            "http://example.com/releases/TestProduct.zip", //'0x' + bigEscrow.toString(16),
+    const receipt = await creatorTokenInstance.creatorReleases([0], [3], [0x900DF00D],
+            ["http://example.com/releases/MasterContract.pdf"], [0],
             { from: Account });
 
+    console.log("GasUsed: " + bigInt(receipt.receipt.gasUsed).toString(10))
+
     // Read back the release hash
-    const details = await immutableProductInstance.
-                                  productReleaseDetails(1, 0, 0);
+    const details = await creatorTokenInstance.
+                                       creatorReleaseDetails(1, 0, 0);
+
+    assert.equal(details[2], 0x900DF00D, "Failed! Release hash mismatch.");
+  });
+
+  it("Create 10 new product release", async () => {
+    // Get the number of products
+    const numProducts = await immutableProductInstance.productNumberOf('1');
+
+    if (numProducts <= 0)
+    {
+      // Create a new test product
+      assert.equal(true, false, "Failed, product does not exist");
+      return;
+    }
+
+    // Create 10 releases
+    const receipt = await creatorTokenInstance.creatorReleases([0,0,0,0,0,0,0,0,0,0],
+            [4, 5, 6, 7, 8, 9, 10, 11, 12, 13], [0x900DF01D, 0x900DF02D,
+            0x900DF03D, 0x900DF04D, 0x900DF05D, 0x900DF06D, 0x900DF07D,
+            0x900DF08D, 0x900DF09D, 0x900DF0AD],
+            ["http://example.com/releases/TestProduct10.pdf", "http://example.com/releases/TestProduct11.zip",
+             "http://example.com/releases/TestProduct12.zip", "http://example.com/releases/TestProduct13.zip",
+             "http://example.com/releases/TestProduct14.zip", "http://example.com/releases/TestProduct15.zip",
+             "http://example.com/releases/TestProduct16.zip", "http://example.com/releases/TestProduct17.zip",
+             "http://example.com/releases/TestProduct18.zip", "http://example.com/releases/Client10Contract.pdf"],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0x900DF00D],
+            { from: Account });
+
+    console.log("GasUsed: " + bigInt(receipt.receipt.gasUsed).toString(10))
+
+    // Read back the release hash
+    const details = await creatorTokenInstance.
+                                       creatorReleaseDetails(1, 0, 0);
 
     assert.equal(details[2], 0x900DF00D, "Failed! Release hash mismatch.");
   });
@@ -327,8 +319,7 @@ contract("ImmutableEcosystem", accounts => {
     }
 
     // Reverse lookup from the release hash
-    const details = await immutableProductInstance.
-                                  productReleaseHashDetails(0x900DF00D);
+    const details = await creatorTokenInstance.creatorReleaseHashDetails(0x900DF00D);
 
 //                                  external view returns (uint256, uint256, uint256, uint256, string memory)
 
@@ -341,9 +332,29 @@ contract("ImmutableEcosystem", accounts => {
     // Skip over timestamp to check last byte of version
     assert.equal(version.toString(16)[version.toString(16).length - 1],
                  "3", "Failed! Version not 3.");
-    assert.equal(details[4], "http://example.com/releases/TestProduct.zip",
+    assert.equal(details[4], "http://example.com/releases/MasterContract.pdf",
                                 "Failed! URI does not match");
   });
+
+  it("Look up release URI with tokenId", async () => {
+
+    // Look up URI from the manually generated tokenId                                                                                                   
+    const details = await creatorTokenInstance.
+     //         |EntityID|ProdID|RelID  |
+     tokenURI('0x0000000100000000000000000000000000000000000000000000000000000000');
+
+    assert.equal(details, "http://example.com/releases/MasterContract.pdf",
+                                "Failed! URI does not match");
+  });
+
+  it("Check owner of new release token", async () => {
+
+    const tokenOwner = await creatorTokenInstance.
+      ownerOf('0x0000000100000000000000000000000000000000000000000000000000000000');
+
+    assert.equal(Account, tokenOwner);
+  });
+
 
   it("Create three (3) products and verify", async () => {
     // Get the number of products
@@ -400,7 +411,6 @@ contract("ImmutableEcosystem", accounts => {
 
       // Get the organization name
       storedData = await immutableEntityInstance.entityDetailsByIndex(2);
-
     }
     assert.equal(storedData[0], "Test Org2", "Failed! Name mismatch.");
   });
@@ -446,26 +456,17 @@ contract("ImmutableEcosystem", accounts => {
               "http://example2.com/TestProduct2",
               "http://example2.com/TestProduct2/favicon.ico", 0, { from: SecondAccount });
     }
-/*
-    // Purchase tokens (auto-approved for use in immutable ecosystem)
-    // TODO: Move from ERC20 to ERC777?
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 10000000000;
-    await immuteTokenInstance.tokenPurchase({ from: SecondAccount,
-                                            value: bigPurchase });
-*/
     // Create the release
-    await immutableProductInstance.productRelease(0, 0, 0x900DF00D,
-            "http://example2.com/releases/TestProduct2.zip", //bigPurchase.toString(10, 20),
+    await creatorTokenInstance.creatorReleases([0], [0], [0x0D0DF00D],
+            ["http://example2.com/releases/TestProduct20.zip"], [0],
             { from: SecondAccount });
 
     // Read back the release hash
-    const details = await immutableProductInstance.
-                                  productReleaseDetails(2, 0, 0);
+    const details = await creatorTokenInstance.creatorReleaseDetails(2, 0, 0);
 
-    assert.equal(details[2], 0x900DF00D, "Failed! Release hash mismatch.");
+    assert.equal(details[2], 0x0D0DF00D, "Failed! Release hash mismatch.");
   });
-  
+
   it("Create and test a license", async () => {
     // Get the organization name
     var entity = await immutableEntityInstance.entityDetailsByIndex(1);
@@ -489,10 +490,12 @@ contract("ImmutableEcosystem", accounts => {
       assert.equal(1, 0, "No products exist");
     }
 
+    // Set Expiration (1), Limitation (2) flags, add activation value 1
     var value = bigInt('0x3').shiftLeft(160).add(1);//0000000000000000000000000000000000000001');
     // Create the product license
-    await activateTokenInstance.activateCreate(0, 0xFEEDBEEF, '0x' + value.toString(16), { from: Account,
-                                               value: 1000000000000000 });
+    await productActivateInstance.activateCreate(0, 0xFEEDBEEF, '0x' + value.toString(16),
+                                                 0, 0, { from: Account });//,
+//                                               value: 1000000000000000 });
 
     // Check validity of the license
     var storedData = await activateTokenInstance.activateStatus(1, 0, 0xFEEDBEEF);
@@ -507,6 +510,177 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(storedData[1], 0, "Failed! License sale price not zero.");
   });
 
+  it("Create and test a non-resellable license", async () => {
+    // Get the organization name
+    var entity = await immutableEntityInstance.entityDetailsByIndex(1);
+
+    // Get the number of products
+    const numProducts = await immutableProductInstance.productNumberOf(1);
+
+    if (numProducts == 0)
+    {
+      // Assert failure
+      assert.equal(1, 0, "No products exist");
+    }
+
+    // Set Expiration (1), Limitation (2) and NoResale (4) flags
+    var value = bigInt('0x7').shiftLeft(160).add(1);
+    // Create the product license
+    await productActivateInstance.activateCreate(0, 0xFEEDB00F, '0x' + value.toString(16),
+                                                 0, 0, { from: Account });//,
+//                                               value: 1000000000000000 });
+
+    // Check validity of the license
+    var storedData = await activateTokenInstance.activateStatus(1, 0, 0xFEEDB00F);
+//    var licenseValue = new BN('0x' + storedData[0].toString(16));
+
+    value = bigInt(storedData[0]);
+//    var flags = value.shiftRight(160).and(0xFFFF);
+//    var expiration = value.shiftRight(128).and(0xFFFFFFFF);
+    
+    assert.equal(value.toString(16)[0], '7', "Failed! License flags is not 7.");
+    assert.equal(value.toString(16).length, 41, "Failed! License value not large enough."); 
+    assert.equal(storedData[1], 0, "Failed! License sale price not zero.");
+  });
+
+  it("Offer non-resellable activation for resale (reverts)", async () => {
+    await truffleAssert.reverts(productActivateInstance.
+      activateOfferResale(1, 0, 0xFEEDB00F, 5000000000, { from: Account }));
+  });
+
+  it("Ensure ownership transfer of non-resellable activation", async () => {
+
+    const tokenId = await activateTokenInstance.activateIdToTokenId(0xFEEDB00F);
+
+    await activateTokenInstance.approve(EndUser, tokenId, { from: Account });
+
+    await activateTokenInstance.transferFrom(Account, EndUser, tokenId, { from: Account });
+
+    let tokenOwner = await activateTokenInstance.ownerOf(tokenId);
+    assert.equal(tokenOwner.toString(16), EndUser.toString(16), "Token owner not changed.");
+    
+  });
+
+// start Ricardian activation tests
+  it("Create and test a Ricardian required license", async () => {
+    // Get the organization name
+    var entity = await immutableEntityInstance.entityDetailsByIndex(1);
+
+    // Get the number of products
+    const numProducts = await immutableProductInstance.productNumberOf(1);
+
+    if (numProducts == 0)
+    {
+      // Assert failure
+      assert.equal(1, 0, "No products exist");
+    }
+
+    // Set Expiration (1), Limitation (2) and RicardianReq (64 ie. 0x40) flags
+    var value = bigInt('0x43').shiftLeft(160).add(1);
+
+    // Ensure revert if RicardianReq flag but no parent
+    await truffleAssert.reverts(productActivateInstance.activateCreate(0, 0xFEEDB11F, '0x' + value.toString(16),
+                                                 0, 0, { from: Account }));
+
+    // Create the product license if Ricardian Required transfer
+    await productActivateInstance.activateCreate(0, 0xFEEDB11F, '0x' + value.toString(16),
+                                                 0, 0x900DF00D, { from: Account });//,
+//                                               value: 1000000000000000 });
+
+    // Check validity of the license
+    var storedData = await activateTokenInstance.activateStatus(1, 0, 0xFEEDB11F);
+//    var licenseValue = new BN('0x' + storedData[0].toString(16));
+
+    value = bigInt(storedData[0]);
+//    var flags = value.shiftRight(160).and(0xFFFF);
+//    var expiration = value.shiftRight(128).and(0xFFFFFFFF);
+    
+    assert.equal(value.toString(16)[0], '4', "Failed! License flags is not 4.");
+    assert.equal(value.toString(16)[1], '3', "Failed! License flags is not 3.");
+    assert.equal(value.toString(16).length, 42, "Failed! License value not large enough."); 
+    assert.equal(storedData[1], 0, "Failed! License sale price not zero.");
+  });
+
+  it("Check Account owns a Ricardian client - creatorHasChildOf()", async () => {
+
+    // Check that the new address has Ricardian client - creatorHasChildOf()
+    const receipt = await creatorTokenInstance.creatorHasChildOf(Account,
+                                                                 0x900DF00D);
+
+    assert.equal(receipt, 1, "Failed! Release parent depth not one (1).");
+  });
+
+  it("Ensure ownership transfer of Ricardian required activation", async () => {
+
+    const tokenId = await activateTokenInstance.activateIdToTokenId(0xFEEDB11F);
+
+    await activateTokenInstance.approve(EndUser, tokenId, { from: Account });
+
+    await activateTokenInstance.transferFrom(Account, EndUser, tokenId, { from: Account });
+
+    let tokenOwner = await activateTokenInstance.ownerOf(tokenId);
+    assert.equal(tokenOwner.toString(16), EndUser.toString(16), "Token owner not changed.");
+    
+  });
+
+  it("Offer Ricardian required activation for resale", async () => {
+    var offerResult = await productActivateInstance.
+      activateOfferResale(1, 0, 0xFEEDB11F, 5000000000, { from: EndUser });
+
+    const tokenId = await activateTokenInstance.activateIdToTokenId(0xFEEDB11F);
+
+//    var tid = bigInt(tokenId);
+//    console.log("TokenId " + tokenId + " tid " + tid);
+    await activateTokenInstance.approve(productActivateInstance.address, tokenId, { from: EndUser });
+  });
+
+  it("Check address that does not own a Ricardian client (revert)", async () => {
+
+    // Check that the new address has Ricardian client - creatorHasChildOf()
+    let result = await creatorTokenInstance.creatorHasChildOf(EndUser,
+                                                                 0x900DF00D);
+    assert.equal(result, 0, "Failed! Release parent depth not zero (0).");
+  });
+
+  it("Ensure revert if RicardianReq flag but owner has no client", async () => {
+    // Ensure revert if RicardianReq flag but owner has no client
+    await truffleAssert.fails(productActivateInstance.activateTransfer(
+              1, 0, 0xFEEDB11F, 0x900DF0AD, { from: EndUser2, value: 5000000000 }));
+
+  });
+
+  it("Purchase second hand activation license with Ricardian requirement", async () => {
+    // Check the license
+    let result = await activateTokenInstance.
+                                     activateStatus(1, 0, 0xFEEDB11F);
+    var licenseValue = bigInt(result[0]);
+
+    assert.equal(licenseValue.toString(16)[0], '4', "Failed! Not licensed.");
+    assert.equal(licenseValue.toString(16).length, 42, "Failed! License value not large enough."); 
+
+    // Transfer (resell) the product activation license (Account has client)
+    await productActivateInstance.activateTransfer(
+              1, 0, 0xFEEDB11F, 0xFEEDB12F, { from: Account, value: 5000000000 });
+
+    // Check the new license
+    result = await activateTokenInstance.
+                                     activateStatus(1, 0, 0xFEEDB12F);
+    var licenseValue = bigInt(result[0]);
+
+    assert.equal(licenseValue.toString(16)[0], '4', "Failed! Not licensed.");
+    assert.equal(licenseValue.toString(16).length, 42, "Failed! License value not large enough."); 
+
+  });
+
+// end Ricardian activation tests
+
+  it("Mint a new activate tokenId as token contract owner (reverts)", async () => {
+
+    // Look up URI from the                                                                                                   
+    await truffleAssert.fails(activateTokenInstance.
+      mint(Owner, 1, 0, 0xFEED0FF, 0, 0, { from: Owner }));
+  });
+
   it("Update an organization status", async () => {
     // Update the organization status to a distributor (2)
     await immutableEntityInstance.entityStatusUpdate(
@@ -517,17 +691,7 @@ contract("ImmutableEcosystem", accounts => {
 
     assert.equal(status, 2, "Failed! Status not two (Distributor).");
   });
-/*
-  it("Check ImmutableEcosystem token balance matches escrow amount", async () => {
-    // Check the balance of the ecosystem
-    // (should be 2 escrow amounts)
-    const balance = await immuteTokenInstance.balanceOf(immutableProductInstance.address);
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 20000000000;
 
-    assert.equal(balance, bigPurchase, "Failed, contract balance not equal to escrow amount");
-  });
-*/
   it("Create a nonprofit organization and product release", async () => {
     // Create a new test organization
     await immutableEntityInstance.entityCreate("OrgAccount1",
@@ -551,92 +715,11 @@ contract("ImmutableEcosystem", accounts => {
               "http://nonprofit.org/TestProduct/favicon.ico", 0, { from: accounts[9] });
 
     // Create the release
-    await immutableProductInstance.productRelease(0, 0, 0x900DF00D,
-            "http://nonprofit.org/releases/TestProduct.zip", //0,
+    await creatorTokenInstance.creatorReleases([0], [0], [0x0D1DF00D],
+            ["http://nonprofit.org/releases/TestProduct.zip"], [0],
             { from: accounts[9] });
-/*
-    // Challenge the nonprofit release and get 1/2 escrow
-    const balanceBefore = await immuteTokenInstance.balanceOf(EndUser2);
-    await immutableProductInstance.productChallengeReward(EndUser2,
-               3, 0, 0, 0x0BADF00D, { from: Owner });
-    const balanceAfter = await immuteTokenInstance.balanceOf(EndUser2);
-
-    var halfEscrow = new BN(100000000)
-    halfEscrow = halfEscrow * 5000000000; // 1/2  token
-    assert.equal(balanceAfter - balanceBefore, halfEscrow,
-                 "Failed, balance did not increase by expected amount");
-*/
-  });
-/*
-
-  it("Transfer ImmuteToken contract ETH balance to bank", async () => {
-    // Transfer the ETH escrow balance to the bank
-    await immuteTokenInstance.transferToBank({ from: TokenOwner });
-  });*/
-/*
-  it("Attempt to transfer new tokens between accounts", async () => {
-    // Purchase tokens and approve them for use by accounts[9]
-    const balanceBefore = await immuteTokenInstance.balanceOf(accounts[9]);
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 20000000000; // 2 tokens
-    await immuteTokenInstance.tokenPurchase({ from: EndUser,
-                                            value: '0x' + bigPurchase.toString(16) });
-    await immuteTokenInstance.approve(accounts[9],
-                                      20000000000 * 500, { from: EndUser });
-
-    // Transfer the tokens
-    await immuteTokenInstance.transfer(accounts[9],
-                                       10000000000, { from: EndUser });
-    const balanceAfter = await immuteTokenInstance.balanceOf(accounts[9]);
-    assert.equal(balanceAfter - balanceBefore, 0, "Failed, tokens were transferred!");
-  });
-*/
-/*
-  it("Donate tokens to a nonprofit entity", async () => {
-    // Purchase tokens and approve them for use by accounts[9]
-    const balanceBefore = await immuteTokenInstance.balanceOf(accounts[9]);
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 20000000000; // 2 tokens
-
-    await immuteTokenInstance.tokenPurchase({ from: EndUser,
-      value: '0x' + bigPurchase.toString(16) });
-
-    var entityIndex = await immutableEntityInstance.entityAddressToIndex(accounts[9]);
-
-    // Donate the tokens
-    await immutableEntityInstance.entityDonate(entityIndex, 0, 10000000000, { from: EndUser });
-    const balanceAfter = await immuteTokenInstance.balanceOf(accounts[9]);
-    assert.equal(balanceAfter.sub(balanceBefore), 10000000000, "Failed, tokens were not transfered!");
   });
 
-  it("Donate tokens to a for profit entity", async () => {
-    // Purchase tokens and approve them for use by accounts[9]
-    const balanceBefore = await immuteTokenInstance.balanceOf(Account);
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 20000000000; // 2 tokens
-
-    var entityIndex = await immutableEntityInstance.entityAddressToIndex(Account);
-
-    // Donate tokens to a for profit entity (must revert)
-    await immutableEntityInstance.entityDonate(entityIndex,
-                                0, 10000000000, { from: EndUser });
-    const balanceAfter = await immuteTokenInstance.balanceOf(Account);
-    assert.equal(balanceAfter.sub(balanceBefore), 10000000000, "Failed, tokens were not transfered!");
-  });
-
-  it("Attempt to transfer from another to the ecosystem", async () => {
-    // Purchase tokens and approve them for use by accounts[9]
-    const balanceBefore = await immuteTokenInstance.balanceOf(EndUser);
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 20000000000; // 2 tokens
-
-    // Attemp transfer of tokens to pre-approved ecosystem contract
-    await truffleAssert.reverts(immuteTokenInstance.transferFrom(EndUser,
-        immutableEntityInstance.address, 10000000000, { from: Owner }));
-    const balanceAfter = await immuteTokenInstance.balanceOf(EndUser);
-    assert.equal(balanceAfter - balanceBefore, 0, "Failed, tokens were transferred!");
-  });
-*/
   it("Create a product license offer", async () => {
     // Create the produce license offer for a one year activation
 
@@ -648,34 +731,19 @@ contract("ImmutableEcosystem", accounts => {
 
     await immutableProductInstance.productOfferLimitation(0,
        '0x0000000000000000000000000000000000000000', 10000000000,
-       0, '0x' + expiringLicense.toString(16), 0, "", 0, { from: Account });
+       0, '0x' + expiringLicense.toString(16), 0, 0, "", 0, 0, 0, { from: Account });
 
     var offerPrice = await immutableProductInstance.productOfferDetails(1, 0, 0, { from: Account });
     assert.equal(offerPrice[1], 10000000000, "Failed, product activation license price mismatch");
-/*
-    var rawExpiration = bigInt(offerPrice[2]);
-//    rawExpiration = rawExpiration.shiftRight(128).and('0xFFFFFFFFFFFFFFFF');
-    expiringLicense = expiringLicense.shiftLeft(128);
-    rawExpiration = rawExpiration.and('0xFFFFFFFFFFFFFFFF');
-    assert.equal(expiringLicense.toString(16), rawExpiration.toString(16), "Failed, product activation license duration mismatch");
-*/
   });
 
   it("Purchase a product activation license", async () => {
 //    const origBalance = await immuteTokenInstance.balanceOf(Account);
-/*
-    // Create an end user entity account
-    await immutableEntityInstance.entityCreate("John Smith",
-             "http://linkedin.com/john_smith", { from: EndUser });
-    var entityIndex = await immutableEntityInstance.entityAddressToIndex(EndUser);
-
-    // Update the end user status to an EndUser (3)
-    await immutableEntityInstance.entityStatusUpdate(entityIndex, 3, { from: Owner });
-*/
     // Create the product activation license offer
     //  (entity, productID, activationHash)
-    await activateTokenInstance.activatePurchase(
-              1, 0, 0, 0xF00D, { from: EndUser, value: 10000000000 });
+    const receipt = await productActivateInstance.activatePurchase(
+              1, 0, 0, 1, [0xF00D], [0], { from: EndUser, value: 10000000000 });
+    console.log("GasUsed: " + bigInt(receipt.receipt.gasUsed).toString(10))
 
     // Check the license. (entity, productID, activation hash)
     var storedData = await activateTokenInstance.activateStatus(1, 0, 0xF00D);
@@ -688,7 +756,31 @@ contract("ImmutableEcosystem", accounts => {
 
 //    const newBalance = await immuteTokenInstance.balanceOf(Account);
 
-//    assert.equal(newBalance - origBalance, 9900130304 /*(10000000000 * 98) / 100*/,
+//    assert.equal(newBalance - origBalance, 9900130304,
+//                 "Failed, not enough tokens transferred to creator!");
+  });
+
+  it("Purchase 10 product activation licenses", async () => {
+//    const origBalance = await immuteTokenInstance.balanceOf(Account);
+    // Create the product activation license offer
+    //  (entity, productID, activationHash)
+    const receipt = await productActivateInstance.activatePurchase(
+              1, 0, 0, 10, [0xF01D, 0xF02D, 0xF03D, 0xF04D, 0xF05D,0xF06D,0xF07D,0xF08D,0xF09D,0xF0AD],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], { from: EndUser, value: 10000000000 * 10});
+    console.log("GasUsed: " + bigInt(receipt.receipt.gasUsed).toString(10))
+
+    // Check the license. (entity, productID, activation hash)
+    var storedData = await activateTokenInstance.activateStatus(1, 0, 0xF01D);
+
+    var licenseValue = bigInt(storedData[0]);
+
+    assert.equal(licenseValue.toString(16)[0], '3', "Failed! License flags is not zero.");
+    assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
+    assert.equal(storedData[1], 0, "Failed! License sale price not zero.");
+
+//    const newBalance = await immuteTokenInstance.balanceOf(Account);
+
+//    assert.equal(newBalance - origBalance, 9900130304 ,
 //                 "Failed, not enough tokens transferred to creator!");
   });
 
@@ -697,8 +789,8 @@ contract("ImmutableEcosystem", accounts => {
 
     // Create the product activation license offer
     //  (entity, productID, activationHash)
-    await activateTokenInstance.activatePurchase(
-              1, 0, 0, 0xF00D, { from: EndUser, value: 10000000000 });
+    await productActivateInstance.activatePurchase(
+              1, 0, 0, 1, [0xF00D], [0], { from: EndUser, value: 10000000000 });
 
     // Check the license. (entity, productID, activation hash)
     const storedData = await activateTokenInstance.activateStatus(1, 0, 0xF00D);
@@ -710,15 +802,15 @@ contract("ImmutableEcosystem", accounts => {
 
 //    var newBalance = await immuteTokenInstance.balanceOf(Account);
 
-//    assert.equal(newBalance.sub(origBalance), 9900000000 /*9899868160*/ /*(10000000000 * 98) / 100*/,
+//    assert.equal(newBalance.sub(origBalance), 9900000000 ,
 //                 "Failed, not enough tokens transferred to creator!");
   });
 
   it("Purchase a duplicate product activation license with a different user", async () => {
     // Ensure revert if purchase of a duplicate activation license
     //  (entity, productID, activationHash, promotional)
-    await truffleAssert.reverts(activateTokenInstance.activatePurchase(
-              1, 0, 0xF00D, 0, { from: EndUser2, value: 10000000000 }));
+    await truffleAssert.fails(productActivateInstance.activatePurchase(
+              1, 0, 0, 1, [0xF00D], [0], { from: EndUser2, value: 10000000000 }));
     // Check the license. (entity, productID, activation hash)
     const storedData = await activateTokenInstance.activateStatus(1, 0, 0xF00D);
 
@@ -744,7 +836,7 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(result[1], 0, "Failed! License sale price not zero.");
 
     // Move the product activation license offer
-    await activateTokenInstance.activateMove(
+    await productActivateInstance.activateMove(
               1, 0, 0xF00D, 0xFEED, { from: EndUser, value: 1000000000000000 });
 
     // Check the old license
@@ -768,20 +860,24 @@ contract("ImmutableEcosystem", accounts => {
 //    assert.equal(oldBalance.sub(newBalance), bigEscrow, "Tokens not charged for moving license");
   });
 
+  it("Read all for sale activations from the ecosystem", async () => {
+    // Read the for-sale activations from the ecosystem
+    let activations = await activateTokenInstance.activateAllForSaleTokenDetails();
+
+    assert.equal(activations[0].length, 0, "Failed! Not zero activations for sale." + activations[0].length);
+  });
+
   it("Offer a product activation license for resale", async () => {
-    await activateTokenInstance.activateOfferResale(1, 0, 0xFEED, 5000000000, { from: EndUser });
+    await productActivateInstance.activateOfferResale(1, 0, 0xFEED, 5000000000, { from: EndUser });
+
+    const tokenId = await activateTokenInstance.activateIdToTokenId(0xFEED);
+
+//    var tid = bigInt(tokenId);
+//    console.log("TokenId " + tokenId + " tid " + tid);
+    await activateTokenInstance.approve(productActivateInstance.address, tokenId, { from: EndUser });
   });
 
   it("Purchase a second hand activation license", async () => {
-/*
-
-    var rate = await immuteTokenInstance.currentRate();
-
-    await immuteTokenInstance.tokenPurchase({ from: EndUser2,
-                                           value: 5000000000 / rate });
-    const oldBalance = await immuteTokenInstance.balanceOf(EndUser);
-    const user2Balance = await immuteTokenInstance.balanceOf(EndUser2);
-*/
     // Check the license
     let result = await activateTokenInstance.
                                      activateStatus(1, 0, 0xFEED);
@@ -795,7 +891,7 @@ contract("ImmutableEcosystem", accounts => {
 //                                      { from: EndUser2 });
 
     // Transfer (resell) the product activation license
-    await activateTokenInstance.activateTransfer(
+    await productActivateInstance.activateTransfer(
               1, 0, 0xFEED, 0xFEAD, { from: EndUser2, value: 5000000000 });
 
     // Check the new license
@@ -806,13 +902,6 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(licenseValue.toString(16)[0], '3', "Failed! Not licensed.");
     assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
 
-/*
-    const newBalance = await immuteTokenInstance.balanceOf(EndUser);
-    const newUser2Balance = await immuteTokenInstance.balanceOf(EndUser2);
-
-    assert.equal(user2Balance.sub(newUser2Balance), 5000000000, "Tokens not charged for resell");
-    assert.equal(newBalance.sub(oldBalance), 4950000000, "Tokens not earned for resell");
-*/
   });
 
   it("Purchase another product activation license and offer it for resale", async () => {
@@ -820,8 +909,8 @@ contract("ImmutableEcosystem", accounts => {
 
     // Create the product activation license offer
     //  (entity, productID, activationHash)
-    await activateTokenInstance.activatePurchase(
-              1, 0, 0, 0xF00D, { from: EndUser, value: 10000000000 });
+    await productActivateInstance.activatePurchase(
+              1, 0, 0, 1, [0xF00D], [0], { from: EndUser, value: 10000000000 });
 
     // Check the license. (entity, productID, activation hash)
     const storedData = await activateTokenInstance.activateStatus(1, 0, 0xF00D);
@@ -831,7 +920,11 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(licenseValue.toString(16)[0], '3', "Failed! Not licensed.");
     assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
 
-    await activateTokenInstance.activateOfferResale(1, 0, 0xF00D, 5000000000, { from: EndUser });
+    await productActivateInstance.activateOfferResale(1, 0, 0xF00D, 5000000000, { from: EndUser });
+
+    const tokenId = await activateTokenInstance.activateIdToTokenId(0xF00D);
+
+    await activateTokenInstance.approve(productActivateInstance.address, tokenId, { from: EndUser });
 
   });
 
@@ -846,7 +939,7 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
 
     // Transfer (resell) the product activation license
-    await activateTokenInstance.activateTransfer(
+    await productActivateInstance.activateTransfer(
               1, 0, 0xF00D, 0xFEAD, { from: EndUser2, value: 5000000000 });
 
     // Check the new license
@@ -867,15 +960,9 @@ contract("ImmutableEcosystem", accounts => {
 
     assert.equal(licenseValue.toString(16)[0], '3', "Failed! Not licensed.");
     assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
-/*
-    // Purchase tokens
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 10000000000; // 1 tokens
-    await immuteTokenInstance.tokenPurchase({ from: EndUser2,
-                                            value: '0x' + bigPurchase.toString(16) });
-*/
+
     // Move the product activation license offer
-    await activateTokenInstance.activateMove(
+    await productActivateInstance .activateMove(
               1, 0, 0xFEAD, 0xF00D, { from: EndUser2, value: 1000000000000000 });
 
     // Check the old license
@@ -893,114 +980,264 @@ contract("ImmutableEcosystem", accounts => {
 
   });
 
+// test for resale transfer fee
+
+  it("Create a product license offer with 600000000 (10%) resale transfer fee", async () => {
+    // Create the produce license offer for a one year activation
+
+    // Update the license value with the expiration
+    var expiringLicense = bigInt(365 * (24 * (60 * 60)));//.shiftLeft(128);
+
+    // Add the product activation value (1)
+//    expiringLicense = expiringLicense.add(1);
+
+    await immutableProductInstance.productOfferLimitation(0,
+       '0x0000000000000000000000000000000000000000',     6000000000,
+       0, '0x' + expiringLicense.toString(16), 0, 0, "", 0,  600000000, 0, { from: Account });
+
+    var offerPrice = await immutableProductInstance.productOfferDetails(1, 0, 1, { from: Account });
+    assert.equal(offerPrice[1], 6000000000, "Failed, product activation license price mismatch");
+  });
+
+  it("Purchase a product activation license with resale fee", async () => {
+
+    // Create the product activation license offer
+    //  (entity, productID, activationHash)
+    const receipt = await productActivateInstance.activatePurchase(
+              1, 0, 1, 1, [0xF88D], [0], { from: EndUser, value: 6000000000 });
+    console.log("GasUsed: " + bigInt(receipt.receipt.gasUsed).toString(10))
+
+    // Check the license. (entity, productID, activation hash)
+    var storedData = await activateTokenInstance.activateStatus(1, 0, 0xF88D);
+
+    var licenseValue = bigInt(storedData[0]);
+
+    assert.equal(licenseValue.toString(16)[0], '3', "Failed! License flags is not zero.");
+    assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
+    assert.equal(storedData[1], 0, "Failed! License sale price not zero.");
+
+  });
+
+  it("Offer a product activation with transfer fee for resale", async () => {
+    await productActivateInstance.activateOfferResale(1, 0, 0xF88D, 1000000000, { from: EndUser });
+
+    const tokenId = await activateTokenInstance.activateIdToTokenId(0xF88D);
+
+//    var tid = bigInt(tokenId);
+//    console.log("TokenId " + tokenId + " tid " + tid);
+    await activateTokenInstance.approve(productActivateInstance.address, tokenId, { from: EndUser });
+  });
+
+  it("Purchase a second hand activation license with transfer fee", async () => {
+    // Check the license
+    let result = await activateTokenInstance.
+                                     activateStatus(1, 0, 0xF88D);
+    var licenseValue = bigInt(result[0]);
+
+    assert.equal(licenseValue.toString(16)[0], '3', "Failed! Not licensed.");
+    assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
+
+    // Approve tokens for transfer to EndUser
+//    await customTokenInstance.approve(EndUser, 5000000000,
+//                                      { from: EndUser2 });
+
+    // Revert on transfer of activation license without resale fee
+    await truffleAssert.fails(productActivateInstance.activateTransfer(
+              1, 0, 0xF88D, 0xF99D, { from: EndUser2, value: 1000000000 }));
+
+    // Transfer the product activation license only with resale fee
+    await productActivateInstance.activateTransfer(
+              1, 0, 0xF88D, 0xF99D, { from: EndUser2, value: 1600000000 });
+
+    // Check the new license
+    result = await activateTokenInstance.
+                                     activateStatus(1, 0, 0xF99D);
+    var licenseValue = bigInt(result[0]);
+
+    assert.equal(licenseValue.toString(16)[0], '3', "Failed! Not licensed.");
+    assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
+
+  });
+
+
+// End tests for resale transfer fee
+
+  it("Create a new product for use as a ricardian legal agreement", async () => {
+    // Read back the organization status
+    const status = await immutableEntityInstance.entityIndexStatus(1);
+    if (status == 0)
+    {
+      // Update the organization status to a creator (1)
+      await immutableEntityInstance.entityStatusUpdate(1, 1, { from: Owner });
+    }
+
+    // Get the number of products
+    const numProducts = await immutableProductInstance.productNumberOf(1);
+
+    // Create a new legal contract for test product
+    await immutableProductInstance.productCreate("Test Product0 Legal Contract",
+            "http://example.com/TestProduct0 Legal Contract",
+            "http://example.com/TestProduct0 Legal Contract/favicon.ico", 0, { from: Account });
+
+    // Get the product name
+    storedData = await immutableProductInstance.productDetails(1, 3);
+    
+    assert.equal(storedData[0], "Test Product0 Legal Contract", "Failed! Name mismatch.");
+  });
+
+  it("Create the base ricarding contract agreement", async () => {
+    // Get the number of products
+    const numProducts = await immutableProductInstance.productNumberOf('1');
+
+    console.log("Entity1 numProducts " + numProducts)
+
+    if (numProducts != 4)
+    {
+      // Create a new test product
+      assert.equal(true, false, "Failed, product number inconsistent");
+      return;
+    }
+
+    // Create the ricardian contract base
+    const receipt = await creatorTokenInstance.creatorReleases([3], [0], ["0xDF00D1"],
+            ["http://example.com/releases/TestProduct0 Legal Contract_v0.pdf"], [0],
+            { from: Account });
+
+    // Read back the release hash
+    const details = await creatorTokenInstance.
+                                       creatorReleaseDetails(1, 3, 0);
+
+    assert.equal(details[2], 0xDF00D1, "Failed! Release hash mismatch.");
+  });
+
+  it("Reverse lookup the ricardian release", async () => {
+
+    // Reverse lookup from the release hash
+    const details = await creatorTokenInstance.creatorReleaseHashDetails("0xDF00D1");
+
+//                                  external view returns (uint256, uint256, uint256, uint256, string memory)
+
+    var version = bigInt(details[3]);
+
+    assert.equal(details[0], 1, "Failed! Entity ID not 1.");
+    assert.equal(details[1], 3, "Failed! Product ID not 3.");
+    assert.equal(details[2], 0, "Failed! Release ID not 0.");
+
+    // Skip over timestamp to check last byte of version
+    assert.equal(version.toString(16)[version.toString(16).length - 1],
+                 "0", "Failed! Version not 0.");
+    assert.equal(details[4], "http://example.com/releases/TestProduct0 Legal Contract_v0.pdf",
+                                "Failed! URI does not match");
+  });
+
+  it("Create the client agreed upon Ricarding contract leaf", async () => {
+    // Get the number of products
+    const numProducts = await immutableProductInstance.productNumberOf('1');
+
+    if (numProducts <= 0)
+    {
+      // Create a new test product
+      assert.equal(true, false, "Failed, product does not exist");
+      return;
+    }
+
+    // Create the ricardian contract base
+    const receipt = await creatorTokenInstance.creatorReleases([3], [1], [0xDF00D2],
+            ["http://example.com/releases/TestProduct0 Legal Contract_v0_client1.pdf"], [0xDF00D1],
+            { from: Account });
+
+    // Read back the release hash
+    const details = await creatorTokenInstance.
+                                       creatorReleaseDetails(1, 3, 1);
+
+    assert.equal(details[2], 0xDF00D2, "Failed! Release hash mismatch.");
+  });
+
+  it("Reverse lookup the Ricardian release of client", async () => {
+
+    // Reverse lookup from the release hash
+    const details = await creatorTokenInstance.creatorReleaseHashDetails(0xDF00D2);
+
+//                                  external view returns (uint256, uint256, uint256, uint256, string memory)
+
+    var version = bigInt(details[3]);
+
+    assert.equal(details[0], 1, "Failed! Entity ID not 1.");
+    assert.equal(details[1], 3, "Failed! Product ID not 1.");
+    assert.equal(details[2], 1, "Failed! Release ID not 1.");
+
+    // Skip over timestamp to check last byte of version
+    assert.equal(version.toString(16)[version.toString(16).length - 1],
+                 "1", "Failed! Version not 1.");
+    assert.equal(details[4], "http://example.com/releases/TestProduct0 Legal Contract_v0_client1.pdf",
+                                "Failed! URI does not match");
+  });
+
+  it("Check Ricardian contract leaf is parent of", async () => {
+
+    // Create the ricardian contract base
+    const receipt = await creatorTokenInstance.creatorParentOf(0xDF00D2,
+                                                               0xDF00D1);
+
+    assert.equal(receipt, 1, "Failed! Release parent depth not one (1).");
+  });
+
+  it("Check address owns a Ricardian client - creatorHasChildOf()", async () => {
+
+    // Check address owns a Ricardian client - creatorHasChildOf()
+    const receipt = await creatorTokenInstance.creatorHasChildOf(Account,
+                                                                 0xDF00D1);
+
+    assert.equal(receipt, 1, "Failed! Release parent depth not one (1).");
+  });
+
+  it("Create a product license offer with ricardian requirement", async () => {
+    // Create the produce license offer for a one year activation
+
+    // Update the license value with the expiration
+    var expiringLicense = bigInt(365 * (24 * (60 * 60)));//.shiftLeft(128);
+
+    // Add the product activation value (1)
+//    expiringLicense = expiringLicense.add(1);
+
+    await immutableProductInstance.productOfferLimitation(0,
+       '0x0000000000000000000000000000000000000000', 100000000000,
+       0, '0x' + expiringLicense.toString(16), 0, 0, "", 0, 0, 0xDF00D1, { from: Account });
+
+    var offerPrice = await immutableProductInstance.productOfferDetails(1, 0, 2, { from: Account });
+    assert.equal(offerPrice[1], 100000000000, "Failed, product activation license price mismatch");
+  });
+
+  it("Purchase a product activation license with ricadian requirement", async () => {
+//    const origBalance = await immuteTokenInstance.balanceOf(Account);
+    // Create the product activation license offer
+    //  (entity, productID, offerID (2 requires ricardian),
+    //   numLicenses, activationHashes, clientRicardians)
+    const receipt = await productActivateInstance.activatePurchase(
+              1, 0, 2, 1, [0xF00D1], [0xDF00D2], { from: EndUser, value: 100000000000 });
+    console.log("GasUsed: " + bigInt(receipt.receipt.gasUsed).toString(10))
+
+    // Check the license. (entity, productID, activation hash)
+    var storedData = await activateTokenInstance.activateStatus(1, 0, 0xF00D1);
+
+    var licenseValue = bigInt(storedData[0]);
+
+    assert.equal(licenseValue.toString(16)[0], '3', "Failed! License flags is not zero.");
+    assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
+    assert.equal(storedData[1], 0, "Failed! License resale price not zero.");
+
+//    const newBalance = await immuteTokenInstance.balanceOf(Account);
+
+//    assert.equal(newBalance - origBalance, 9900130304 ,
+//                 "Failed, not enough tokens transferred to creator!");
+  });
+
+
   it("Configure a bank", async () => {
     // Configure the bank to be the same as the address
     await immutableEntityInstance.entityBankChange(Account, { from: Account });
   });
-/*
-  it("Create a Token Offer", async () => {
-    const balanceBefore = new BN(await immuteTokenInstance.balanceOf(Account));
-
-    // Create a token block offer (rate, amount, block count)
-    await immutableEntityInstance.entityTokenBlockOffer(1600,
-     1200000000, 2, { from: Account });
-
-    const offers = await immutableEntityInstance.entityNumberOfOffers(1, { from: Account });
-    assert.equal(offers, 1, "Failed, product activation license offers is zero");
-
-    var balanceAfter = new BN(await immuteTokenInstance.balanceOf(Account));
-    assert.equal(balanceBefore.sub(balanceAfter), 2400000000, "Failed, not enough tokens transfered to contract!");
-
-  });
-
-  it("Purchase a Token Offer", async () => {
-    // Purchase the previous tests token offer
-    const balanceBefore = await immuteTokenInstance.balanceOf(EndUser);
-    let tokenPurchase = await immutableEntityInstance.entityTokenBlockPurchase(1, 0, 1, { from: EndUser, value: 1200000000 / 1200 });
-    const balanceAfter = await immuteTokenInstance.balanceOf(EndUser);
-    assert.equal(balanceAfter.sub(balanceBefore), 1200000000, "Failed, end user balance incorrect");
-
-//    truffleAssert.eventEmitted(tokenPurchase, 'EntityTokenBlockPurchaseEvent', (ev) => {
-//        return ((ev.challenger == EndUser) && (ev.creator == Account) &&
-//                (ev.newHash == 0x0BADF00D));
-  });
-
-  it("Withdraw ETH from the token purchase", async () => {
-    var ethInEscrow = await immutableEntityInstance.entityPaymentsCheck({ from: Account});
-    assert.equal(ethInEscrow, 1200000000 / 1200, "Failed, ETH in escrow incorrect amount");
-
-    // Withdraw the payments in escrow from previous test
-    await immutableEntityInstance.entityPaymentsWithdraw({ from: Account} );
-
-    // Recheck escrow and ensure it went to zero
-    ethInEscrow = await immutableEntityInstance.entityPaymentsCheck({ from: Account });
-    assert.equal(ethInEscrow, 0, "Failed, ETH in escrow after withdraw");
-  });
-  it("Revoke a token block offer", async () => {
-    // Revoke the token block offer
-    await immutableEntityInstance.entityTokenBlockOfferChange(0, 0, 0, { from: Account });
-
-    const offers = await immutableEntityInstance.entityNumberOfOffers(1);
-    assert.equal(offers, 0, "Failed, product token block offers is not zero");
-  });
-
-  it("Create another Token Offer", async () => {
-    const balanceBefore = new BN(await immuteTokenInstance.balanceOf(Account));
-
-    // Create a token block offer (rate, amount, block count)
-    await immutableEntityInstance.entityTokenBlockOffer(1600,
-     1200000000, 2, { from: Account });
-
-    const offers = await immutableEntityInstance.entityNumberOfOffers(1, { from: Account });
-    assert.equal(offers, 1, "Failed, product activation license offers is zero");
-
-    var balanceAfter = new BN(await immuteTokenInstance.balanceOf(Account));
-    assert.equal(balanceBefore.sub(balanceAfter), 2400000000, "Failed, not enough tokens transfered to contract!");
-
-  });
-*/
-/*
-  it("Challenge a product release", async () => {
-    // Challenge the product release by providing new hash
-    let newChallenge = await immutableProductInstance.productReleaseChallenge(1, 0, 0,
-                                            0x0BADF00D, { from: EndUser });
-
-    truffleAssert.eventEmitted(newChallenge, 'productReleaseChallengeEvent', (ev) => {
-        return ((ev.challenger == EndUser) && (ev.entityIndex == 1) &&
-                (ev.newHash == 0x0BADF00D));
-    });
-  });
-
-  it("Award a product release challenge (onlyOwner)", async () => {
-    // Have the Admin reward the challenger
-    var balanceBefore = await immuteTokenInstance.balanceOf(EndUser);
-
-    let newChallenge = await immutableProductInstance.productChallengeReward(EndUser,
-               1, 0, 0, 0x0BADF00D, { from: Owner });
-
-    var balanceAfter = await immuteTokenInstance.balanceOf(EndUser);
-
-    // Assert if correct event was not emitted
-    truffleAssert.eventEmitted(newChallenge, 'productReleaseChallengeAwardEvent', (ev) => {
-        return ((ev.challenger == EndUser) && (ev.entityIndex == 1) &&
-                (ev.newHash == 0x0BADF00D));
-    });
-
-    var bigPurchase = new BN(100000000)
-    bigPurchase = (bigPurchase * 5000000000);// + 131100;//499..9868900 // TODO whats with rounding errors?
-    assert.equal(balanceAfter.sub(balanceBefore), bigPurchase, "Failed, end user balance delta incorrect");
-  });
-*/
   it("Move an entity to a new address", async () => {
-/*
-    var oldAccountBalanceBefore = await immuteTokenInstance.balanceOf(Account);
-    var newAccountBalanceBefore = await immuteTokenInstance.balanceOf(Account2);
-
-    // Approve the transfer of all tokens to escrow
-    await immuteTokenInstance.approve(immutableEntityInstance.address,
-                                      oldAccountBalanceBefore,
-                                      { from: Account });
-*/
     // Configure next entity address and move tokens to escrow
     await immutableEntityInstance.entityAddressNext(Account2,
                            { from: Account });
@@ -1026,34 +1263,23 @@ contract("ImmutableEcosystem", accounts => {
 
     await immutableProductInstance.productOfferLimitation(0,
        '0x0000000000000000000000000000000000000000', 20000000000,
-       0, '0x' + expiringLicense.toString(16), 0, "", 0, { from: Account2 });
+       0, '0x' + expiringLicense.toString(16), 0, 0, "", 0, 0, 0, { from: Account2 });
 
-    var offerPrice = await immutableProductInstance.productOfferDetails(1, 0, 1, { from: Account });
+    var offerPrice = await immutableProductInstance.productOfferDetails(1, 0, 3, { from: Account });
     assert.equal(offerPrice[1], 20000000000, "Failed, product activation license price mismatch");
 
 //    var rawExpiration = bigInt(offerPrice[2]);
 //    assert.equal(expiringLicense.toString(16), rawExpiration.toString(16), "Failed, product activation license duration mismatch");
   });
 
-  it("Purchase activation license directly with ETH", async () => {
+  it("Purchase activation license with ETH", async () => {
     var ethInEscrow = await immutableEntityInstance.entityPaymentsCheck({ from: Account2});
     
 //    var bigPurchase = new BN(20000000000); // license price
-/*
-    // Update the organization status with Automatic = (1 << 33);
-    var Automatic = new BN(0x200000001); // (1 << 33) automatic flag
-    await immutableEntityInstance.entityStatusUpdate(1, "0x" + Automatic.toString(16), { from: Owner });
-
-    // Read back the organization status
-    const status = await immutableEntityInstance.entityIndexStatus(1);
-    assert.equal("0x" + status.toString(16), "0x200000001", "Failed! Status not four (non-profit).");
-
-//    var rate = await immuteTokenInstance.currentRate();
-*/
     // Convert big purchase to ETH
 //    bigPurchase = bigPurchase / rate;
-    await activateTokenInstance.activatePurchase(
-              1, 0, 1, 0xBEEF, { from: EndUser, value: 20000000000 });
+    await productActivateInstance.activatePurchase(
+              1, 0, 3, 1, [0xBEEF], [0], { from: EndUser, value: 20000000000 });
 
     var ethOutEscrow = await immutableEntityInstance.entityPaymentsCheck({ from: Account2});
     assert.equal(ethOutEscrow.sub(ethInEscrow).toString(10), 19800000000, "Failed, ETH in escrow incorrect amount");
@@ -1065,8 +1291,8 @@ contract("ImmutableEcosystem", accounts => {
 
     // Extend the product activation license for 0xBEEF
     //  (entity, productID, offerIndex, activationHash)
-    await activateTokenInstance.activatePurchase(
-              1, 0, 0, 0xBEEF, { from: EndUser, value: 10000000000 });
+    await productActivateInstance.activatePurchase(
+              1, 0, 0, 1, [0xBEEF], [0], { from: EndUser, value: 10000000000 });
 
 //    var oldAccountBalanceBefore = await immuteTokenInstance.balanceOf(EndUser);
 
@@ -1076,12 +1302,6 @@ contract("ImmutableEcosystem", accounts => {
 
     assert.equal(licenseValue.toString(16)[0], '3', "Failed! Not licensed.");
     assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
-/*
-    // Approve the transfer of all tokens to escrow
-    await immuteTokenInstance.approve(immutableEntityInstance.address,
-                                      oldAccountBalanceBefore,
-                                      { from: EndUser });
-*/
 
     // Create an end user entity account
     await immutableEntityInstance.entityCreate("John Smith",
@@ -1093,7 +1313,7 @@ contract("ImmutableEcosystem", accounts => {
 
     // Configure next entity address and move tokens to escrow
     await immutableEntityInstance.entityAddressNext(EndUser2,
-                           /*oldAccountBalanceBefore,*/ { from: EndUser });
+                           { from: EndUser });
 
     // Move the activations, ie. all activate tokens
     await activateTokenInstance.activateOwner(EndUser2, { from: EndUser });
@@ -1110,7 +1330,7 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
 
     // Move product activation license offer with new entity address
-    await activateTokenInstance.activateMove(
+    await productActivateInstance.activateMove(
               1, 0, 0xBEEF, 0xDEED, { from: EndUser2, value: 1000000000000000 });
 
     // Check the old license
@@ -1136,8 +1356,8 @@ contract("ImmutableEcosystem", accounts => {
     result = await immutableProductInstance.productOfferDetails(
               1, 0, 0);
     assert.equal(result[0], 0, "Failed! License offer not zero.");
-    await truffleAssert.reverts(activateTokenInstance.activatePurchase(
-          1, 0, 0xF00D, 0, { from: EndUser }), "Offer not found");
+    await truffleAssert.reverts(productActivateInstance.activatePurchase(
+          1, 0, 0, 1, [0xF00D], [0], { from: EndUser }), "Offer not found");
   });
 
   //////////////////////////////////////////////////////////
@@ -1181,26 +1401,7 @@ contract("ImmutableEcosystem", accounts => {
     const status = await immutableEntityInstance.entityIndexStatus(5);
 
     assert.equal("0x" + status.toString(16), "0x600000001", "Failed! Status not custom token creator.");
-/*
-    // Check balance to ensure referral received bonus
-    var bigReferral = new BN(100000000)
-    bigReferral = bigReferral * 400000000000;
-    const afterBalance = await immuteTokenInstance.balanceOf(accounts[9]);
-    assert.equal(afterBalance - beforeBalance, bigReferral, "Failed! Token bonus not applied to referral.");
-    */
   });
-/*
-  it("Update entity with a custom token", async () => {
-    // Update organization with a custom ERC token address
-    await immutableEntityInstance.entityCustomToken(
-           5, customTokenInstance.address, { from: Owner });
-
-    // Read back the token address
-    const customAddress = await immutableEntityInstance.entityCustomTokenAddress(5);
-
-    assert.equal(customAddress, customTokenInstance.address, "Failed! Status not custom token creator.");
-  });
-*/
   it("Find or create a new product ", async () => {
     // Get the number of products
     const numProducts = await immutableProductInstance.productNumberOf(5);
@@ -1212,13 +1413,6 @@ contract("ImmutableEcosystem", accounts => {
       await immutableProductInstance.productCreate("Test Product4",
               "http://example.com/TestProduct0",
               "http://example.com/TestProduct0/favicon.ico", 0, { from: Account });
-/*
-      // Check balance to ensure referral received bonus
-      var bigReferral = new BN(100000000)
-      bigReferral = bigReferral * 40000000000;
-      const afterBalance = await immuteTokenInstance.balanceOf(accounts[9]);
-      assert.equal(afterBalance - beforeBalance, bigReferral, "Failed! Token bonus not applied to referral.");
-*/
     }
 
     // Get the product name
@@ -1233,26 +1427,14 @@ contract("ImmutableEcosystem", accounts => {
 
     assert.equal(numProducts, 1, "One product not found");
 
-/*
-    // Purchase tokens for escrow and ensure referral received bonus
-    const beforeBalance = await immuteTokenInstance.balanceOf(accounts[9]);
-    // Purchase tokens (auto-approved for use in immutable ecosystem)
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 10000000000;
-    await immuteTokenInstance.tokenPurchase({ from: Account,
-                                            value: bigPurchase });
-    const afterBalance = await immuteTokenInstance.balanceOf(accounts[9]);
-    var rate = await immuteTokenInstance.currentRate();
-    assert.equal(afterBalance - beforeBalance, (bigPurchase * rate) / 10, "Failed! Token bonus not applied to referral.");
-*/
     // Create the release
-    await immutableProductInstance.productRelease(0, 0, 0x900DFEED,
-            "http://example.com/releases/TestProduct.zip", //bigPurchase.toString(10, 20),
+    await creatorTokenInstance.creatorReleases([0], [0], [0x900DFEED],
+            ["http://example.com/releases/TestProduct.zip"], [0],
             { from: Account });
 
     // Read back the release hash
-    const details = await immutableProductInstance.
-                                  productReleaseDetails(5, 0, 0);
+    const details = await creatorTokenInstance.
+                                  creatorReleaseDetails(5, 0, 0);
 
     assert.equal(details[2], 0x900DFEED, "Failed! Release hash mismatch.");
   });
@@ -1265,19 +1447,13 @@ contract("ImmutableEcosystem", accounts => {
 //    expiringLicense = expiringLicense.add(1);
 
     // Create the produce license offer
-//    await immutableProductInstance.productOffer(0, customTokenInstance.address, 10000000000,
+//    await creatorTokenInstance.productOffer(0, customTokenInstance.address, 10000000000,
 //       '0x' + expiringLicense.toString(16), "", { from: Account });
 
     await immutableProductInstance.productOfferLimitation(0,
        customTokenInstance.address, 10000000000,
-       0, '0x' + expiringLicense.toString(16), 0, "", 0, { from: Account });
+       0, '0x' + expiringLicense.toString(16), 0, 0, "", 0, 0, 0, { from: Account });
 
-/*
-    await immutableProductInstance.productOffer(0, 10000000000, // standard 1 year
-                                        (365 * (24 * (60 * 60))),
-                                        20000000000, // 3 year promo for price of 2
-                                        (3 * 365 * (24 * (60 * 60))), { from: Account });
-*/
     const offerPrice = await immutableProductInstance.productOfferDetails(5, 0, 0, { from: Account });
     assert.equal(offerPrice[1], 10000000000, "Failed, product activation license price mismatch");
     assert.equal(offerPrice[0], customTokenInstance.address, "Failed, product activation license toke address mismatch");
@@ -1287,13 +1463,13 @@ contract("ImmutableEcosystem", accounts => {
     const beforeBalance = await customTokenInstance.balanceOf(accounts[0]);
 
     // Approve custom tokens for transfer
-    await customTokenInstance.approve(activateTokenInstance.address, 10000000000,
+    await customTokenInstance.approve(productActivateInstance.address, 10000000000,
                                               { from: accounts[0] });
 
     // Create the product activation license offer
     //  (entity, productID, activationHash)
-    await activateTokenInstance.activatePurchase(
-              5, 0, 0, 0xFEAD, { from: accounts[0] });
+    await productActivateInstance.activatePurchase(
+              5, 0, 0, 1, [0xFEAD], [0], { from: accounts[0] });
 
     // Check the license. (entity, productID, activation hash)
     const storedData = await activateTokenInstance.activateStatus(5, 0, 0xFEAD);
@@ -1308,7 +1484,7 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(beforeBalance.sub(afterBalance), 10000000000, "Failed, tokens not transferred.");
   });
 
-  it("Offer a product activation license for resale", async () => {
+  it("Create customer, move and offer activation license for resale", async () => {
     // We have purchased an activation but are unregistered
     //  After registering and being approved, if we move an activation
     //  it becomes managed and can be resold
@@ -1323,28 +1499,23 @@ contract("ImmutableEcosystem", accounts => {
            6, "0x" + Automatic.toString(16), { from: Owner });
 
     // Move the product activation license offer
-    await activateTokenInstance.activateMove(
+    await productActivateInstance.activateMove(
               5, 0, 0xFEAD, 0xFAD0, { from: accounts[0] });
 
     var bigPurchase = new BN(100000000)
     bigPurchase = bigPurchase * 20000000000;
           
     // Finally, offer the purchased activation for sale
-    await activateTokenInstance.activateOfferResale(5, 0, 0xFAD0,
+    await productActivateInstance.activateOfferResale(5, 0, 0xFAD0,
                '0x' + bigPurchase.toString(16), { from: accounts[0] });
+
+    const tokenId = await activateTokenInstance.activateIdToTokenId(0xFAD0);
+
+    await activateTokenInstance.approve(productActivateInstance.address, tokenId, { from: accounts[0] });
   });
 
   it("Purchased third party custom token activation license", async () => {
 
-/*
-    // Approve custom tokens for transfer
-    await customTokenInstance.approve(EndUser, 10000000000,
-                                      { from: accounts[0] });
-
-    // Transfer custom tokens to EndUser
-    await customTokenInstance.transfer(EndUser, 10000000000,
-                                      { from: accounts[0] });
-*/
     // Check the license
     let result = await activateTokenInstance.
                                      activateStatus(5, 0, 0xFAD0);
@@ -1352,15 +1523,6 @@ contract("ImmutableEcosystem", accounts => {
 
     assert.equal(licenseValue.toString(16)[0], '3', "Failed! Not licensed.");
     assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
-/*
-    // Approve custom tokens for transfer
-    await customTokenInstance.approve(activateTokenInstance.address, 5000000000,
-                                      { from: EndUser });
-
-    // Check allowance of custom tokens for transfer
-    let newAllowance = await customTokenInstance.allowance(EndUser, activateTokenInstance.address);
-    assert.equal(newAllowance, 5000000000, "Allowance did not stick!");
-*/
 
     let oldBalance = await web3.eth.getBalance(EndUser);
     console.log("Eth balance " + oldBalance);
@@ -1370,7 +1532,7 @@ contract("ImmutableEcosystem", accounts => {
     bigPurchase = bigPurchase * 20000000000;
 
     // Transfer (purchase) the product activation license offer
-    await activateTokenInstance.activateTransfer(5, 0, 0xFAD0, 0xFEED,
+    await productActivateInstance.activateTransfer(5, 0, 0xFAD0, 0xFEED,
              { from: EndUser, value: '0x' + bigPurchase.toString(16) });
 
     // Check the new license
@@ -1391,13 +1553,6 @@ contract("ImmutableEcosystem", accounts => {
   });
 
   it("Move a resold custom token activation license", async () => {
-/*
-    // Purchase tokens (auto-approved for use in immutable ecosystem)
-    var bigPurchase = new BN(100000000)
-    bigPurchase = bigPurchase * 20000000000;
-    await immuteTokenInstance.tokenPurchase({ from: EndUser,
-                                              value: bigPurchase });
-*/
       // Check the license
     let result = await activateTokenInstance.
                                      activateStatus(5, 0, 0xFEED);
@@ -1409,7 +1564,7 @@ contract("ImmutableEcosystem", accounts => {
 //    const oldBalance = await immuteTokenInstance.balanceOf(EndUser);
 
     // Move the product activation license offer
-    await activateTokenInstance.activateMove(
+    await productActivateInstance.activateMove(
               5, 0, 0xFEED, 0xF00D, { from: EndUser, value: 1000000000000000 });
 
     // Check the old license
@@ -1425,13 +1580,91 @@ contract("ImmutableEcosystem", accounts => {
     assert.equal(licenseValue.toString(16)[0], '3', "Failed! Not licensed.");
     assert.equal(licenseValue.toString(16).length, 41, "Failed! License value not large enough."); 
 
-/*
-    const newBalance = await immuteTokenInstance.balanceOf(EndUser);
+  });
 
-    var bigEscrow = new BN(100000000)
-    bigEscrow = bigEscrow * 10000000000; // one token
-    assert.equal(oldBalance.sub(newBalance).toString(10), bigEscrow.toString(10), "Tokens not charged for moving license");
-*/
+  it("Create one-time license ERC20 offer", async () => {
+    // Update the license value with the expiration
+    var expiringLicense = bigInt(365 * (24 * (60 * 60)));//.shiftLeft(128);
+
+    // Add the product activation value (1)
+//    expiringLicense = expiringLicense.add(1);
+
+    // Create the produce license offer
+//    await creatorTokenInstance.productOffer(0, customTokenInstance.address, 10000000000,
+//       '0x' + expiringLicense.toString(16), "", { from: Account });
+
+    await immutableProductInstance.productOfferLimitation(0,
+       customTokenInstance.address, 14000000000,
+       0, '0x' + expiringLicense.toString(16), 1, 0, "", 0, 0, 0, { from: Account });
+
+    const offerPrice = await immutableProductInstance.productOfferDetails(5, 0, 1, { from: Account });
+    assert.equal(offerPrice[1], 14000000000, "Failed, product activation license price mismatch");
+    assert.equal(offerPrice[0], customTokenInstance.address, "Failed, product activation license toke address mismatch");
+  });
+
+  it("Purchase a ERC20 token product activation license from limited offer", async () => {
+    const beforeBalance = await customTokenInstance.balanceOf(accounts[0]);
+
+    // Approve custom tokens for transfer
+    await customTokenInstance.approve(productActivateInstance.address, 28000000000,
+                                              { from: accounts[0] });
+
+    // Purchase this offer
+    await productActivateInstance.activatePurchase(
+              5, 0, 1, 1, [0xFEAD], [0], { from: accounts[0] });
+
+    // Check the license. (entity, productID, activation hash)
+    const storedData = await activateTokenInstance.activateStatus(5, 0, 0xFEAD);
+
+    var licenseValue = bigInt(storedData[0]);
+
+    assert.equal(licenseValue.toString(16)[0], '1', "Failed! Not licensed.");
+    assert.equal(licenseValue.toString(16).length, 42, "Failed! License value not large enough."); 
+
+    const afterBalance = await customTokenInstance.balanceOf(accounts[0]);
+
+    assert.equal(beforeBalance.sub(afterBalance), 14000000000, "Failed, tokens not transferred.");
+
+    // Purchase another offer (ensure it reverts - no more offers
+    await truffleAssert.fails(productActivateInstance.activatePurchase(
+              5, 0, 1, 1, [0x1FEAD], [0], { from: accounts[0] }));
+  });
+
+  it("Create a product license 10 activation bulk offer", async () => {
+    // Create the produce license offer for a one year activation
+
+    // Update the license value with the expiration
+    var expiringLicense = bigInt(365 * (24 * (60 * 60)));
+
+
+    await immutableProductInstance.productOfferLimitation(0,
+       '0x0000000000000000000000000000000000000000', 16000000000,
+       0, '0x' + expiringLicense.toString(16), 0, 10, "", 0, 0, 0, { from: Account });
+
+    var offerPrice = await immutableProductInstance.productOfferDetails(5, 0, 1, { from: Account });
+    console.log("offer price: 0x" + offerPrice[1].toString(16));
+    assert.equal(offerPrice[1], 16000000000, "Failed, product activation license price mismatch");
+  });
+
+  it("Purchase a bulk of 10 activation licenses", async () => {
+
+    // Purcahse the product activation license offer
+    const receipt = await productActivateInstance.activatePurchase(
+              5, 0, 1, 1,
+              [0xF10D, 0xF20D,0xF30D,0xF40D,0xF50D,0xF60D,0xF70D,0xF80D,0xF90D,0xFA0D],
+              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], { from: EndUser, value: 16000000000 });
+    console.log("GasUsed: " + bigInt(receipt.receipt.gasUsed).toString(10))
+
+    // Check the license. (entity, productID, activation hash)
+    var storedData = await activateTokenInstance.activateStatus(5, 0, 0xFA0D);
+
+    var licenseValue = bigInt(storedData[0]);
+
+//    console.log("license value: 0x" + licenseValue.toString(16));
+    assert.equal(licenseValue.toString(16)[0], '2', "Failed! License flags is not zero.");
+    assert.equal(licenseValue.toString(16).length, 42, "Failed! License value not large enough."); 
+    assert.equal(storedData[1], 0, "Failed! License sale price not zero.");
+
   });
 
   it("Read all the entities", async () => {
@@ -1445,39 +1678,41 @@ contract("ImmutableEcosystem", accounts => {
     // Read all the products for entity one
     let products = await immutableProductInstance.productAllDetails(1);
 
-    assert.equal(products[0].length, 3, "Failed! Result array length not 3" + products[0].length);
+    assert.equal(products[0].length, 4, "Failed! Result array length not 3" + products[0].length);
     assert.equal(products[0][0], "Test Product 0", "Failed! Test Product 0 not found." + products[0]);
   });
 
   it("Read all the releases for the first entity, first product", async () => {
     // Read all the releases for the first product
-    let releases = await immutableProductInstance.productAllReleaseDetails(1, 0);
+    let releases = await creatorTokenInstance.creatorAllReleaseDetails(1, 0);
 
-    assert.equal(releases[1][0], "http://example.com/releases/TestProduct.zip",
+    assert.equal(releases[1][0], "http://example.com/releases/MasterContract.pdf",
       "Failed! Release URI does not match." + releases[1]);
   });
 
-/*
-  it("Read all the token offers for the first entity", async () => {
-    // Read all the token offers for the first entity
-    let offers = await immutableEntityInstance.entityAllOfferDetails(1);
 
-    assert.equal(offers[0].length, 1, "Failed! No offers present." + offers[0]);
-  });
-*/
-
-  it("Read all (3) activations for the fourth entity (enduser/enduser2)", async () => {
+  it("Read all (15) activations for the fourth entity (enduser/enduser2)", async () => {
     // Read all the activations for the end user
     let activations = await activateTokenInstance.activateAllDetails(4);
 
-    assert.equal(activations[0].length, 3, "Failed! Not three (3) activations." + activations[0].length);
+    assert.equal(activations[0].length, 16, "Failed! Not fifteen (16) activations." + activations[0].length);
   });
 
-  it("Read all (5) activations from the ecosystem", async () => {
-    // Read all the activations from the ecosystem (all tokens)
-    let activations = await activateTokenInstance.activateAllTokenDetails();
+  it("Offer product activation license for resale", async () => {
+    await productActivateInstance.activateOfferResale(5, 0, 0xF00D, 5000000000, { from: EndUser });
 
-    assert.equal(activations[0].length, 5, "Failed! Not five (5) activations." + activations[0].length);
+    const tokenId = await activateTokenInstance.activateIdToTokenId(0xF00D);
+
+//    var tid = bigInt(tokenId);
+//    console.log("TokenId " + tokenId + " tid " + tid);
+    await activateTokenInstance.approve(productActivateInstance.address, tokenId, { from: EndUser });
+  });
+
+  it("Read all for sale activations from the ecosystem", async () => {
+    // Read the for-sale activations from the ecosystem
+    let activations = await activateTokenInstance.activateAllForSaleTokenDetails();
+
+    assert.equal(activations[0].length, 1, "Failed! Not one (1) activation for sale." + activations[0].length);
   });
 
 });

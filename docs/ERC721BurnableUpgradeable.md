@@ -1,43 +1,32 @@
-# Migrations.sol
+# ERC721 Burnable Token (ERC721BurnableUpgradeable.sol)
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721BurnableUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721BurnableUpgradeable.sol)
 
-**Migrations**
+**↗ Extends: [Initializable](Initializable.md), [ContextUpgradeable](ContextUpgradeable.md), [ERC721Upgradeable](ERC721Upgradeable.md)**
+**↘ Derived Contracts: [ActivateToken](ActivateToken.md), [CreatorToken](CreatorToken.md)**
+
+**ERC721BurnableUpgradeable**
+
+ERC721 Token that can be irreversibly burned (destroyed).
 
 ## Contract Members
 **Constants & Variables**
 
 ```js
-address public owner;
-uint256 public last_completed_migration;
+uint256[50] private __gap;
 
 ```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [__ERC721Burnable_init()](#__erc721burnable_init)
+- [__ERC721Burnable_init_unchained()](#__erc721burnable_init_unchained)
+- [burn(uint256 tokenId)](#burn)
 
-### 
+### __ERC721Burnable_init
 
 ```js
-function () public nonpayable
+function __ERC721Burnable_init() internal nonpayable initializer 
 ```
 
 **Arguments**
@@ -45,29 +34,32 @@ function () public nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### setCompleted
+### __ERC721Burnable_init_unchained
 
 ```js
-function setCompleted(uint256 completed) external nonpayable
+function __ERC721Burnable_init_unchained() internal nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| completed | uint256 |  | 
 
-### upgrade
+### burn
+
+Burns `tokenId`. See {ERC721-_burn}.
+ Requirements:
+ - The caller must own `tokenId` or be an approved operator.
 
 ```js
-function upgrade(address new_address) external nonpayable
+function burn(uint256 tokenId) public nonpayable
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| new_address | address |  | 
+| tokenId | uint256 |  | 
 
 ## Contracts
 
