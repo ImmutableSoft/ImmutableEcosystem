@@ -1,8 +1,16 @@
-const ImmutableProduct = artifacts.require("./ImmutableProduct.sol");
-const ImmutableEntity = artifacts.require("./ImmutableEntity.sol");
+const ImmutableEntity = artifacts.require("ImmutableEntity.sol");
+const ImmutableProduct = artifacts.require("ImmutableProduct.sol");
 const truffleAssert = require('truffle-assertions');
 
 contract("ImmutableEcosystemEvents", accounts => {
+/*
+  let immutableEntityInstance;
+  let productActivateInstance;
+
+  beforeEach('setup contract for each test case', async () => {
+    immutableEntityInstance = await ImmutableEntity.deployed();
+    immutableProductInstance = await ImmutableProduct.deployed();
+  })
 
   it("Check the new organization event", async () => {
     const immutableEntityInstance = await ImmutableEntity.deployed();
@@ -37,7 +45,6 @@ contract("ImmutableEcosystemEvents", accounts => {
     truffleAssert.eventEmitted(newEntity, 'productEvent', (ev) => {
         return ev.entityIndex == 1 && ev.name === "Test Product Event";
     });
-
   });
-
+*/
 });

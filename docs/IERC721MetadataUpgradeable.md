@@ -1,43 +1,27 @@
-# Migrations.sol
+# ERC-721 Non-Fungible Token Standard, optional metadata extension (IERC721MetadataUpgradeable.sol)
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721MetadataUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721MetadataUpgradeable.sol)
 
-**Migrations**
+**↗ Extends: [IERC721Upgradeable](IERC721Upgradeable.md)**
+**↘ Derived Contracts: [ERC721Upgradeable](ERC721Upgradeable.md)**
 
-## Contract Members
-**Constants & Variables**
+**IERC721MetadataUpgradeable**
 
-```js
-address public owner;
-uint256 public last_completed_migration;
-
-```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
+See https://eips.ethereum.org/EIPS/eip-721
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [name()](#name)
+- [symbol()](#symbol)
+- [tokenURI(uint256 tokenId)](#tokenuri)
 
-### 
+### name
+
+Returns the token collection name.
 
 ```js
-function () public nonpayable
+function name() external view
+returns(string)
 ```
 
 **Arguments**
@@ -45,29 +29,34 @@ function () public nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### setCompleted
+### symbol
+
+Returns the token collection symbol.
 
 ```js
-function setCompleted(uint256 completed) external nonpayable
+function symbol() external view
+returns(string)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| completed | uint256 |  | 
 
-### upgrade
+### tokenURI
+
+Returns the Uniform Resource Identifier (URI) for `tokenId` token.
 
 ```js
-function upgrade(address new_address) external nonpayable
+function tokenURI(uint256 tokenId) external view
+returns(string)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| new_address | address |  | 
+| tokenId | uint256 |  | 
 
 ## Contracts
 

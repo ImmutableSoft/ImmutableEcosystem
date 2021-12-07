@@ -1,14 +1,27 @@
 # The Immutable Product - authentic product distribution (ImmutableProduct.sol)
 
-View Source: [contracts/ImmutableProduct.sol](../contracts/ImmutableProduct.sol)
+View Source: [\contracts\ImmutableProduct.sol](..\contracts\ImmutableProduct.sol)
 
-**↗ Extends: [Initializable](Initializable.md), [Ownable](Ownable.md), [ImmutableConstants](ImmutableConstants.md)**
+**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 
 **ImmutableProduct**
 
 Token transfers use the ImmuteToken only
 
 ## Structs
+### Offer
+
+```js
+struct Offer {
+ address tokenAddr,
+ uint256 price,
+ uint256 value,
+ string infoURL,
+ uint256 transferSurcharge,
+ uint256 ricardianParent
+}
+```
+
 ### Product
 
 ```js
@@ -17,31 +30,21 @@ struct Product {
  string infoURL,
  string logoURL,
  uint256 details,
- uint256 numberOfReleases,
  uint256 numberOfOffers,
- mapping(uint256 => struct ImmutableProduct.Release) releases,
  mapping(uint256 => struct ImmutableProduct.Offer) offers
 }
 ```
 
-### Offer
+### OfferResult
 
 ```js
-struct Offer {
- address tokenAddr,
- uint256 price,
- uint256 value,
- string infoURL
-}
-```
-
-### Release
-
-```js
-struct Release {
- uint256 hash,
- string fileURI,
- uint256 version
+struct OfferResult {
+ address[] resultAddr,
+ uint256[] resultPrice,
+ uint256[] resultValue,
+ string[] resultInfoUrl,
+ uint256[] resultSurcharge,
+ uint256[] resultParent
 }
 ```
 
@@ -51,7 +54,6 @@ struct Release {
 ```js
 mapping(uint256 => mapping(uint256 => struct ImmutableProduct.Product)) private Products;
 mapping(uint256 => uint256) private NumberOfProducts;
-mapping(uint256 => uint256) private HashToRelease;
 contract ImmutableEntity private entityInterface;
 contract StringCommon private commonInterface;
 
@@ -61,26 +63,20 @@ contract StringCommon private commonInterface;
 
 ```js
 event productEvent(uint256  entityIndex, uint256  productIndex, string  name, string  infoUrl, uint256  details);
-event productReleaseEvent(uint256  entityIndex, uint256  productIndex, uint256  version);
 event productOfferEvent(uint256  entityIndex, uint256  productIndex, string  productName, address  erc20token, uint256  price, uint256  value, string  infoUrl);
 ```
 
 ## Functions
 
 - [initialize(address entityAddr, address commonAddr)](#initialize)
-- [productCreate(string productName, string productURL, string logoURL, uint256 productDetails)](#productcreate)
-- [productOfferFeature(uint256 productIndex, address erc20token, uint256 price, uint256 feature, uint256 expiration, uint256 number, string infoUrl, bool noResale)](#productofferfeature)
-- [productOfferLimitation(uint256 productIndex, address erc20token, uint256 price, uint256 limitation, uint256 expiration, uint256 number, string infoUrl, bool noResale)](#productofferlimitation)
-- [productOffer(uint256 productIndex, address erc20token, uint256 price, uint256 value, string infoUrl)](#productoffer)
+- [productCreate(string productName, string productURL, string logoURL, uint256 details)](#productcreate)
+- [productOfferFeature(uint256 productIndex, address erc20token, uint256 price, uint256 feature, uint256 expiration, uint16 limited, uint16 bulk, string infoUrl, bool noResale, uint256 transferSurcharge, uint256 requireRicardian)](#productofferfeature)
+- [productOfferLimitation(uint256 productIndex, address erc20token, uint256 price, uint256 limitation, uint256 expiration, uint16 limited, uint16 bulk, string infoUrl, bool noResale, uint256 transferSurcharge, uint256 requireRicardian)](#productofferlimitation)
+- [productOffer(uint256 productIndex, address erc20token, uint256 price, uint256 value, string infoUrl, uint256 transferSurcharge, uint256 requireRicardian)](#productoffer)
 - [productOfferEditPrice(uint256 productIndex, uint256 offerIndex, uint256 price)](#productoffereditprice)
 - [productOfferPurchased(uint256 entityIndex, uint256 productIndex, uint256 offerIndex)](#productofferpurchased)
-- [productEdit(uint256 productIndex, string productName, string productURL, string logoURL, uint256 productDetails)](#productedit)
-- [productRelease(uint256 productIndex, uint256 newVersion, uint256 newHash, string newFileUri)](#productrelease)
-- [productReleaseDetails(uint256 entityIndex, uint256 productIndex, uint256 releaseIndex)](#productreleasedetails)
-- [productReleaseHashDetails(uint256 fileHash)](#productreleasehashdetails)
-- [productAllReleaseDetails(uint256 entityIndex, uint256 productIndex)](#productallreleasedetails)
+- [productEdit(uint256 productIndex, string productName, string productURL, string logoURL, uint256 details)](#productedit)
 - [productNumberOf(uint256 entityIndex)](#productnumberof)
-- [productNumberOfReleases(uint256 entityIndex, uint256 productIndex)](#productnumberofreleases)
 - [productDetails(uint256 entityIndex, uint256 productIndex)](#productdetails)
 - [productAllDetails(uint256 entityIndex)](#productalldetails)
 - [productOfferDetails(uint256 entityIndex, uint256 productIndex, uint256 offerIndex)](#productofferdetails)
@@ -108,9 +104,13 @@ Create a new product for an entity.
  Entity must exist and be validated by Immutable.
 
 ```js
-function productCreate(string productName, string productURL, string logoURL, uint256 productDetails) external nonpayable
+function productCreate(string productName, string productURL, string logoURL, uint256 details) external nonpayable
 returns(uint256)
 ```
+
+**Returns**
+
+the new (unique per entity) product identifier (index)
 
 **Arguments**
 
@@ -119,7 +119,7 @@ returns(uint256)
 | productName | string | The name of the new product | 
 | productURL | string | The primary URL of the product | 
 | logoURL | string | The logo URL of the product | 
-| productDetails | uint256 | the product category, languages, etc. | 
+| details | uint256 | the product category, languages, etc. | 
 
 ### productOfferFeature
 
@@ -127,7 +127,7 @@ Offer a software product license for sale.
  mes.sender must have a valid entity and product.
 
 ```js
-function productOfferFeature(uint256 productIndex, address erc20token, uint256 price, uint256 feature, uint256 expiration, uint256 number, string infoUrl, bool noResale) external nonpayable
+function productOfferFeature(uint256 productIndex, address erc20token, uint256 price, uint256 feature, uint256 expiration, uint16 limited, uint16 bulk, string infoUrl, bool noResale, uint256 transferSurcharge, uint256 requireRicardian) external nonpayable
 ```
 
 **Arguments**
@@ -137,12 +137,14 @@ function productOfferFeature(uint256 productIndex, address erc20token, uint256 p
 | productIndex | uint256 | The specific ID of the product | 
 | erc20token | address | Address of ERC 20 token offer | 
 | price | uint256 | The token cost to purchase activation | 
-| feature | uint256 | The product feature value/item (128 LSB only)
-              (128 MSB only) is duration, flags/resallability | 
+| feature | uint256 | The product feature value/item (128 LSB only)               (128 MSB only) is duration, flags/resallability | 
 | expiration | uint256 | activation expiration, (0) forever/unexpiring | 
-| number | uint256 | of offers, (0) is unlimited 65535 is maximum | 
+| limited | uint16 | number of offers, (0) unlimited, 65535 max | 
+| bulk | uint16 | number of activions per offer, > 0 to 65535 max | 
 | infoUrl | string | The official URL for more information about offer | 
 | noResale | bool | Flag to disable resale capabilities for purchaser | 
+| transferSurcharge | uint256 | Surcharged levied upon resale of purchase | 
+| requireRicardian | uint256 | parent of required Ricardian client contract | 
 
 ### productOfferLimitation
 
@@ -150,7 +152,7 @@ Offer a software product license for sale.
  mes.sender must have a valid entity and product.
 
 ```js
-function productOfferLimitation(uint256 productIndex, address erc20token, uint256 price, uint256 limitation, uint256 expiration, uint256 number, string infoUrl, bool noResale) external nonpayable
+function productOfferLimitation(uint256 productIndex, address erc20token, uint256 price, uint256 limitation, uint256 expiration, uint16 limited, uint16 bulk, string infoUrl, bool noResale, uint256 transferSurcharge, uint256 requireRicardian) external nonpayable
 ```
 
 **Arguments**
@@ -162,9 +164,12 @@ function productOfferLimitation(uint256 productIndex, address erc20token, uint25
 | price | uint256 | The token cost to purchase activation | 
 | limitation | uint256 | The version and language limitations | 
 | expiration | uint256 | activation expiration, (0) forever/unexpiring | 
-| number | uint256 | of offers, (0) is unlimited 65535 is maximum | 
+| limited | uint16 | number of offers, (0) unlimited, 65535 max | 
+| bulk | uint16 | number of activions per offer, > 0 to 65535 max | 
 | infoUrl | string | The official URL for more information about offer | 
 | noResale | bool | Prevent the resale of any purchased activation | 
+| transferSurcharge | uint256 | Surcharged levied upon resale of purchase | 
+| requireRicardian | uint256 | parent of required Ricardian client contract | 
 
 ### productOffer
 
@@ -172,7 +177,7 @@ Offer a software product license for sale.
  mes.sender must have a valid entity and product.
 
 ```js
-function productOffer(uint256 productIndex, address erc20token, uint256 price, uint256 value, string infoUrl) private nonpayable
+function productOffer(uint256 productIndex, address erc20token, uint256 price, uint256 value, string infoUrl, uint256 transferSurcharge, uint256 requireRicardian) private nonpayable
 ```
 
 **Arguments**
@@ -182,10 +187,10 @@ function productOffer(uint256 productIndex, address erc20token, uint256 price, u
 | productIndex | uint256 | The specific ID of the product | 
 | erc20token | address | Address of ERC 20 token offer | 
 | price | uint256 | The token cost to purchase activation | 
-| value | uint256 | The product activation value/item (128 LSB only)
-              (128 MSB only) is duration, flags/resallability
-              Zero (0) duration is forever/unexpiring | 
+| value | uint256 | The product activation value/item (128 LSB only)               (128 MSB only) is duration, flags/resallability               Zero (0) duration is forever/unexpiring | 
 | infoUrl | string | The official URL for more information about offer | 
+| transferSurcharge | uint256 | ETH to creator for each transfer | 
+| requireRicardian | uint256 | Ricardian leaf required for purchase | 
 
 ### productOfferEditPrice
 
@@ -227,7 +232,7 @@ Edit an existing product of an entity.
  Entity must exist and be validated by Immutable.
 
 ```js
-function productEdit(uint256 productIndex, string productName, string productURL, string logoURL, uint256 productDetails) external nonpayable
+function productEdit(uint256 productIndex, string productName, string productURL, string logoURL, uint256 details) external nonpayable
 ```
 
 **Arguments**
@@ -238,88 +243,7 @@ function productEdit(uint256 productIndex, string productName, string productURL
 | productName | string | The name of the new product | 
 | productURL | string | The primary URL of the product | 
 | logoURL | string | The logo URL of the product | 
-| productDetails | uint256 | the product category, languages, etc. | 
-
-### productRelease
-
-Create a new release of an existing product.
- Entity and Product must exist.
-
-```js
-function productRelease(uint256 productIndex, uint256 newVersion, uint256 newHash, string newFileUri) external nonpayable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| productIndex | uint256 | The product ID of the new release | 
-| newVersion | uint256 | The new product version, architecture and languages | 
-| newHash | uint256 | The new release binary SHA256 CRC hash | 
-| newFileUri | string | The valid URI of the release binary | 
-
-### productReleaseDetails
-
-Return version, URI and hash of existing product release.
- Entity, Product and Release must exist.
-
-```js
-function productReleaseDetails(uint256 entityIndex, uint256 productIndex, uint256 releaseIndex) external view
-returns(uint256, string, uint256)
-```
-
-**Returns**
-
-the version, architecture and language(s)
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity owner of product | 
-| productIndex | uint256 | The product ID of the new release | 
-| releaseIndex | uint256 | The index of the product release | 
-
-### productReleaseHashDetails
-
-Reverse lookup, return entity, product, URI of product release.
- Entity, Product and Release must exist.
-
-```js
-function productReleaseHashDetails(uint256 fileHash) external view
-returns(uint256, uint256, uint256, uint256, string)
-```
-
-**Returns**
-
-The index of the entity owner of product
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| fileHash | uint256 | The index of the product release | 
-
-### productAllReleaseDetails
-
-Retrieve details for all product releases
- Status of empty arrays if none found.
-
-```js
-function productAllReleaseDetails(uint256 entityIndex, uint256 productIndex) external view
-returns(uint256[], string[], uint256[])
-```
-
-**Returns**
-
-array of version, architecture and language(s)
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The index of the entity owner of product | 
-| productIndex | uint256 | The product ID of the new release | 
+| details | uint256 | the product category, languages, etc. | 
 
 ### productNumberOf
 
@@ -341,27 +265,6 @@ the current number of products for the entity
 | ------------- |------------- | -----|
 | entityIndex | uint256 | The index of the entity | 
 
-### productNumberOfReleases
-
-Return the number of product releases of a product.
- Entity and product must exist.
-
-```js
-function productNumberOfReleases(uint256 entityIndex, uint256 productIndex) external view
-returns(uint256)
-```
-
-**Returns**
-
-the current number of releases for the product
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| entityIndex | uint256 | The glabal entity index | 
-| productIndex | uint256 | The index of the product | 
-
 ### productDetails
 
 Retrieve existing product name, info and details.
@@ -369,12 +272,16 @@ Retrieve existing product name, info and details.
 
 ```js
 function productDetails(uint256 entityIndex, uint256 productIndex) external view
-returns(string, string, string, uint256)
+returns(name string, infoURL string, logoURL string, details uint256)
 ```
 
 **Returns**
 
-the name of the product
+name , infoURL, logoURL and details are return values.\
+         **name** The name of the product\
+         **infoURL** The primary URL for information about the product\
+         **logoURL** The URL for the product logo\
+         **details** The detail flags (category, language) of product
 
 **Arguments**
 
@@ -385,18 +292,22 @@ the name of the product
 
 ### productAllDetails
 
-Retrieve details for all products
- Status of empty arrays if none found.
+Retrieve details for all products of an entity.
+ Empty arrays if no products are found.
 
 ```js
 function productAllDetails(uint256 entityIndex) external view
-returns(string[], string[], string[], uint256[], uint256[], uint256[])
+returns(names string[], infoURLs string[], logoURLs string[], details uint256[], offers uint256[])
 ```
 
 **Returns**
 
-array of name, infoURL, logoURL, status details
-                  number of releases, price in tokens
+names , infoURLs, logoURLs, details and offers are returned as arrays.\
+         **names** Array of names of the product\
+         **infoURLs** Array of primary URL about the product\
+         **logoURLs** Array of URL for the product logos\
+         **details** Array of detail flags (category, etc.)\
+         **offers** Array of number of Activation offers
 
 **Arguments**
 
@@ -406,17 +317,23 @@ array of name, infoURL, logoURL, status details
 
 ### productOfferDetails
 
-Return the price of a product activation license.
- Entity and Product must exist.
+Return the offer price of a product activation license.
+ Entity, Product and Offer must exist.
 
 ```js
 function productOfferDetails(uint256 entityIndex, uint256 productIndex, uint256 offerIndex) public view
-returns(address, uint256, uint256, string)
+returns(erc20Token address, price uint256, value uint256, offerURL string, surcharge uint256, parent uint256)
 ```
 
 **Returns**
 
-address of ERC20 token of offer (zero address is ETH)
+erc20Token , price, value, offerURL, surcharge and parent are return values.\
+         **erc20Token** The address of ERC20 token offer (zero is ETH)\
+         **price** The price (ETH or ERC20) for the activation license\
+         **value** The duration, flags and value of activation\
+         **offerURL** The URL to more information about the offer\
+         **surcharge** The transfer surcharge of offer\
+         **parent** The required ricardian contract parent (if any)
 
 **Arguments**
 
@@ -433,12 +350,18 @@ Return all the product activation offers
 
 ```js
 function productAllOfferDetails(uint256 entityIndex, uint256 productIndex) public view
-returns(address[], uint256[], uint256[], string[])
+returns(erc20Tokens address[], prices uint256[], values uint256[], offerURLs string[], surcharges uint256[], parents uint256[])
 ```
 
 **Returns**
 
-address of ERC20 token of offer (zero address is ETH)
+erc20Tokens , prices, values, offerURLs, surcharges and parents are array return values.\
+         **erc20Tokens** Array of addresses of ERC20 token offer (zero is ETH)\
+         **prices** Array of prices for the activation license\
+         **values** Array of duration, flags, and value of activation\
+         **offerURLs** Array of URLs to more information on the offers\
+         **surcharges** Array of transfer surcharge of offers\
+         **parents** Array of ricardian contract parent (if any)
 
 **Arguments**
 
@@ -450,34 +373,30 @@ address of ERC20 token of offer (zero address is ETH)
 ## Contracts
 
 * [ActivateToken](ActivateToken.md)
-* [Address](Address.md)
-* [Context](Context.md)
-* [Counters](Counters.md)
+* [AddressUpgradeable](AddressUpgradeable.md)
+* [ContextUpgradeable](ContextUpgradeable.md)
+* [CreatorToken](CreatorToken.md)
 * [CustomToken](CustomToken.md)
-* [ERC165](ERC165.md)
-* [ERC20](ERC20.md)
-* [ERC20Detailed](ERC20Detailed.md)
-* [ERC20Mintable](ERC20Mintable.md)
-* [ERC721](ERC721.md)
-* [ERC721Burnable](ERC721Burnable.md)
-* [ERC721Enumerable](ERC721Enumerable.md)
-* [ERC721Mintable](ERC721Mintable.md)
-* [Escrow](Escrow.md)
-* [IERC165](IERC165.md)
-* [IERC20](IERC20.md)
-* [IERC721](IERC721.md)
-* [IERC721Enumerable](IERC721Enumerable.md)
-* [IERC721Receiver](IERC721Receiver.md)
-* [ImmutableConstants](ImmutableConstants.md)
+* [ERC165Upgradeable](ERC165Upgradeable.md)
+* [ERC20Upgradeable](ERC20Upgradeable.md)
+* [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md)
+* [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
+* [ERC721Upgradeable](ERC721Upgradeable.md)
+* [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
+* [EscrowUpgradeable](EscrowUpgradeable.md)
+* [IERC165Upgradeable](IERC165Upgradeable.md)
+* [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
+* [IERC20Upgradeable](IERC20Upgradeable.md)
+* [IERC721EnumerableUpgradeable](IERC721EnumerableUpgradeable.md)
+* [IERC721MetadataUpgradeable](IERC721MetadataUpgradeable.md)
+* [IERC721ReceiverUpgradeable](IERC721ReceiverUpgradeable.md)
+* [IERC721Upgradeable](IERC721Upgradeable.md)
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableProduct](ImmutableProduct.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
-* [MinterRole](MinterRole.md)
-* [Ownable](Ownable.md)
-* [PullPayment](PullPayment.md)
-* [ResolverBase](ResolverBase.md)
-* [Roles](Roles.md)
-* [SafeMath](SafeMath.md)
-* [Secondary](Secondary.md)
+* [OwnableUpgradeable](OwnableUpgradeable.md)
+* [ProductActivate](ProductActivate.md)
+* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
+* [StringsUpgradeable](StringsUpgradeable.md)

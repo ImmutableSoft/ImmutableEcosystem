@@ -1,43 +1,31 @@
-# Migrations.sol
+# ContextUpgradeable.sol
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\utils\ContextUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\ContextUpgradeable.sol)
 
-**Migrations**
+**↗ Extends: [Initializable](Initializable.md)**
+**↘ Derived Contracts: [ERC20Upgradeable](ERC20Upgradeable.md), [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md), [ERC721Upgradeable](ERC721Upgradeable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
+
+**ContextUpgradeable**
 
 ## Contract Members
 **Constants & Variables**
 
 ```js
-address public owner;
-uint256 public last_completed_migration;
+uint256[50] private __gap;
 
 ```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [__Context_init()](#__context_init)
+- [__Context_init_unchained()](#__context_init_unchained)
+- [_msgSender()](#_msgsender)
+- [_msgData()](#_msgdata)
 
-### 
+### __Context_init
 
 ```js
-function () public nonpayable
+function __Context_init() internal nonpayable initializer 
 ```
 
 **Arguments**
@@ -45,29 +33,40 @@ function () public nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### setCompleted
+### __Context_init_unchained
 
 ```js
-function setCompleted(uint256 completed) external nonpayable
+function __Context_init_unchained() internal nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| completed | uint256 |  | 
 
-### upgrade
+### _msgSender
 
 ```js
-function upgrade(address new_address) external nonpayable
+function _msgSender() internal view
+returns(address)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| new_address | address |  | 
+
+### _msgData
+
+```js
+function _msgData() internal view
+returns(bytes)
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
 
 ## Contracts
 

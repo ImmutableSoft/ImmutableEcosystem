@@ -1,28 +1,26 @@
-# Initializable
- * (Initializable.sol)
+# Initializable.sol
 
-View Source: [@openzeppelin/upgrades/contracts/Initializable.sol](../@openzeppelin/upgrades/contracts/Initializable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\proxy\utils\Initializable.sol](..\@openzeppelin\contracts-upgradeable\proxy\utils\Initializable.sol)
 
-**↘ Derived Contracts: [ActivateToken](ActivateToken.md), [Context](Context.md), [ERC165](ERC165.md), [ERC20](ERC20.md), [ERC20Detailed](ERC20Detailed.md), [ERC20Mintable](ERC20Mintable.md), [ERC721](ERC721.md), [ERC721Burnable](ERC721Burnable.md), [ERC721Enumerable](ERC721Enumerable.md), [ERC721Mintable](ERC721Mintable.md), [Escrow](Escrow.md), [IERC721](IERC721.md), [IERC721Enumerable](IERC721Enumerable.md), [ImmutableEntity](ImmutableEntity.md), [ImmutableProduct](ImmutableProduct.md), [MinterRole](MinterRole.md), [Ownable](Ownable.md), [PullPayment](PullPayment.md), [Secondary](Secondary.md)**
+**↘ Derived Contracts: [ActivateToken](ActivateToken.md), [ContextUpgradeable](ContextUpgradeable.md), [CreatorToken](CreatorToken.md), [CustomToken](CustomToken.md), [ERC165Upgradeable](ERC165Upgradeable.md), [ERC20Upgradeable](ERC20Upgradeable.md), [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md), [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md), [ERC721Upgradeable](ERC721Upgradeable.md), [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md), [EscrowUpgradeable](EscrowUpgradeable.md), [ImmutableEntity](ImmutableEntity.md), [ImmutableProduct](ImmutableProduct.md), [OwnableUpgradeable](OwnableUpgradeable.md), [ProductActivate](ProductActivate.md), [PullPaymentUpgradeable](PullPaymentUpgradeable.md)**
 
 **Initializable**
 
-Helper contract to support initializer functions. To use it, replace
-the constructor with a function that has the `initializer` modifier.
-WARNING: Unlike constructors, initializer functions must be manually
-invoked. This applies both to deploying an Initializable contract, as well
-as extending an Initializable contract via inheritance.
-WARNING: When used with inheritance, manual care must be taken to not invoke
-a parent initializer twice, or ensure that all initializers are idempotent,
-because this is not dealt with automatically as with constructors.
+This is a base contract to aid in writing upgradeable contracts, or any kind of contract that will be deployed
+ behind a proxy. Since a proxied contract can't have a constructor, it's common to move constructor logic to an
+ external initializer function, usually called `initialize`. It then becomes necessary to protect this initializer
+ function so it can only be called once. The {initializer} modifier provided by this contract will have this effect.
+ TIP: To avoid leaving the proxy in an uninitialized state, the initializer function should be called as early as
+ possible by providing the encoded function call as the `_data` argument to {ERC1967Proxy-constructor}.
+ CAUTION: When used with inheritance, manual care must be taken to not invoke a parent initializer twice, or to ensure
+ that all initializers are idempotent. This is not verified automatically as constructors are by Solidity.
 
 ## Contract Members
 **Constants & Variables**
 
 ```js
-bool private initialized;
-bool private initializing;
-uint256[50] private ______gap;
+bool private _initialized;
+bool private _initializing;
 
 ```
 
@@ -32,7 +30,7 @@ uint256[50] private ______gap;
 
 ### initializer
 
-Modifier to use in the initializer function of a contract.
+Modifier to protect an initializer function from being invoked twice.
 
 ```js
 modifier initializer() internal
@@ -45,53 +43,33 @@ modifier initializer() internal
 
 ## Functions
 
-- [isConstructor()](#isconstructor)
-
-### isConstructor
-
-Returns true if and only if the function is running in the constructor
-
-```js
-function isConstructor() private view
-returns(bool)
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-
 ## Contracts
 
 * [ActivateToken](ActivateToken.md)
-* [Address](Address.md)
-* [Context](Context.md)
-* [Counters](Counters.md)
+* [AddressUpgradeable](AddressUpgradeable.md)
+* [ContextUpgradeable](ContextUpgradeable.md)
+* [CreatorToken](CreatorToken.md)
 * [CustomToken](CustomToken.md)
-* [ERC165](ERC165.md)
-* [ERC20](ERC20.md)
-* [ERC20Detailed](ERC20Detailed.md)
-* [ERC20Mintable](ERC20Mintable.md)
-* [ERC721](ERC721.md)
-* [ERC721Burnable](ERC721Burnable.md)
-* [ERC721Enumerable](ERC721Enumerable.md)
-* [ERC721Mintable](ERC721Mintable.md)
-* [Escrow](Escrow.md)
-* [IERC165](IERC165.md)
-* [IERC20](IERC20.md)
-* [IERC721](IERC721.md)
-* [IERC721Enumerable](IERC721Enumerable.md)
-* [IERC721Receiver](IERC721Receiver.md)
-* [ImmutableConstants](ImmutableConstants.md)
+* [ERC165Upgradeable](ERC165Upgradeable.md)
+* [ERC20Upgradeable](ERC20Upgradeable.md)
+* [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md)
+* [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
+* [ERC721Upgradeable](ERC721Upgradeable.md)
+* [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
+* [EscrowUpgradeable](EscrowUpgradeable.md)
+* [IERC165Upgradeable](IERC165Upgradeable.md)
+* [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
+* [IERC20Upgradeable](IERC20Upgradeable.md)
+* [IERC721EnumerableUpgradeable](IERC721EnumerableUpgradeable.md)
+* [IERC721MetadataUpgradeable](IERC721MetadataUpgradeable.md)
+* [IERC721ReceiverUpgradeable](IERC721ReceiverUpgradeable.md)
+* [IERC721Upgradeable](IERC721Upgradeable.md)
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableProduct](ImmutableProduct.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
-* [MinterRole](MinterRole.md)
-* [Ownable](Ownable.md)
-* [PullPayment](PullPayment.md)
-* [ResolverBase](ResolverBase.md)
-* [Roles](Roles.md)
-* [SafeMath](SafeMath.md)
-* [Secondary](Secondary.md)
+* [OwnableUpgradeable](OwnableUpgradeable.md)
+* [ProductActivate](ProductActivate.md)
+* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
+* [StringsUpgradeable](StringsUpgradeable.md)

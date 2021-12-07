@@ -7,9 +7,10 @@ const Entity = artifacts.require('ImmutableEntity');
 
 module.exports = async function (deployer, network) {
   const commonInstance = await Common.deployed();
-  console.log('  Using common ', commonInstance.address);
 
+//  await deployer.deploy(Entity, commonInstance.address);
   const entityInstance = await deployProxy(Entity, [commonInstance.address], { deployer });
-  console.log('Deployed entity ', entityInstance.address);
+
+  console.log('  Deployed entity ', entityInstance.address);
 };
 

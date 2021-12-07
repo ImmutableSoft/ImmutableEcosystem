@@ -7,8 +7,9 @@ const Custom = artifacts.require('CustomToken');
 module.exports = async function (deployer, network) {
   if (network != 'mainnet')
   {
+//    deployer.deploy(Custom)
     const customInstance = await deployProxy(Custom, [], { deployer });
-    console.log('Deployed custom token ', customInstance.address);
+    console.log('  Deployed custom token ', customInstance.address);
   }
 };
 

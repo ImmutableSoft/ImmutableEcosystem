@@ -1,14 +1,21 @@
-pragma solidity ^0.8.4;
+pragma solidity >=0.7.6;
+pragma abicoder v2;
 
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import "./StringCommon.sol";
 
 // OpenZepellin upgradable contracts
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol";
 
-import "./StringCommon.sol";
-import "./ImmutableConstants.sol";
+/*
+// OpenZepellin standard contracts
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/PullPayment.sol";
+*/
+
 /* //ENS integration (old/deprecated)
 import "./ImmutableResolver.sol";
 import "@ensdomains/ens/contracts/ENS.sol";
@@ -20,7 +27,9 @@ import "./AddrResolver.sol";
 /// @notice Token transfers use the ImmuteToken by default
 /// @dev Entity variables and methods
 contract ImmutableEntity is Initializable, OwnableUpgradeable,
-                            PullPaymentUpgradeable, ImmutableConstants
+                            PullPaymentUpgradeable
+/*
+contract ImmutableEntity is Initializable, Ownable, PullPayment*/
 {
   // Error strings
   string constant BankNotConfigured = "Bank not configured";
@@ -43,11 +52,10 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     uint256 createTime;
   }
 
-  // Array of current entity addresses, indexable by local entity index
-  //   ie. local entity index equals global entity index - 1
+  // Array of current entity addresses, indexable by entity index
   mapping (uint256 => address) private EntityArray;
 
-  // Array of entities, indexable by local entity index
+  // Array of entities, indexable by entity index
   mapping (uint256 => Entity) private Entities;
   uint256 NumberOfEntities;
 
@@ -64,12 +72,16 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
 
   /// @notice Contract initializer
   /// Executed on contract creation only.
-  /// @param commonAddr the address of the CommonString contract
   function initialize(address commonAddr) public initializer
   {
     __Ownable_init();
     __PullPayment_init();
-
+/*
+  // OpenZepellin standard contracts
+  constructor(address commonAddr) Ownable()
+                                  PullPayment()
+  {
+*/
     // Initialize string and token contract interfaces
     commonInterface = StringCommon(commonAddr);
   }
@@ -97,9 +109,6 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
   function entityStatusUpdate(uint256 entityIndex, uint256 status)
     external onlyOwner
   {
-//    uint eIndex = entityIdToLocalId(entityIndex);
-//    Entity storage entity = Entities[entityIndex];
-
     // Update the organization status
     EntityStatus[entityIndex] = status;
 
@@ -133,6 +142,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
   /// Entities require approval (entityStatusUpdate) after create.
   /// @param entityName The legal name of the entity
   /// @param entityURL The valid URL of the entity
+  /// @return the new entity unique identifier (index)
   function entityCreate(string memory entityName,
                         string memory entityURL)
     public returns (uint256)
@@ -144,7 +154,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
 
     // Require the entity name be unique
     for (uint256 i = 1; i < NumberOfEntities + 1; ++i)
-      require(!commonInterface.stringsEqual(Entities[i].name, entityName),
+      require(!commonInterface/*StringCommon*/.stringsEqual(Entities[i].name, entityName),
               "Entity name already exists");
 
     // Push the entity to permenant storage on the blockchain
@@ -157,7 +167,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     EntityIndex[msg.sender] = entityIndex; // glbal entity id
     NumberOfEntities++;
 
-    // Emit entity event, converting from local id to global (add 1)
+    // Emit entity event: id, name and URL
     emit entityEvent(entityIndex, entityName, entityURL);
     return entityIndex;
   }
@@ -181,7 +191,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
       // Skip the duplicate name check for sender entity
       //   ie. Allow only URL to be changed
       if (i != entityIndex)
-        require(!commonInterface.stringsEqual(Entities[i].name,
+        require(!commonInterface/*StringCommon*/.stringsEqual(Entities[i].name,
                 entityName), "Entity name already exists");
     }
 
@@ -203,11 +213,11 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     external
   {
     uint256 entityIndex = EntityIndex[msg.sender];
-    require(entityIndex > 0, EntityIsZero);
+    require(entityIndex > 0, commonInterface.EntityIsZero());
     Entity storage entity = Entities[entityIndex];
 
     // Only a validated entity can configue a bank address
-    require(entityAddressStatus(msg.sender) > 0, EntityNotValidated);
+    require(entityAddressStatus(msg.sender) > 0, commonInterface.EntityNotValidated());
     require(newBank != address(0), "Bank cannot be zero");
     entity.bank = newBank;
   }
@@ -220,13 +230,13 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     external
   {
     uint256 entityIndex = EntityIndex[msg.sender];
-    require(entityIndex > 0, EntityIsZero);
+    require(entityIndex > 0, commonInterface.EntityIsZero());
     Entity storage entity = Entities[entityIndex];
 
     // Ensure next address and status and status are valid
     require(msg.sender != nextAddress, "Next address not different");
     require(nextAddress != address(0), "Next address is zero");
-    require(entityAddressStatus(msg.sender) > 0, EntityNotValidated);
+    require(entityAddressStatus(msg.sender) > 0, commonInterface.EntityNotValidated());
 
     // Require next address to have no entity configured
     require(EntityIndex[nextAddress] == 0, "Next address in use");
@@ -245,7 +255,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     external onlyOwner
   {
     uint256 entityIndex = EntityIndex[entityAddress];
-    require(entityIndex > 0, EntityIsZero);
+    require(entityIndex > 0, commonInterface.EntityIsZero());
     Entity storage entity = Entities[entityIndex];
 
     // Ensure next address is valid
@@ -266,11 +276,11 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     external
   {
     uint256 entityIndex = EntityIndex[oldAddress];
-    require(entityIndex > 0, EntityIsZero);
+    require(entityIndex > 0, commonInterface.EntityIsZero());
     Entity storage entity = Entities[entityIndex];
     require(entity.nextAddress == msg.sender, "Next address not sender");
     uint256 entityStatus = entityAddressStatus(oldAddress);
-    require(entityStatus > 0, EntityNotValidated);
+    require(entityStatus > 0, commonInterface.EntityNotValidated());
 
     // Assign the indexing for the new address
     EntityIndex[msg.sender] = entityIndex;
@@ -290,10 +300,10 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     external
   {
     uint256 entityIndex = EntityIndex[msg.sender];
-    require(entityIndex > 0, EntityIsZero);
+    require(entityIndex > 0, commonInterface.EntityIsZero());
     Entity storage entity = Entities[entityIndex];
     uint256 entityStatus = entityAddressStatus(msg.sender);
-    require(entityStatus > 0, EntityNotValidated);
+    require(entityStatus > 0, commonInterface.EntityNotValidated());
 
     // Ensure entity has a configured bank
     require(entity.bank != address(0), "Bank address zero");
@@ -311,10 +321,10 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
     public payable
   {
     uint256 entityStatus = entityIndexStatus(entityIndex);
-    require(entityIndex > 0, EntityIsZero);
+    require(entityIndex > 0, commonInterface.EntityIsZero());
     Entity storage entity = Entities[entityIndex];
 
-    require(entityStatus > 0, EntityNotValidated);
+    require(entityStatus > 0, commonInterface.EntityNotValidated());
     require(msg.value > 0, "ETH value zero");
     require(entity.bank != address(0), BankNotConfigured);
 
@@ -374,21 +384,18 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
 
   /// @notice Retrieve entity details from index.
   /// @param entityIndex The index of the entity
-  /// @return the entity name
-  /// @return the entity URL
+  /// @return name and URL are return values.\
+  ///         **name** the entity name\
+  ///         **URL** the entity name\
   function entityDetailsByIndex(uint256 entityIndex)
-    public view returns (string memory, string memory)
+    public view returns (string memory name, string memory URL)
   {
     if ((entityIndex == 0) || (entityIndex > NumberOfEntities))
       return ("", "");
     Entity storage entity = Entities[entityIndex];
-    string memory name;
-    string memory infoURL;
 
     // Return the name and URL for this organization
-    infoURL = entity.infoURL;
-    name = entity.name;
-    return (name, infoURL);
+    return (entity.name, entity.infoURL);
   }
 
   /// @notice Retrieve number of entities.
@@ -410,7 +417,7 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
       return 0;
     Entity storage entity = Entities[entityIndex];
     uint256 entityStatus = entityAddressStatus(msg.sender);
-    require(entityStatus > 0, EntityNotValidated);
+    require(entityStatus > 0, commonInterface.EntityNotValidated());
 
     // Return zero if bank is unconfigured
     if (entity.bank == address(0))
@@ -435,12 +442,13 @@ contract ImmutableEntity is Initializable, OwnableUpgradeable,
 
   /// @notice Retrieve all entity details
   /// Status of empty arrays if none found.
-  /// @return array of entity status
-  /// @return array of entity name
-  /// @return array of entity URL
+  /// @return status , name and URL arrays are return values.\
+  ///         **status** Array of entity status\
+  ///         **name** Array of entity names\
+  ///         **URL** Array of entity URLs
   function entityAllDetails()
-    external view returns (uint256[] memory, string[] memory,
-                           string[] memory)
+    external view returns (uint256[] memory status, string[] memory name,
+                           string[] memory URL)
   {
     uint256[] memory resultStatus = new uint256[](NumberOfEntities);
     string[] memory resultName = new string[](NumberOfEntities);
