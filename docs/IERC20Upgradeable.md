@@ -1,13 +1,12 @@
-# IERC20.sol
+# IERC20Upgradeable.sol
 
-View Source: [@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol](../@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC20\IERC20Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC20\IERC20Upgradeable.sol)
 
-**↘ Derived Contracts: [ERC20](ERC20.md), [ERC20Detailed](ERC20Detailed.md)**
+**↘ Derived Contracts: [ERC20Upgradeable](ERC20Upgradeable.md), [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)**
 
-**IERC20**
+**IERC20Upgradeable**
 
-Interface of the ERC20 standard as defined in the EIP. Does not include
-the optional functions; to access them see {ERC20Detailed}.
+Interface of the ERC20 standard as defined in the EIP.
 
 **Events**
 
@@ -27,8 +26,6 @@ event Approval(address indexed owner, address indexed spender, uint256  value);
 
 ### totalSupply
 
-⤿ Overridden Implementation(s): [ERC20.totalSupply](ERC20.md#totalsupply)
-
 Returns the amount of tokens in existence.
 
 ```js
@@ -42,8 +39,6 @@ returns(uint256)
 | ------------- |------------- | -----|
 
 ### balanceOf
-
-⤿ Overridden Implementation(s): [ERC20.balanceOf](ERC20.md#balanceof)
 
 Returns the amount of tokens owned by `account`.
 
@@ -60,11 +55,9 @@ returns(uint256)
 
 ### transfer
 
-⤿ Overridden Implementation(s): [ERC20.transfer](ERC20.md#transfer)
-
 Moves `amount` tokens from the caller's account to `recipient`.
-     * Returns a boolean value indicating whether the operation succeeded.
-     * Emits a {Transfer} event.
+ Returns a boolean value indicating whether the operation succeeded.
+ Emits a {Transfer} event.
 
 ```js
 function transfer(address recipient, uint256 amount) external nonpayable
@@ -80,12 +73,10 @@ returns(bool)
 
 ### allowance
 
-⤿ Overridden Implementation(s): [ERC20.allowance](ERC20.md#allowance)
-
 Returns the remaining number of tokens that `spender` will be
-allowed to spend on behalf of `owner` through {transferFrom}. This is
-zero by default.
-     * This value changes when {approve} or {transferFrom} are called.
+ allowed to spend on behalf of `owner` through {transferFrom}. This is
+ zero by default.
+ This value changes when {approve} or {transferFrom} are called.
 
 ```js
 function allowance(address owner, address spender) external view
@@ -101,17 +92,15 @@ returns(uint256)
 
 ### approve
 
-⤿ Overridden Implementation(s): [ERC20.approve](ERC20.md#approve)
-
 Sets `amount` as the allowance of `spender` over the caller's tokens.
-     * Returns a boolean value indicating whether the operation succeeded.
-     * IMPORTANT: Beware that changing an allowance with this method brings the risk
-that someone may use both the old and the new allowance by unfortunate
-transaction ordering. One possible solution to mitigate this race
-condition is to first reduce the spender's allowance to 0 and set the
-desired value afterwards:
-https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-     * Emits an {Approval} event.
+ Returns a boolean value indicating whether the operation succeeded.
+ IMPORTANT: Beware that changing an allowance with this method brings the risk
+ that someone may use both the old and the new allowance by unfortunate
+ transaction ordering. One possible solution to mitigate this race
+ condition is to first reduce the spender's allowance to 0 and set the
+ desired value afterwards:
+ https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+ Emits an {Approval} event.
 
 ```js
 function approve(address spender, uint256 amount) external nonpayable
@@ -127,13 +116,11 @@ returns(bool)
 
 ### transferFrom
 
-⤿ Overridden Implementation(s): [ERC20.transferFrom](ERC20.md#transferfrom)
-
 Moves `amount` tokens from `sender` to `recipient` using the
-allowance mechanism. `amount` is then deducted from the caller's
-allowance.
-     * Returns a boolean value indicating whether the operation succeeded.
-     * Emits a {Transfer} event.
+ allowance mechanism. `amount` is then deducted from the caller's
+ allowance.
+ Returns a boolean value indicating whether the operation succeeded.
+ Emits a {Transfer} event.
 
 ```js
 function transferFrom(address sender, address recipient, uint256 amount) external nonpayable
@@ -151,34 +138,30 @@ returns(bool)
 ## Contracts
 
 * [ActivateToken](ActivateToken.md)
-* [Address](Address.md)
-* [Context](Context.md)
-* [Counters](Counters.md)
+* [AddressUpgradeable](AddressUpgradeable.md)
+* [ContextUpgradeable](ContextUpgradeable.md)
+* [CreatorToken](CreatorToken.md)
 * [CustomToken](CustomToken.md)
-* [ERC165](ERC165.md)
-* [ERC20](ERC20.md)
-* [ERC20Detailed](ERC20Detailed.md)
-* [ERC20Mintable](ERC20Mintable.md)
-* [ERC721](ERC721.md)
-* [ERC721Burnable](ERC721Burnable.md)
-* [ERC721Enumerable](ERC721Enumerable.md)
-* [ERC721Mintable](ERC721Mintable.md)
-* [Escrow](Escrow.md)
-* [IERC165](IERC165.md)
-* [IERC20](IERC20.md)
-* [IERC721](IERC721.md)
-* [IERC721Enumerable](IERC721Enumerable.md)
-* [IERC721Receiver](IERC721Receiver.md)
-* [ImmutableConstants](ImmutableConstants.md)
+* [ERC165Upgradeable](ERC165Upgradeable.md)
+* [ERC20Upgradeable](ERC20Upgradeable.md)
+* [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md)
+* [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
+* [ERC721Upgradeable](ERC721Upgradeable.md)
+* [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
+* [EscrowUpgradeable](EscrowUpgradeable.md)
+* [IERC165Upgradeable](IERC165Upgradeable.md)
+* [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
+* [IERC20Upgradeable](IERC20Upgradeable.md)
+* [IERC721EnumerableUpgradeable](IERC721EnumerableUpgradeable.md)
+* [IERC721MetadataUpgradeable](IERC721MetadataUpgradeable.md)
+* [IERC721ReceiverUpgradeable](IERC721ReceiverUpgradeable.md)
+* [IERC721Upgradeable](IERC721Upgradeable.md)
 * [ImmutableEntity](ImmutableEntity.md)
 * [ImmutableProduct](ImmutableProduct.md)
 * [Initializable](Initializable.md)
 * [Migrations](Migrations.md)
-* [MinterRole](MinterRole.md)
-* [Ownable](Ownable.md)
-* [PullPayment](PullPayment.md)
-* [ResolverBase](ResolverBase.md)
-* [Roles](Roles.md)
-* [SafeMath](SafeMath.md)
-* [Secondary](Secondary.md)
+* [OwnableUpgradeable](OwnableUpgradeable.md)
+* [ProductActivate](ProductActivate.md)
+* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
+* [StringsUpgradeable](StringsUpgradeable.md)

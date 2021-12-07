@@ -1,43 +1,40 @@
-# Migrations.sol
+# ERC165Upgradeable.sol
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\utils\introspection\ERC165Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\introspection\ERC165Upgradeable.sol)
 
-**Migrations**
+**↗ Extends: [Initializable](Initializable.md), [IERC165Upgradeable](IERC165Upgradeable.md)**
+**↘ Derived Contracts: [ERC721Upgradeable](ERC721Upgradeable.md)**
+
+**ERC165Upgradeable**
+
+Implementation of the {IERC165} interface.
+ Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check
+ for the additional interface id that will be supported. For example:
+ ```solidity
+ function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId);
+ }
+ ```
+ Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.
 
 ## Contract Members
 **Constants & Variables**
 
 ```js
-address public owner;
-uint256 public last_completed_migration;
+uint256[50] private __gap;
 
 ```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [__ERC165_init()](#__erc165_init)
+- [__ERC165_init_unchained()](#__erc165_init_unchained)
+- [supportsInterface(bytes4 interfaceId)](#supportsinterface)
 
-### 
+### __ERC165_init
 
 ```js
-function () public nonpayable
+function __ERC165_init() internal nonpayable initializer 
 ```
 
 **Arguments**
@@ -45,29 +42,31 @@ function () public nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### setCompleted
+### __ERC165_init_unchained
 
 ```js
-function setCompleted(uint256 completed) external nonpayable
+function __ERC165_init_unchained() internal nonpayable initializer 
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| completed | uint256 |  | 
 
-### upgrade
+### supportsInterface
+
+See {IERC165-supportsInterface}.
 
 ```js
-function upgrade(address new_address) external nonpayable
+function supportsInterface(bytes4 interfaceId) public view
+returns(bool)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| new_address | address |  | 
+| interfaceId | bytes4 |  | 
 
 ## Contracts
 

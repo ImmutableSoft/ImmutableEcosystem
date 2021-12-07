@@ -1,13 +1,27 @@
-pragma solidity ^0.8.4;
+pragma solidity >=0.7.6;
 
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import "./ImmutableProduct.sol";
+import "./StringCommon.sol";
+import "./ImmutableEntity.sol";
+import "./CreatorToken.sol";
+import "./ProductActivate.sol";
 
 // OpenZepellin upgradable contracts
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
+/*
+// OpenZepellin standard contracts
+//import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+*/
 
 /*
   The ActivateToken unique token id is a conglomeration of the entity, product,
@@ -18,55 +32,80 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Enumer
                       (activationIdFlags << 96) | (licenseValue << 128);
 */
 
+// OpenZepellin upgradable contracts
 contract ActivateToken is Initializable, OwnableUpgradeable,
-                          PullPaymentUpgradeable,
                           ERC721EnumerableUpgradeable,
-                          ERC721BurnableUpgradeable, ImmutableConstants
+                          ERC721BurnableUpgradeable
+/*
+contract ActivateToken is Ownable,
+                          ERC721Enumerable,
+                          ERC721Burnable
+*/
 {
-  address payable private Bank;
-  uint256 private EthFee;
-
-  // Mapping to and from token id to current activation id
+  // Mapping to and from token id and activation id
   mapping (uint256 => uint256) private ActivateIdToTokenId;
   mapping (uint256 => uint256) private TokenIdToActivateId;
-  // Mapping of the number of activations (used for uniqueness)
-  mapping (uint256 => uint256) private NumberOfActivations;
-  mapping (uint256 => uint256) private TokenIdToOfferPrice;
 
+  // Mapping the number of activations (used for uniqueness)
+  mapping (uint64 => uint64) private NumberOfActivations;
+
+  // Mapping any Ricardian contract requirements
+  mapping (uint256 => uint256) private TokenIdToRicardianParent;
+
+  ProductActivate activateInterface;
+  CreatorToken creatorInterface;
   ImmutableEntity entityInterface;
-  ImmutableProduct productInterface;
+  StringCommon commonInterface;
 
-  function initialize(address entityContractAddr,
-                      address productContractAddr)
+  // OpenZepellin upgradable contracts
+  function initialize(address commonContractAddr, address entityContractAddr)
     public initializer
   {
     __Ownable_init();
-    __PullPayment_init();
     __ERC721_init("Activate", "ACT");
     __ERC721Enumerable_init();
-
-    // Initialize the entity contract interface
+    __ERC721Burnable_init();
+/*
+  // OpenZepellin standard contracts
+  constructor(address commonContractAddr, address entityContractAddr)
+                                           Ownable()
+                                           ERC721("Activate", "ACT")
+                                           ERC721Enumerable()
+  {
+*/
+    // Initialize the contract interfaces
+    commonInterface = StringCommon(commonContractAddr);
     entityInterface = ImmutableEntity(entityContractAddr);
-    productInterface = ImmutableProduct(productContractAddr);
+  }
 
-    // Set default fee and add the deployer as the bank
-    EthFee = 1000000000000000; // Default $.40 with ETH $400
-    Bank = payable(msg.sender);
+  /// @notice Restrict the token to the activate contract
+  ///   Called internally. msg.sender must contract owner
+  /// @param activateAddress The ProductActivate contract address
+  /// @param creatorAddress The Creator token contract address
+  function restrictToken(address activateAddress, address creatorAddress)
+    public onlyOwner
+  {
+    activateInterface = ProductActivate(activateAddress);  
+    creatorInterface = CreatorToken(creatorAddress);
   }
 
   /// @notice Burn a product activation license.
   /// Not public, called internally. msg.sender must be the token owner.
   /// @param tokenId The tokenId to burn
-  function activation_burn(uint256 tokenId)
-    private
+  function burn(uint256 tokenId) public override(ERC721BurnableUpgradeable)
   {
     uint256 activationId = TokenIdToActivateId[tokenId];
-    require(ownerOf(tokenId) == msg.sender, "Burn requires being owner");
 
     ActivateIdToTokenId[activationId] = 0;
     TokenIdToActivateId[tokenId] = 0;
-    TokenIdToOfferPrice[tokenId] = 0;
-    burn(tokenId);
+
+    // If called from restricted address skip approval check
+    if (msg.sender == address(activateInterface))
+      super._burn(tokenId);
+
+    // Otherwise ensure caller is approved for the token
+    else
+      super.burn(tokenId);
   }
 
   /// @notice Create a product activation license.
@@ -75,18 +114,31 @@ contract ActivateToken is Initializable, OwnableUpgradeable,
   /// @param productIndex The specific ID of the product
   /// @param licenseHash The external license activation hash
   /// @param licenseValue The activation value and flags (192 bits)
-  function activation_mint(uint256 entityIndex, uint256 productIndex,
-                           uint256 licenseHash, uint256 licenseValue)
-    private
+  /// @param ricardianParent The Ricardian contract parent (if required)
+  /// @return tokenId The resulting new unique token identifier
+  function mint(address sender, uint256 entityIndex, uint256 productIndex,
+                uint256 licenseHash, uint256 licenseValue,
+                uint256 ricardianParent)
+    public returns (uint256)
   {
     uint256 activationId =
-      ++NumberOfActivations[entityIndex | (productIndex << 32)];
+      ++NumberOfActivations[(uint64)(entityIndex | (productIndex << 32))];
 
-    uint256 tokenId = ((entityIndex << EntityIdOffset) & EntityIdMask) |
-                      ((productIndex << ProductIdOffset) & ProductIdMask) |
-                      ((activationId << UniqueIdOffset) & UniqueIdMask) |
-                      (licenseValue & (FlagsMask | ExpirationMask | ValueMask));
+    uint256 tokenId = ((entityIndex << commonInterface.EntityIdOffset()) & commonInterface.EntityIdMask()) |
+                      ((productIndex << commonInterface.ProductIdOffset()) & commonInterface.ProductIdMask()) |
+                      ((activationId << commonInterface.UniqueIdOffset()) & commonInterface.UniqueIdMask()) |
+                      (licenseValue & (commonInterface.FlagsMask() | commonInterface.ExpirationMask() | commonInterface.ValueMask()));
 
+    // If no expiration to the activation, use those bits for more randomness
+    if ((licenseValue & commonInterface.ExpirationFlag() == 0) && (activationId > 0xFFFF))
+      tokenId |= ((activationId >> 16) << commonInterface.ExpirationOffset()) & commonInterface.ExpirationMask();
+
+    require(address(activateInterface) != address(0));
+    require(msg.sender == address(activateInterface));
+
+// Do NOT uncomment this, it can potentially infinite loop
+//   But the idea is valid, leaving until a better solution
+/*
     // If not unique, fudge the values until unique
     while (TokenIdToActivateId[tokenId] != 0)
     {
@@ -94,43 +146,48 @@ contract ActivateToken is Initializable, OwnableUpgradeable,
       activationId =
         ++NumberOfActivations[entityIndex | (productIndex << 32)];
 
-      tokenId = ((entityIndex << EntityIdOffset) & EntityIdMask) |
-                ((productIndex << ProductIdOffset) & ProductIdMask) |
-                ((activationId << UniqueIdOffset) & UniqueIdMask) |
-                (licenseValue & (FlagsMask | ExpirationMask | ValueMask));
-
+      tokenId = ((entityIndex << commonInterface.EntityIdOffset()) & commonInterface.EntityIdMask()) |
+                ((productIndex << commonInterface.ProductIdOffset()) & commonInterface.ProductIdMask()) |
+                ((activationId << commonInterface.UniqueIdOffset()) & commonInterface.UniqueIdMask()) |
+                (licenseValue & (commonInterface.FlagsMask() | commonInterface.ExpirationMask() | commonInterface.ValueMask()));
+*/
 /*
       // If still not unique, decrease the expiration time slightly
       // Must decrease since zero is unlimited time
       if (TokenIdToActivateId[tokenId] != 0)
       {
-        uint256 theDuration = ((licenseValue & ExpirationMask) >> ExpirationOffset);
+        uint256 theDuration = ((licenseValue & ImmutableConstants.ExpirationMask) >> ImmutableConstants.ExpirationOffset);
         theDuration -= block.timestamp % 0xFF;
 
         // Update tokenId to include new expiration
         //  Clear the expiration
-        licenseValue &= ~ExpirationMask;
-        licenseValue |= (theDuration << ExpirationOffset) & ExpirationMask;
+        licenseValue &= ~ImmutableConstants.ExpirationMask;
+        licenseValue |= (theDuration << ImmutableConstants.ExpirationOffset) & ImmutableConstants.ExpirationMask;
 
-        tokenId = ((entityIndex << EntityIdOffset) & EntityIdMask) |
-                  ((productIndex << ProductIdOffset) & ProductIdMask) |
-                  ((activationId << UniqueIdOffset) & UniqueIdMask) |
-                  (licenseValue & (FlagsMask | ExpirationMask | ValueMask));
+        tokenId = ((entityIndex << ImmutableConstants.EntityIdOffset) & ImmutableConstants.EntityIdMask) |
+                  ((productIndex << ImmutableConstants.ProductIdOffset) & ImmutableConstants.ProductIdMask) |
+                  ((activationId << ImmutableConstants.UniqueIdOffset) & ImmutableConstants.UniqueIdMask) |
+                  (licenseValue & (ImmutableConstants.FlagsMask | ImmutableConstants.ExpirationMask | ImmutableConstants.ValueMask));
       }
 */
-    }
+//    }
+
 
     // Require a unique tokenId
-    require(TokenIdToActivateId[tokenId] == 0, TokenNotUnique);
-    require(TokenIdToOfferPrice[tokenId] == 0, TokenNotUnique);
-    require(ActivateIdToTokenId[licenseHash] == 0, TokenNotUnique);
+    require(tokenId > 0, "TokenId zero");
+    require(TokenIdToActivateId[tokenId] == 0, commonInterface.TokenNotUnique());
+    require(ActivateIdToTokenId[licenseHash] == 0, commonInterface.TokenNotUnique());
 
     // Mint the new activate token
-    _mint(msg.sender, tokenId);
+    _mint(sender, tokenId);
 
     // Assign mappings for id-to-hash and hash-to-id
     TokenIdToActivateId[tokenId] = licenseHash;
-    ActivateIdToTokenId[licenseHash] = tokenId;
+    if (licenseHash > 0)
+      ActivateIdToTokenId[licenseHash] = tokenId;
+    if (ricardianParent > 0)
+      TokenIdToRicardianParent[tokenId] = ricardianParent;
+    return tokenId;
   }
 
   ///////////////////////////////////////////////////////////
@@ -139,382 +196,111 @@ contract ActivateToken is Initializable, OwnableUpgradeable,
 
   /// @notice Change owner for all activate tokens (activations)
   /// Not public, called internally. msg.sender is the license owner.
+  /// @param newOwner The new owner to receive transfer of tokens
   function activateOwner(address newOwner)
       external
   {
     // Retrieve the balance of activation tokens
     uint256 numActivations = balanceOf(msg.sender);
 
-    // Safely transfer each token to the new owner
+    // Safely transfer each token (index 0) to the new owner
     for (uint i = 0; i < numActivations; ++i)
-      safeTransferFrom(msg.sender, newOwner, tokenOfOwnerByIndex(msg.sender, i));
-  }
-
-  /// @notice Transfer ETH funds to ImmutableSoft bank address.
-  /// Uses OpenZeppelin PullPayment interface.
-  function activateDonate(uint256 amount)
-    public payable
-  {
-    _asyncTransfer(Bank, amount);
-  }
-
-  /// @notice Change bank that contract pays ETH out too.
-  /// Administrator only.
-  /// @param newBank The Ethereum address of new ecosystem bank
-  function activateBankChange(address payable newBank)
-    external onlyOwner
-  {
-    require(newBank != address(0), "Bank cannot be zero address");
-    Bank = newBank;
-  }
-
-  /// @notice Change license creation and move fee value
-  /// Administrator only.
-  /// @param newFee The new ETH fee for pay-as-you-go entities
-  function activateFeeChange(uint256 newFee)
-    external onlyOwner
-  {
-    EthFee = newFee;
-  }
-
-  /// @notice Retrieve current ETH pay-as-you-go fee
-  /// @return The fee in ETH wei
-  function activateFeeValue()
-    external view returns (uint256)
-  {
-    return EthFee;
-  }
-
-  /// @notice Create manual product activation license for end user.
-  /// mes.sender must own the entity and product.
-  /// Costs 1 IuT token if sender not registered as automatic
-  /// @param productIndex The specific ID of the product
-  /// @param licenseHash the activation license hash from end user
-  /// @param licenseValue the value of the license
-  function activateCreate(uint256 productIndex, uint256 licenseHash,
-                          uint256 licenseValue)
-    external payable
-  {
-    uint256 entityIndex = entityInterface.entityAddressToIndex(msg.sender);
-    // Only a validated commercial entity can create an offer
-    uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
-    require(entityStatus > 0, EntityNotValidated);
-    require((entityStatus & Nonprofit) != Nonprofit, "Nonprofit prohibited");
-    require(productInterface.productNumberOf(entityIndex) > productIndex,
-            "Product not found");
-
-    // If entity not automatic, donate ETH to create activation
-    if ((entityStatus & Automatic) != Automatic)
     {
-      // Send ETH to configured ImmutableSoft bank
-      require(msg.value >= EthFee, "Owner not automatic, ETH required");
-      activateDonate(msg.value);
-    }
-    else
-      require(msg.value == 0, "ETH not required");
-
-    activation_mint(entityIndex, productIndex, licenseHash,
-                    licenseValue);
+      // Always transfer token index zero, to ensure the same
+      // order/index for the new address
+      safeTransferFrom(msg.sender, newOwner, tokenOfOwnerByIndex(msg.sender, 0));
+    }      
   }
 
-  /// @notice Purchase a software product activation license.
-  /// mes.sender is the purchaser.
-  /// @param entityIndex The entity offering the product license
-  /// @param productIndex The specific ID of the product
-  /// @param offerIndex the product activation offer to purchase
-  /// @param licenseHash the end user unique identifier to activate
-  function activatePurchase(uint256 entityIndex, uint256 productIndex,
-                            uint256 offerIndex, uint256 licenseHash)
-    external payable
-  {
-    // Ensure vendor is registered and product exists
-    uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
-    require(entityStatus > 0, EntityNotValidated);
-    require(productInterface.productNumberOf(entityIndex) > productIndex,
-            "Product not found");
-
-    uint256 priceInTokens;
-    uint256 value;
-    address erc20token;
-    string memory infoUrl;
-    uint256 feeAmount = 0;
-
-    (erc20token, priceInTokens, value, infoUrl) =
-      productInterface.productOfferDetails(entityIndex, productIndex, offerIndex);
-    require(priceInTokens > 0, OfferNotFound);
-    require(licenseHash > 0, HashCannotBeZero);
-
-    // If purchase offer is not a token, transfer ETH
-    if (erc20token == address(0))
-    {
-      require(msg.value >= priceInTokens, "Not enough ETH");
-      priceInTokens = msg.value;
-
-      if ((entityStatus & Automatic) != Automatic)
-        feeAmount = (priceInTokens * 1) / 100;
-
-      // Transfer the ETH to the entity bank address
-      entityInterface.entityTransfer{value: priceInTokens - feeAmount}
-                                    (entityIndex, productIndex);
-
-      // Move fee, if any, into ImmutableSoft bank account
-      if (feeAmount > 0)
-        activateDonate(feeAmount);
-    }
-
-    // Otherwise the purchase is an exchange of ERCXXX tokens
-    else
-    {
-      IERC20Upgradeable erc20TokenInterface = IERC20Upgradeable(erc20token);
-
-      // Transfer tokens to the sender and revert if failure
-      erc20TokenInterface.transferFrom(msg.sender, entityInterface.
-          entityIndexToAddress(entityIndex), priceInTokens);
-    }
-
-    uint256 theDuration = ((value & ExpirationMask) >> ExpirationOffset);
-
-    // Check if this is a renewal (hash exists)
-    if (ActivateIdToTokenId[licenseHash] > 0)
-    {
-      // Look up tokenId from the old activation hash
-      uint256 tokenId = ActivateIdToTokenId[licenseHash];
-
-      // Require that caller (msg.sender) is the owner
-      require(ownerOf(tokenId) == msg.sender, "Not token owner");
-
-      // Require entity/product id's, flags and limitations match the token
-      require((tokenId & (EntityIdMask | ProductIdMask | FlagsMask | ValueMask)) ==
-              ((entityIndex << EntityIdOffset) | (productIndex << ProductIdOffset) |
-              (value & (FlagsMask | ValueMask))),
-              "Token to extend does not match offer");
-
-      // Extend time duration by whatever was remaining, if any
-      if (((tokenId & ExpirationMask) >> ExpirationOffset) > block.timestamp)
-        theDuration += ((tokenId & ExpirationMask) >> ExpirationOffset) - block.timestamp;
-
-      // burn the old token
-      activation_burn(tokenId);
-    }
-
-    // Update tokenId to include new expiration
-    //  First clear then set expiration based on duration and now
-    value &= ~ExpirationMask;
-    value |= ((theDuration + block.timestamp) << ExpirationOffset) & ExpirationMask;
-
-    // If a limited amount of offers, inform product offer of purchase
-    if ((value << UniqueIdOffset) & UniqueIdMask > 0)
-      productInterface.productOfferPurchased(entityIndex,
-                                             productIndex, offerIndex);
-
-    // Create a new ERC721 activate token for the sender
-    activation_mint(entityIndex, productIndex, licenseHash, value);
-  }
-
-  /// @notice Move a software product activation license.
-  /// Costs 1 IuT token if sender not registered as automatic.
-  /// mes.sender must be the activation license owner.
-  /// @param entityIndex The entity who owns the product
-  /// @param productIndex The specific ID of the product
-  /// @param oldLicenseHash the existing activation identifier
-  /// @param newLicenseHash the new activation identifier
-  function activateMove(uint256 entityIndex,
-                        uint256 productIndex,
-                        uint256 oldLicenseHash,
-                        uint256 newLicenseHash)
-    external payable
-  {
-    // Ensure vendor is registered and product exists
-    uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
-    require(entityStatus > 0, EntityNotValidated);
-    uint256 tokenId;
-
-    // Look up tokenId from the old activation hash
-    tokenId = ActivateIdToTokenId[oldLicenseHash];
-    require(tokenId > 0, "TokenId invalid");
-    require(msg.sender == ownerOf(tokenId), "Sender is not token owner");
-
-    // Require the entity and product id's match the token
-    require((tokenId & EntityIdMask) >> EntityIdOffset == entityIndex, TokenEntityNoMatch);
-    require((tokenId & ProductIdMask) >> ProductIdOffset == productIndex, TokenProductNoMatch);
-
-    // Require the hash matches the token and new one is different
-    require(TokenIdToActivateId[tokenId] == oldLicenseHash, "Activate hash mismatch");
-    require(TokenIdToActivateId[tokenId] != newLicenseHash, "New hash must differ");
-
-    // If entity not automatic, charge 1 IuT token to move license
-    if ((entityInterface.entityAddressStatus(msg.sender) & Automatic) != Automatic)
-    {
-      // Send ETH to contract owner
-      require(msg.value >= EthFee, "Not subscribed, ETH required");
-      activateDonate(msg.value);
-    }
-    else
-      require(msg.value == 0, "ETH not required");
-
-    // Update tokenId references and new activation on blockchain
-    ActivateIdToTokenId[oldLicenseHash] = 0;
-    ActivateIdToTokenId[newLicenseHash] = tokenId;
-    TokenIdToActivateId[tokenId] = newLicenseHash;
-  }
-
-  /// @notice Offer a software product license for resale.
-  /// mes.sender must own the activation license.
-  /// @param entityIndex The entity who owns the product
-  /// @param productIndex The specific ID of the product
-  /// @param licenseHash the existing activation identifier
-  /// @param priceInEth The ETH cost to purchase license
-  function activateOfferResale(uint256 entityIndex, uint256 productIndex,
-                               uint256 licenseHash, uint256 priceInEth)
+  /// @notice Change activation identifier for an activate token
+  ///   Caller must be the ProductActivate contract.
+  /// @param tokenId The token identifier to move
+  /// @param newHash The new activation hash/identifier
+  /// @param oldHash The previous activation hash/identifier
+  function activateTokenMoveHash(uint256 tokenId, uint256 newHash,
+                                 uint256 oldHash)
     external
   {
-    // Ensure vendor is registered and product exists
-    uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
-    require(entityStatus > 0, EntityNotValidated);
-    uint256 tokenId;
+    require(address(activateInterface) != address(0));
+    require(msg.sender == address(activateInterface));
 
-    // Look up tokenId from the activation hash
-    tokenId = ActivateIdToTokenId[licenseHash];
-    require(tokenId > 0, "TokenId invalid");
-    require(msg.sender == ownerOf(tokenId), "Sender is not token owner");
+    // Clear old hash if present
+    if (oldHash > 0)
+      ActivateIdToTokenId[oldHash] = 0;
 
-    // Require the entity and product id's match the token
-    require((tokenId & EntityIdMask) >> EntityIdOffset == entityIndex, TokenEntityNoMatch);
-    require((tokenId & ProductIdMask) >> ProductIdOffset == productIndex, TokenProductNoMatch);
-    require((tokenId & NoResaleFlag) == 0, "No resale rights");
+    // Clear token-to-activate lookup
+    if (TokenIdToActivateId[tokenId] > 0)
+      ActivateIdToTokenId[TokenIdToActivateId[tokenId]] = 0;
 
-    // Set activation to "for sale" and approve this contract to transfer
-    TokenIdToOfferPrice[tokenId] = priceInEth;
-    approve(address(this), tokenId);
-  }
-
-  /// @notice Transfer/Resell a software product activation license.
-  /// License must be 'for sale' and msg.sender is new owner.
-  /// @param entityIndex The entity who owns the product
-  /// @param productIndex The specific ID of the product
-  /// @param licenseHash the existing activation identifier to purchase
-  /// @param newLicenseHash the new activation identifier after purchase
-  function activateTransfer(uint256 entityIndex,
-                            uint256 productIndex,
-                            uint256 licenseHash,
-                            uint256 newLicenseHash)
-    external payable
-  {
-    // Ensure vendor is registered and product exists
-    uint256 entityStatus = entityInterface.entityIndexStatus(entityIndex);
-    require(entityStatus > 0, EntityNotValidated);
-
-    uint256 tokenId;
-
-    // Look up tokenId from the old activation hash
-    tokenId = ActivateIdToTokenId[licenseHash];
-    require(tokenId > 0, "TokenId invalid");
-
-    // Require the license is offered for sale and price valid
-    require(TokenIdToOfferPrice[tokenId] > 0, "License not for sale");
-    if ((tokenId & ExpirationFlag) == ExpirationFlag)
-      require((((tokenId & ExpirationMask) >> ExpirationOffset) == 0) ||
-              (((tokenId & ExpirationMask) >> ExpirationOffset) > block.timestamp), "Resale of expired license invalid");
-
-    // Ensure new identifier is different from current
-    require(licenseHash != newLicenseHash, "Identifier identical");
-
-    // Get the old activation license falgs and ensure it is valid
-    require(((tokenId & FlagsMask) >> FlagsOffset) > 0, "Old license not valid");
-    require((tokenId & NoResaleFlag) == 0, "No resale rights");
-
-    // Require the entity and product id's match the token
-    require((tokenId & EntityIdMask) >> EntityIdOffset == entityIndex, TokenEntityNoMatch);
-    require((tokenId & ProductIdMask) >> ProductIdOffset == productIndex, TokenProductNoMatch);
-
-    // Look up the license owner and their entity status
-    uint256 fee = 0;
-    address licenseOwner = ownerOf(tokenId);
-    address payable payableOwner = payable(licenseOwner);//address(uint256(licenseOwner));
-    uint256 ownerStatus = entityInterface.entityAddressStatus(licenseOwner);
-
-    require(msg.value >= TokenIdToOfferPrice[tokenId], "Not enough ETH");
-
-    // If activation owner is registered, use lower fee if any
-    if (ownerStatus > 0)
-    {
-      if ((ownerStatus & Automatic) != Automatic)
-        fee = (msg.value * 1) / 100;
-
-      entityInterface.entityTransfer{value: msg.value - fee}
-               (entityInterface.entityAddressToIndex(licenseOwner), 0);
-
-      // Move fee, if any, into ImmutableSoft bank account
-      if (fee > 0)
-        activateDonate(fee);
-    }
-
-    // Otherwise an unregistered resale has a 5% fee
-    else
-    {
-      fee = (msg.value * 5) / 100;
-
-      // Transfer ETH funds minus the fee if any
-      payableOwner.transfer(msg.value - fee);
-      activateDonate(fee);
-    }
-
-    // Transfer the activate token and update to the new owner
-    this.safeTransferFrom(licenseOwner, msg.sender, tokenId);
-
-    // Remove activate id reverse lookup and clear offer price
-    ActivateIdToTokenId[TokenIdToActivateId[tokenId]] = 0;
-    TokenIdToOfferPrice[tokenId] = 0;
-
-    // Change the activation id after transfer
-    TokenIdToActivateId[tokenId] = newLicenseHash;
-    ActivateIdToTokenId[newLicenseHash] = tokenId;
+    // Update tokenId references and new activation on blockchain
+    ActivateIdToTokenId[newHash] = tokenId;
+    TokenIdToActivateId[tokenId] = newHash;
   }
 
   /// All activate functions below are view type (read only)
 
-  /// @notice Return end user activation value and expiration for product
+  /// @notice Find token identifier associated with activation hash
+  /// @param licenseHash the external unique identifier
+  /// @return the tokenId value
+  function activateIdToTokenId(uint256 licenseHash)
+    external view returns (uint256)
+  {
+    return ActivateIdToTokenId[licenseHash];
+  }
+
+  /// @notice Find activation hash associated with token identifier
+  /// @param tokenId is the unique token identifier
+  /// @return the license hash/unique activation identifier
+  function tokenIdToActivateId(uint256 tokenId)
+    external view returns (uint256)
+  {
+    return TokenIdToActivateId[tokenId];
+  }
+  
+  /// @notice Find end user activation value and expiration for product
   /// Entity and product must be valid.
   /// @param entityIndex The entity the product license is for
   /// @param productIndex The specific ID of the product
   /// @param licenseHash the external unique identifier to activate
-  /// @return the activation value (flags, expiration, value)
-  /// @return the price in tokens it is offered for resale
+  /// @return value (with flags) and price of the activation.\
+  ///         **value** The activation value (flags, expiration, value)\
+  ///         **price** The price in tokens if offered for resale
   function activateStatus(uint256 entityIndex, uint256 productIndex,
                           uint256 licenseHash)
-    external view returns (uint256, uint256)
+    external view returns (uint256 value, uint256 price)
   {
-    require(entityIndex > 0, EntityIsZero);
+    require(entityIndex > 0, commonInterface.EntityIsZero());
     uint256 tokenId = ActivateIdToTokenId[licenseHash];
 
     if (tokenId > 0)
     {
-      require(entityIndex == (tokenId & EntityIdMask) >> EntityIdOffset,
+      require(entityIndex == (tokenId & commonInterface.EntityIdMask()) >> commonInterface.EntityIdOffset(),
               "EntityId does not match");
-      require(productIndex == (tokenId & ProductIdMask) >> ProductIdOffset,
+      require(productIndex == (tokenId & commonInterface.ProductIdMask()) >> commonInterface.ProductIdOffset(),
               "ProductId does not match");
     }
 
     // Return license flags, value. expiration and price
     return (
-             (tokenId & (FlagsMask |      //flags
-                         ExpirationMask | //expiration
-                         ValueMask)),     //value
-             TokenIdToOfferPrice[tokenId] //price
+             (tokenId & (commonInterface.FlagsMask() |      //flags
+                         commonInterface.ExpirationMask() | //expiration
+                         commonInterface.ValueMask())),     //value
+                         activateInterface.activateTokenIdToOfferPrice(tokenId) //price
            );
   }
 
-  /// @notice Return all license activation details for an address
+  /// @notice Find all license activation details for an address
   /// @param entityAddress The address that owns the activations
-  /// @return array of entity id of product
-  /// @return array of product id of product
-  /// @return array of activation identifiers
-  /// @return array of token values
-  /// @return array of price in tokens if for resale
+  /// @return entities , products, hashes, values and prices as arrays.\
+  ///         **entities** Array of entity ids of product\
+  ///         **products** Array of product ids of product\
+  ///         **hashes** Array of activation identifiers\
+  ///         **values** Array of token values\
+  ///         **prices** Array of price in tokens if for resale
   function activateAllDetailsForAddress(address entityAddress)
-    public view returns (uint256[] memory, uint256[] memory,
-                         uint256[] memory, uint256[] memory,
-                         uint256[] memory)
+    public view returns (uint256[] memory entities, uint256[] memory products,
+                         uint256[] memory hashes, uint256[] memory values,
+                         uint256[] memory prices)
   {
     // Allocate result array based on the number of activate tokens
     //   Using tokenId for result length since no more stack space
@@ -528,89 +314,141 @@ contract ActivateToken is Initializable, OwnableUpgradeable,
     // Build result arrays for all activations of an Entity
     for (uint i = 0; i < balanceOf(entityAddress); ++i)
     {
-      // Return the number of activations (number of activate tokens)
+      // Retrieve the token id of this index
       tokenId = tokenOfOwnerByIndex(entityAddress, i);
 
       // Return activate information from tokenId and mappings
-      resultEntityId[i] = (tokenId & EntityIdMask) >> EntityIdOffset; // entityID
-      resultProductId[i] = (tokenId & ProductIdMask) >> ProductIdOffset; //productID,
-      resultValue[i] = tokenId & (FlagsMask |      //flags
-                                  ExpirationMask | //expiration
-                                  ValueMask);      //value
+      resultEntityId[i] = (tokenId & commonInterface.EntityIdMask()) >> commonInterface.EntityIdOffset(); // entityID
+      resultProductId[i] = (tokenId & commonInterface.ProductIdMask()) >> commonInterface.ProductIdOffset(); //productID,
+      resultValue[i] = tokenId & (commonInterface.FlagsMask() |      //flags
+                                  commonInterface.ExpirationMask() | //expiration
+                                  commonInterface.ValueMask());      //value
       resultHash[i] = TokenIdToActivateId[tokenId]; // activation hash
-      resultPrice[i] = TokenIdToOfferPrice[tokenId]; // offer price
+      resultPrice[i] = activateInterface.activateTokenIdToOfferPrice(tokenId); // offer price
     }
 
     return (resultEntityId, resultProductId, resultHash,
             resultValue, resultPrice);
   }
 
-  /// @notice Return all license activation details for an entity
+  /// @notice Find all license activation details for an entity
   /// Entity must be valid.
   /// @param entityIndex The entity to return activations for
-  /// @return array of entity id of product activated
-  /// @return array of product id of product activated
-  /// @return array of current identifiers that are activated
-  /// @return array of license value (flags, expiration value)
-  /// @return array of price in tokens if for resale
+  /// @return entities , products, hashes, values and prices as arrays.\
+  ///         **entities** Array of entity ids of product\
+  ///         **products** Array of product ids of product\
+  ///         **hashes** Array of activation identifiers\
+  ///         **values** Array of token values (flags, expiration)\
+  ///         **prices** Array of price in tokens if for resale
   function activateAllDetails(uint256 entityIndex)
-    external view returns (uint256[] memory, uint256[] memory,
-                           uint256[] memory, uint256[] memory,
-                           uint256[] memory)
+    external view returns (uint256[] memory entities, uint256[] memory products,
+                           uint256[] memory hashes, uint256[] memory values,
+                           uint256[] memory prices)
   {
     // Convert entityId to address and call details-for-address
     return activateAllDetailsForAddress(
                         entityInterface.entityIndexToAddress(entityIndex));
   }
 
-  /// @notice Return all license activation details of ecosystem
-  /// May eventually exceed available size
-  /// @return array of entity id of product activated
-  /// @return array of product id of product activated
-  /// @return array of current identifiers that are activated
-  /// @return array of flags/expiration/value
-  /// @return array of price in tokens if for resale
-  function activateAllTokenDetails()
-    external view returns (uint256[] memory, uint256[] memory,
-                           uint256[] memory, uint256[] memory,
-                           uint256[] memory)
+  /// @notice Return all license activations for sale in the ecosystem
+  /// When this exceeds available return size index will be added
+  /// @return entities , products, hashes, values and prices as arrays.\
+  ///         **entities** Array of entity ids of product\
+  ///         **products** Array of product ids of product\
+  ///         **hashes** Array of activation identifiers\
+  ///         **values** Array of token values (flags, expiration)\
+  ///         **prices** Array of price in tokens if for resale
+  function activateAllForSaleTokenDetails()
+    external view returns (uint256[] memory entities, uint256[] memory products,
+                           uint256[] memory hashes, uint256[] memory values,
+                           uint256[] memory prices)
   {
     // Allocate result array based on the number of activate tokens
     //   Using tokenId for result length since no more stack space
-    uint256 tokenId = totalSupply();
-    uint256[] memory resultEntityId = new uint256[](tokenId);
-    uint256[] memory resultProductId = new uint256[](tokenId);
-    uint256[] memory resultHash = new uint256[](tokenId);
-    uint256[] memory resultValue = new uint256[](tokenId);
-    uint256[] memory resultPrice = new uint256[](tokenId);
+    uint256 tokenId;
+    uint i = 0;
+    uint j = 0;
 
-    // Build result arrays for all activations of an Entity
-    for (uint i = 0; i < totalSupply(); ++i)
+
+    // First iterate and find how many are for sale
+    for (i = 0; i < totalSupply(); ++i)
     {
       // Return the number of activations (number of activate tokens)
       tokenId = tokenByIndex(i);
 
-      // Return activate information from tokenId and mappings
-      resultEntityId[i] = (tokenId & EntityIdMask) >> EntityIdOffset; // entityID
-      resultProductId[i] = (tokenId & ProductIdMask) >> ProductIdOffset; //productID,
-      resultValue[i] = tokenId & (FlagsMask |      //flags
-                                  ExpirationMask | //expiration
-                                  ValueMask);      //value
-      resultHash[i] = TokenIdToActivateId[tokenId]; // activation hash
-      resultPrice[i] = TokenIdToOfferPrice[tokenId]; // offer price
+      if (activateInterface.activateTokenIdToOfferPrice(tokenId) > 0)
+        j++;
+    }
+
+    // Allocate resulting arrays based on size
+    uint256[] memory resultEntityId = new uint256[](j);
+    uint256[] memory resultProductId = new uint256[](j);
+    uint256[] memory resultHash = new uint256[](j);
+    uint256[] memory resultValue = new uint256[](j);
+    uint256[] memory resultPrice = new uint256[](j);
+
+    // Build result arrays for all activations of an Entity
+    if (j > 0)
+    {
+      i = 0;
+      for (j = 0; i < totalSupply(); ++i)
+      {
+        // Return the number of activations (number of activate tokens)
+        tokenId = tokenByIndex(i);
+
+        if (activateInterface.activateTokenIdToOfferPrice(tokenId) > 0)
+        {
+          // Return activate information from tokenId and mappings
+          resultPrice[j] = activateInterface.activateTokenIdToOfferPrice(tokenId); // offer price
+          resultEntityId[j] = (tokenId & commonInterface.EntityIdMask()) >> commonInterface.EntityIdOffset(); // entityID
+          resultProductId[j] = (tokenId & commonInterface.ProductIdMask()) >> commonInterface.ProductIdOffset(); //productID,
+          resultValue[j] = tokenId & (commonInterface.FlagsMask() |      //flags
+                                      commonInterface.ExpirationMask() | //expiration
+                                      commonInterface.ValueMask());      //value
+          resultHash[j] = TokenIdToActivateId[tokenId]; // activation hash
+          j++;
+        }
+      }
     }
 
     return (resultEntityId, resultProductId, resultHash,
             resultValue, resultPrice);
   }
 
-  // Pass through the overrides to inherited super class
-  //   To add per-transfer fee's/logic in the future do so here
-  function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(ERC721Upgradeable, ERC721EnumerableUpgradeable) {
-        super._beforeTokenTransfer(from, to, amount);
+  /// @notice Perform validity check before transfer of token allowed
+  /// @param from The token origin address
+  /// @param to The token destination address
+  /// @param tokenId The token to transfer
+  function _beforeTokenTransfer(address from, address to, uint256 tokenId)
+      internal override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
+  {
+
+    // Check flags/validity only after the first mint
+    if (from != address(0))
+    {
+      // Only token owner may transfer without resale rights
+      require((msg.sender == ownerOf(tokenId)) ||
+              ((tokenId & commonInterface.NoResaleFlag()) == 0), "Not owner/resalable");
+
+      // Check any required Ricardian contracts
+      if ((msg.sender != ownerOf(tokenId)) &&
+          (TokenIdToRicardianParent[tokenId] > 0) &&
+          (address(creatorInterface) != address(0)))
+      {
+        uint hasChild = creatorInterface.creatorHasChildOf(to, TokenIdToRicardianParent[tokenId]);
+        require(hasChild > 0, "Ricardian child agreement not found.");
+      }
     }
 
-  function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721Upgradeable, ERC721EnumerableUpgradeable) returns (bool) {
+    super._beforeTokenTransfer(from, to, tokenId);
+  }
+
+  /// @notice Return the type of supported ERC interfaces
+  /// @param interfaceId The interface desired
+  /// @return TRUE (1) if supported, FALSE (0) otherwise
+  function supportsInterface(bytes4 interfaceId)
+      public view virtual override(ERC721Upgradeable, ERC721EnumerableUpgradeable) returns (bool)
+  {
     return super.supportsInterface(interfaceId);
   }
 }

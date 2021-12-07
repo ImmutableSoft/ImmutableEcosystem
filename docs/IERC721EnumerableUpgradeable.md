@@ -1,43 +1,27 @@
-# Migrations.sol
+# ERC-721 Non-Fungible Token Standard, optional enumeration extension (IERC721EnumerableUpgradeable.sol)
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721EnumerableUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721EnumerableUpgradeable.sol)
 
-**Migrations**
+**↗ Extends: [IERC721Upgradeable](IERC721Upgradeable.md)**
+**↘ Derived Contracts: [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)**
 
-## Contract Members
-**Constants & Variables**
+**IERC721EnumerableUpgradeable**
 
-```js
-address public owner;
-uint256 public last_completed_migration;
-
-```
-
-## Modifiers
-
-- [restricted](#restricted)
-
-### restricted
-
-```js
-modifier restricted() internal
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
+See https://eips.ethereum.org/EIPS/eip-721
 
 ## Functions
 
-- [constructor()](#)
-- [setCompleted(uint256 completed)](#setcompleted)
-- [upgrade(address new_address)](#upgrade)
+- [totalSupply()](#totalsupply)
+- [tokenOfOwnerByIndex(address owner, uint256 index)](#tokenofownerbyindex)
+- [tokenByIndex(uint256 index)](#tokenbyindex)
 
-### 
+### totalSupply
+
+Returns the total amount of tokens stored by the contract.
 
 ```js
-function () public nonpayable
+function totalSupply() external view
+returns(uint256)
 ```
 
 **Arguments**
@@ -45,29 +29,38 @@ function () public nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### setCompleted
+### tokenOfOwnerByIndex
+
+Returns a token ID owned by `owner` at a given `index` of its token list.
+ Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
 
 ```js
-function setCompleted(uint256 completed) external nonpayable
+function tokenOfOwnerByIndex(address owner, uint256 index) external view
+returns(tokenId uint256)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| completed | uint256 |  | 
+| owner | address |  | 
+| index | uint256 |  | 
 
-### upgrade
+### tokenByIndex
+
+Returns a token ID at a given `index` of all the tokens stored by the contract.
+ Use along with {totalSupply} to enumerate all tokens.
 
 ```js
-function upgrade(address new_address) external nonpayable
+function tokenByIndex(uint256 index) external view
+returns(uint256)
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| new_address | address |  | 
+| index | uint256 |  | 
 
 ## Contracts
 
