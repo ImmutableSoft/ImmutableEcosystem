@@ -24,7 +24,7 @@
   "homepage": "https://github.com/ImmutableSoft",
   "devDependencies": {
     "@openzeppelin/contracts": "^4.4.0",
-    "@openzeppelin/contracts-upgradeable": "^4.3.3",
+    "@openzeppelin/contracts-upgradeable": "^4.4.0",
     "@openzeppelin/test-helpers": "^0.5.11",
     "@openzeppelin/truffle-upgrades": "^1.7.1"
   },
