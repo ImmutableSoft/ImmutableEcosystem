@@ -1,6 +1,6 @@
 # ERC721 token receiver interface (IERC721ReceiverUpgradeable.sol)
 
-View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\IERC721ReceiverUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\IERC721ReceiverUpgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol)
 
 **IERC721ReceiverUpgradeable**
 
@@ -46,7 +46,6 @@ returns(bytes4)
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -60,6 +59,5 @@ returns(bytes4)
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

@@ -1,11 +1,19 @@
 # ContextUpgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\utils\ContextUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\ContextUpgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol](../@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md)**
 **↘ Derived Contracts: [ERC20Upgradeable](ERC20Upgradeable.md), [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md), [ERC721Upgradeable](ERC721Upgradeable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 
 **ContextUpgradeable**
+
+Provides information about the current execution context, including the
+ sender of the transaction and its data. While these are generally available
+ via msg.sender and msg.data, they should not be accessed in such a direct
+ manner, since when dealing with meta-transactions the account sending and
+ paying for execution may not be the actual sender (as far as an application
+ is concerned).
+ This contract is only required for intermediate, library-like contracts.
 
 ## Contract Members
 **Constants & Variables**
@@ -25,7 +33,7 @@ uint256[50] private __gap;
 ### __Context_init
 
 ```js
-function __Context_init() internal nonpayable initializer 
+function __Context_init() internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -36,7 +44,7 @@ function __Context_init() internal nonpayable initializer
 ### __Context_init_unchained
 
 ```js
-function __Context_init_unchained() internal nonpayable initializer 
+function __Context_init_unchained() internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -81,7 +89,6 @@ returns(bytes)
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -95,6 +102,5 @@ returns(bytes)
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

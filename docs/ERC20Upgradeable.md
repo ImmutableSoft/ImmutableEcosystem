@@ -1,6 +1,6 @@
 # ERC20Upgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\token\ERC20\ERC20Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC20\ERC20Upgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ContextUpgradeable](ContextUpgradeable.md), [IERC20Upgradeable](IERC20Upgradeable.md), [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)**
 **↘ Derived Contracts: [CustomToken](CustomToken.md)**
@@ -14,9 +14,10 @@ Implementation of the {IERC20} interface.
  TIP: For a detailed writeup see our guide
  https://forum.zeppelin.solutions/t/how-to-implement-erc20-supply-mechanisms/226[How
  to implement supply mechanisms].
- We have followed general OpenZeppelin guidelines: functions revert instead
- of returning `false` on failure. This behavior is nonetheless conventional
- and does not conflict with the expectations of ERC20 applications.
+ We have followed general OpenZeppelin Contracts guidelines: functions revert
+ instead returning `false` on failure. This behavior is nonetheless
+ conventional and does not conflict with the expectations of ERC20
+ applications.
  Additionally, an {Approval} event is emitted on calls to {transferFrom}.
  This allows applications to reconstruct the allowance for all accounts just
  by listening to said events. Other implementations of the EIP may not emit
@@ -47,28 +48,30 @@ uint256[45] private __gap;
 - [decimals()](#decimals)
 - [totalSupply()](#totalsupply)
 - [balanceOf(address account)](#balanceof)
-- [transfer(address recipient, uint256 amount)](#transfer)
+- [transfer(address to, uint256 amount)](#transfer)
 - [allowance(address owner, address spender)](#allowance)
 - [approve(address spender, uint256 amount)](#approve)
-- [transferFrom(address sender, address recipient, uint256 amount)](#transferfrom)
+- [transferFrom(address from, address to, uint256 amount)](#transferfrom)
 - [increaseAllowance(address spender, uint256 addedValue)](#increaseallowance)
 - [decreaseAllowance(address spender, uint256 subtractedValue)](#decreaseallowance)
-- [_transfer(address sender, address recipient, uint256 amount)](#_transfer)
+- [_transfer(address from, address to, uint256 amount)](#_transfer)
 - [_mint(address account, uint256 amount)](#_mint)
 - [_burn(address account, uint256 amount)](#_burn)
 - [_approve(address owner, address spender, uint256 amount)](#_approve)
+- [_spendAllowance(address owner, address spender, uint256 amount)](#_spendallowance)
 - [_beforeTokenTransfer(address from, address to, uint256 amount)](#_beforetokentransfer)
+- [_afterTokenTransfer(address from, address to, uint256 amount)](#_aftertokentransfer)
 
 ### __ERC20_init
 
 Sets the values for {name} and {symbol}.
- The defaut value of {decimals} is 18. To select a different value for
+ The default value of {decimals} is 18. To select a different value for
  {decimals} you should overload it.
  All two of these values are immutable: they can only be set once during
  construction.
 
 ```js
-function __ERC20_init(string name_, string symbol_) internal nonpayable initializer 
+function __ERC20_init(string name_, string symbol_) internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -81,7 +84,7 @@ function __ERC20_init(string name_, string symbol_) internal nonpayable initiali
 ### __ERC20_init_unchained
 
 ```js
-function __ERC20_init_unchained(string name_, string symbol_) internal nonpayable initializer 
+function __ERC20_init_unchained(string name_, string symbol_) internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -124,7 +127,7 @@ returns(string)
 
 Returns the number of decimals used to get its user representation.
  For example, if `decimals` equals `2`, a balance of `505` tokens should
- be displayed to a user as `5,05` (`505 / 10 ** 2`).
+ be displayed to a user as `5.05` (`505 / 10 ** 2`).
  Tokens usually opt for a value of 18, imitating the relationship between
  Ether and Wei. This is the value {ERC20} uses, unless this function is
  overridden;
@@ -175,11 +178,11 @@ returns(uint256)
 
 See {IERC20-transfer}.
  Requirements:
- - `recipient` cannot be the zero address.
+ - `to` cannot be the zero address.
  - the caller must have a balance of at least `amount`.
 
 ```js
-function transfer(address recipient, uint256 amount) public nonpayable
+function transfer(address to, uint256 amount) public nonpayable
 returns(bool)
 ```
 
@@ -187,7 +190,7 @@ returns(bool)
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| recipient | address |  | 
+| to | address |  | 
 | amount | uint256 |  | 
 
 ### allowance
@@ -209,6 +212,8 @@ returns(uint256)
 ### approve
 
 See {IERC20-approve}.
+ NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on
+ `transferFrom`. This is semantically equivalent to an infinite approval.
  Requirements:
  - `spender` cannot be the zero address.
 
@@ -229,14 +234,16 @@ returns(bool)
 See {IERC20-transferFrom}.
  Emits an {Approval} event indicating the updated allowance. This is not
  required by the EIP. See the note at the beginning of {ERC20}.
+ NOTE: Does not update the allowance if the current allowance
+ is the maximum `uint256`.
  Requirements:
- - `sender` and `recipient` cannot be the zero address.
- - `sender` must have a balance of at least `amount`.
- - the caller must have allowance for ``sender``'s tokens of at least
+ - `from` and `to` cannot be the zero address.
+ - `from` must have a balance of at least `amount`.
+ - the caller must have allowance for ``from``'s tokens of at least
  `amount`.
 
 ```js
-function transferFrom(address sender, address recipient, uint256 amount) public nonpayable
+function transferFrom(address from, address to, uint256 amount) public nonpayable
 returns(bool)
 ```
 
@@ -244,8 +251,8 @@ returns(bool)
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| sender | address |  | 
-| recipient | address |  | 
+| from | address |  | 
+| to | address |  | 
 | amount | uint256 |  | 
 
 ### increaseAllowance
@@ -294,25 +301,25 @@ returns(bool)
 
 ### _transfer
 
-Moves tokens `amount` from `sender` to `recipient`.
- This is internal function is equivalent to {transfer}, and can be used to
+Moves `amount` of tokens from `sender` to `recipient`.
+ This internal function is equivalent to {transfer}, and can be used to
  e.g. implement automatic token fees, slashing mechanisms, etc.
  Emits a {Transfer} event.
  Requirements:
- - `sender` cannot be the zero address.
- - `recipient` cannot be the zero address.
- - `sender` must have a balance of at least `amount`.
+ - `from` cannot be the zero address.
+ - `to` cannot be the zero address.
+ - `from` must have a balance of at least `amount`.
 
 ```js
-function _transfer(address sender, address recipient, uint256 amount) internal nonpayable
+function _transfer(address from, address to, uint256 amount) internal nonpayable
 ```
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| sender | address |  | 
-| recipient | address |  | 
+| from | address |  | 
+| to | address |  | 
 | amount | uint256 |  | 
 
 ### _mint
@@ -321,7 +328,7 @@ Creates `amount` tokens and assigns them to `account`, increasing
  the total supply.
  Emits a {Transfer} event with `from` set to the zero address.
  Requirements:
- - `to` cannot be the zero address.
+ - `account` cannot be the zero address.
 
 ```js
 function _mint(address account, uint256 amount) internal nonpayable
@@ -376,13 +383,32 @@ function _approve(address owner, address spender, uint256 amount) internal nonpa
 | spender | address |  | 
 | amount | uint256 |  | 
 
+### _spendAllowance
+
+Spend `amount` form the allowance of `owner` toward `spender`.
+ Does not update the allowance amount in case of infinite allowance.
+ Revert if not enough allowance is available.
+ Might emit an {Approval} event.
+
+```js
+function _spendAllowance(address owner, address spender, uint256 amount) internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| owner | address |  | 
+| spender | address |  | 
+| amount | uint256 |  | 
+
 ### _beforeTokenTransfer
 
 Hook that is called before any transfer of tokens. This includes
  minting and burning.
  Calling conditions:
  - when `from` and `to` are both non-zero, `amount` of ``from``'s tokens
- will be to transferred to `to`.
+ will be transferred to `to`.
  - when `from` is zero, `amount` tokens will be minted for `to`.
  - when `to` is zero, `amount` of ``from``'s tokens will be burned.
  - `from` and `to` are never both zero.
@@ -390,6 +416,30 @@ Hook that is called before any transfer of tokens. This includes
 
 ```js
 function _beforeTokenTransfer(address from, address to, uint256 amount) internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| from | address |  | 
+| to | address |  | 
+| amount | uint256 |  | 
+
+### _afterTokenTransfer
+
+Hook that is called after any transfer of tokens. This includes
+ minting and burning.
+ Calling conditions:
+ - when `from` and `to` are both non-zero, `amount` of ``from``'s tokens
+ has been transferred to `to`.
+ - when `from` is zero, `amount` tokens have been minted for `to`.
+ - when `to` is zero, `amount` of ``from``'s tokens have been burned.
+ - `from` and `to` are never both zero.
+ To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
+
+```js
+function _afterTokenTransfer(address from, address to, uint256 amount) internal nonpayable
 ```
 
 **Arguments**
@@ -413,7 +463,6 @@ function _beforeTokenTransfer(address from, address to, uint256 amount) internal
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -427,6 +476,5 @@ function _beforeTokenTransfer(address from, address to, uint256 amount) internal
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

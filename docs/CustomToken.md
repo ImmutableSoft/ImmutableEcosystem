@@ -1,6 +1,6 @@
 # CustomToken.sol
 
-View Source: [\contracts\CustomToken.sol](..\contracts\CustomToken.sol)
+View Source: [contracts/CustomToken.sol](../contracts/CustomToken.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [ERC20Upgradeable](ERC20Upgradeable.md)**
 
@@ -34,7 +34,6 @@ function initialize() public nonpayable initializer
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -48,6 +47,5 @@ function initialize() public nonpayable initializer
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

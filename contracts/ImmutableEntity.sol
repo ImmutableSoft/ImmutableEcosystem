@@ -8,12 +8,10 @@ import "./StringCommon.sol";
 // OpenZepellin upgradable contracts
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol";
 
 /*
 // OpenZepellin standard contracts
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/PullPayment.sol";
 */
 
 /* //ENS integration (old/deprecated)
@@ -22,17 +20,19 @@ import "@ensdomains/ens/contracts/ENS.sol";
 import "./AddrResolver.sol";
 */
 
-/// @title Immutable Entity - managed trust zone for the ecosystem
+/// @title Immutable Entity trust zone used by ecosystem members
 /// @author Sean Lawless for ImmutableSoft Inc.
-/// @notice Token transfers use the ImmuteToken by default
-/// @dev Entity variables and methods
-contract ImmutableEntity is Initializable, OwnableUpgradeable,
-                            PullPaymentUpgradeable
+/// @notice Member entities can accept ETH escrow payments and change
+///         or configure a recovery wallet address. Only after new
+///         members create their Entity (with a blockchain transaction)
+///         is ownership of the wallet address proven to ImmutableSoft
+///         which then allows us to approve the new member.
+contract ImmutableEntity is Initializable, OwnableUpgradeable
 /*
-contract ImmutableEntity is Initializable, Ownable, PullPayment*/
+contract ImmutableEntity is Initializable, Ownable*/
 {
-  // Error strings
-  string constant BankNotConfigured = "Bank not configured";
+  address payable private Bank;
+  uint256 UpgradeFee;
 
   // Mapping between the organization address and the global entity index
   mapping (address => uint256) private EntityIndex;
@@ -47,9 +47,9 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
     address prevAddress;
     address nextAddress;
     string name;
-    string entityEnsName;
     string infoURL;
     uint256 createTime;
+//    string entityEnsName;
   }
 
   // Array of current entity addresses, indexable by entity index
@@ -67,23 +67,23 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
   // Entity interface events
   event entityEvent(uint256 entityIndex,
                     string name, string url);
-  event entityTransferEvent(uint256 entityIndex, uint256 productIndex,
-                            uint256 amount);
 
-  /// @notice Contract initializer
-  /// Executed on contract creation only.
+  /// @notice Initialize the ImmutableEntity smart contract
+  ///   Called during first deployment only (not on upgrade) as
+  ///   this is an OpenZepellin upgradable contract
+  /// @param commonAddr The StringCommon contract address
   function initialize(address commonAddr) public initializer
   {
     __Ownable_init();
-    __PullPayment_init();
 /*
   // OpenZepellin standard contracts
   constructor(address commonAddr) Ownable()
-                                  PullPayment()
   {
 */
     // Initialize string and token contract interfaces
     commonInterface = StringCommon(commonAddr);
+    Bank = payable(msg.sender);
+    UpgradeFee = 10000000000000000000; //10 MATIC ~ $20)
   }
 
   ///////////////////////////////////////////////////////////
@@ -100,6 +100,24 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
     resolver.setRootNode(rootNode);
   }
 */
+  /// @notice Change bank that contract pays ETH out too.
+  /// Administrator only.
+  /// @param newBank The Ethereum address of new ecosystem bank
+  function entityOwnerBank(address payable newBank)
+    external onlyOwner
+  {
+    require(newBank != address(0), "invalid address");
+    Bank = newBank;
+  }
+
+  /// @notice Retrieve fee to upgrade.
+  /// Administrator only.
+  /// @param newFee the new upgrade fee
+  function entityOwnerUpgradeFee(uint256 newFee)
+    external onlyOwner
+  {
+    UpgradeFee = newFee;
+  }
 
   /// @notice Update an entity status, non-zero value is approval.
   /// See ImmutableConstants.sol for status values and flags.
@@ -109,8 +127,14 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
   function entityStatusUpdate(uint256 entityIndex, uint256 status)
     external onlyOwner
   {
+    uint256 newStatus = status;
+
+    // If not disable, add expiration timestamp (one year from now)
+    if (status != 0)
+      newStatus |= ((block.timestamp + 365 days) << commonInterface.ExpirationOffset());
+
     // Update the organization status
-    EntityStatus[entityIndex] = status;
+    EntityStatus[entityIndex] = newStatus;
 
 /*
     // If ENS configured, add resolver
@@ -147,24 +171,26 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
                         string memory entityURL)
     public returns (uint256)
   {
-    require(bytes(entityName).length != 0, "Entity name empty");
-    require(bytes(entityURL).length != 0, "Entity URL empty");
+    require(bytes(entityName).length != 0, "name empty");
+    require(bytes(entityURL).length != 0, "URL empty");
     uint256 entityIndex = NumberOfEntities + 1;
-    require(EntityIndex[msg.sender] == 0, "Entity already created");
+    require(EntityIndex[msg.sender] == 0, "already created");
 
     // Require the entity name be unique
     for (uint256 i = 1; i < NumberOfEntities + 1; ++i)
-      require(!commonInterface/*StringCommon*/.stringsEqual(Entities[i].name, entityName),
-              "Entity name already exists");
+      require(!commonInterface.stringsEqual(Entities[i].name, entityName),
+              "name exists");
 
     // Push the entity to permenant storage on the blockchain
-    Entities[entityIndex] = Entity(payable(msg.sender), address(0),
-                address(0), entityName, "", entityURL, block.timestamp);
+    Entities[entityIndex].bank = payable(msg.sender);
+    Entities[entityIndex].name = entityName;
+    Entities[entityIndex].infoURL = entityURL;
+    Entities[entityIndex].createTime = block.timestamp;
 
     // Push the address to the entity array and clear status
     EntityArray[entityIndex] = msg.sender;
     EntityStatus[entityIndex] = 0;
-    EntityIndex[msg.sender] = entityIndex; // glbal entity id
+    EntityIndex[msg.sender] = entityIndex; // global entity id
     NumberOfEntities++;
 
     // Emit entity event: id, name and URL
@@ -180,10 +206,10 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
                         string calldata entityURL)
     external
   {
-    require(bytes(entityName).length != 0, "Entity name empty");
-    require(bytes(entityURL).length != 0, "Entity URL empty");
+    require(bytes(entityName).length != 0, "name empty");
+    require(bytes(entityURL).length != 0, "URL empty");
     uint256 entityIndex = EntityIndex[msg.sender];
-    require(entityIndex > 0, "Sender is not an entity");
+    require(entityIndex > 0, "Sender unknown");
 
     // Require the new entity name be unique
     for (uint256 i = 0; i < NumberOfEntities; ++i)
@@ -191,16 +217,18 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
       // Skip the duplicate name check for sender entity
       //   ie. Allow only URL to be changed
       if (i != entityIndex)
-        require(!commonInterface/*StringCommon*/.stringsEqual(Entities[i].name,
-                entityName), "Entity name already exists");
+        require(!commonInterface.stringsEqual(Entities[i].name,
+                entityName), "name exists");
     }
 
     // Update entity name and/or URL
     Entities[entityIndex].name = entityName;
     Entities[entityIndex].infoURL = entityURL;
 
+    // Not required, will monitor for fraud
+
     // Clear the entity status as re-validation required
-    EntityStatus[entityIndex] = 0;
+/*    EntityStatus[entityIndex] &= 0xFF;*/
 
     // Emit entity event
     emit entityEvent(entityIndex, entityName, entityURL);
@@ -234,12 +262,12 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
     Entity storage entity = Entities[entityIndex];
 
     // Ensure next address and status and status are valid
-    require(msg.sender != nextAddress, "Next address not different");
-    require(nextAddress != address(0), "Next address is zero");
+    require(msg.sender != nextAddress, "Next not different");
+    require(nextAddress != address(0), "Next is zero");
     require(entityAddressStatus(msg.sender) > 0, commonInterface.EntityNotValidated());
 
     // Require next address to have no entity configured
-    require(EntityIndex[nextAddress] == 0, "Next address in use");
+    require(EntityIndex[nextAddress] == 0, "Next in use");
 
     // Assign the new address to the organization
     entity.nextAddress = nextAddress;
@@ -259,10 +287,10 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
     Entity storage entity = Entities[entityIndex];
 
     // Ensure next address is valid
-    require(entityAddress != nextAddress, "Next address not different");
-    require(nextAddress != address(0), "Next address is zero");
+    require(entityAddress != nextAddress, "Next not different");
+    require(nextAddress != address(0), "Next is zero");
     // Require next address to have no entity configured
-    require(EntityIndex[nextAddress] == 0, "Next address in use");
+    require(EntityIndex[nextAddress] == 0, "Next in use");
 
     // Assign the new address to the organization
     entity.nextAddress = nextAddress;
@@ -278,7 +306,7 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
     uint256 entityIndex = EntityIndex[oldAddress];
     require(entityIndex > 0, commonInterface.EntityIsZero());
     Entity storage entity = Entities[entityIndex];
-    require(entity.nextAddress == msg.sender, "Next address not sender");
+    require(entity.nextAddress == msg.sender, "Next not sender");
     uint256 entityStatus = entityAddressStatus(oldAddress);
     require(entityStatus > 0, commonInterface.EntityNotValidated());
 
@@ -294,45 +322,81 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
       entity.bank = payable(msg.sender);
   }
 
-  /// @notice Withdraw all payments (ETH) into entity bank.
-  /// Uses OpenZeppelin PullPayment interface.
-  function entityPaymentsWithdraw()
-    external
+  /// @notice Pay (transfer ETH to ImmutableSoft) for an upgrade.
+  /// msg.sender must be registered Entity in good standing.
+  /// Payable, requires ETH transfer. Current status of Manual upgrades
+  /// to Automatic, Automatic upgrades to Custom. Upgrading Custom only
+  /// extends your membership.
+  function entityUpgrade()
+    public payable
   {
     uint256 entityIndex = EntityIndex[msg.sender];
     require(entityIndex > 0, commonInterface.EntityIsZero());
-    Entity storage entity = Entities[entityIndex];
-    uint256 entityStatus = entityAddressStatus(msg.sender);
+    require(msg.value >= UpgradeFee, "Payment required");
+
+    uint256 entityStatus = EntityStatus[entityIndex];
     require(entityStatus > 0, commonInterface.EntityNotValidated());
 
-    // Ensure entity has a configured bank
-    require(entity.bank != address(0), "Bank address zero");
+    // Deserialize the expiration date/time
+    uint256 expiration = ((entityStatus & commonInterface.ExpirationMask()) >>
+                           commonInterface.ExpirationOffset());
 
-    if (payments(entity.bank) > 0)
-      withdrawPayments/*WithGas*/(entity.bank);
+    // If unexpired then upgrade AND extend
+    if (expiration > block.timestamp)
+    {
+      // If manual, upgrade to automatic flags
+      if ((entityStatus & (commonInterface.Automatic() |
+                           commonInterface.CustomToken())) == 0)
+        entityStatus |= commonInterface.Automatic();
+
+      // Otherwise upgrade to Custom token flags
+      else
+        entityStatus |= commonInterface.CustomToken();
+    }
+
+    // Otherwise entity expired so set to Automatic and current time
+    else
+    {
+      entityStatus &= ~(commonInterface.Automatic() | commonInterface.CustomToken());
+      entityStatus |= commonInterface.Automatic();
+      expiration = block.timestamp;
+    }
+
+    // All upgrades are given a one year expiration (or extended one year)
+    entityStatus &= ~(commonInterface.ExpirationMask() << commonInterface.ExpirationOffset());
+    entityStatus |= ((expiration + 365 days) << commonInterface.ExpirationOffset());
+
+    // Write new status on-chain
+    EntityStatus[entityIndex] = entityStatus;
+
+    // Transfer ETH funds to ImmutableSoft
+    Bank.transfer(msg.value);
   }
 
-  /// @notice Transfer ETH to an entity.
+  /// @notice Pay (transfer ETH to) an entity.
   /// Entity must exist and have bank configured.
   /// Payable, requires ETH transfer.
-  /// msg.sender is the payee
+  /// msg.sender is the payee (could be ProductActivate contract)
   /// @param entityIndex The index of entity recipient bank
-  function entityTransfer(uint256 entityIndex, uint256 productIndex)
+  function entityPay(uint256 entityIndex)
     public payable
   {
     uint256 entityStatus = entityIndexStatus(entityIndex);
-    require(entityIndex > 0, commonInterface.EntityIsZero());
-    Entity storage entity = Entities[entityIndex];
+    if (entityIndex > 0)
+    {
+      Entity storage entity = Entities[entityIndex];
 
-    require(entityStatus > 0, commonInterface.EntityNotValidated());
-    require(msg.value > 0, "ETH value zero");
-    require(entity.bank != address(0), BankNotConfigured);
+      require(entityStatus > 0, commonInterface.EntityNotValidated());
+      require(msg.value > 0, "ETH required");
+      require(entity.bank != address(0), "Bank not configured");
 
-    // Transfer ETH funds
-    _asyncTransfer(entity.bank, msg.value);
+      // Transfer ETH funds
+      entity.bank.transfer(msg.value);
+    }
 
-    // Send event for transfer
-    emit entityTransferEvent(entityIndex, productIndex, msg.value);
+    // Otherwise transfer ETH funds to ImmutableSoft
+    else
+      Bank.transfer(msg.value);
   }
 
   /// @notice Retrieve official entity status.
@@ -406,25 +470,12 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
     return NumberOfEntities;
   }
 
-  /// @notice Check payment (ETH) due entity bank.
-  /// Uses OpenZeppelin PullPayment interface.
-  /// @return the amount of ETH in the entity escrow
-  function entityPaymentsCheck()
-    external view returns (uint256)
+  /// @notice Retrieve fee to upgrade.
+  /// @return the number of entities
+  function entityUpgradeFee()
+    public view returns (uint256)
   {
-    uint256 entityIndex = EntityIndex[msg.sender];
-    if (entityIndex == 0)
-      return 0;
-    Entity storage entity = Entities[entityIndex];
-    uint256 entityStatus = entityAddressStatus(msg.sender);
-    require(entityStatus > 0, commonInterface.EntityNotValidated());
-
-    // Return zero if bank is unconfigured
-    if (entity.bank == address(0))
-      return 0;
-
-    // Return the amount of ETH payments accumulated
-    return payments(entity.bank);
+    return UpgradeFee;
   }
 
 /*
@@ -439,6 +490,18 @@ contract ImmutableEntity is Initializable, Ownable, PullPayment*/
       return 0;
   }
 */
+
+  /// @notice Retrieve bank address that contract pays out to
+  /// @param entityIndex The index of the entity
+  /// @return bank Ethereum address to pay out entity
+  function entityBank(uint256 entityIndex)
+    external view returns (address bank) 
+  {
+    if (entityIndex > 0)
+      return Entities[entityIndex].bank;
+    else
+      return Bank;
+  }
 
   /// @notice Retrieve all entity details
   /// Status of empty arrays if none found.

@@ -1,6 +1,6 @@
 # ERC165Upgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\utils\introspection\ERC165Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\introspection\ERC165Upgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol](../@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [IERC165Upgradeable](IERC165Upgradeable.md)**
 **↘ Derived Contracts: [ERC721Upgradeable](ERC721Upgradeable.md)**
@@ -34,7 +34,7 @@ uint256[50] private __gap;
 ### __ERC165_init
 
 ```js
-function __ERC165_init() internal nonpayable initializer 
+function __ERC165_init() internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -45,7 +45,7 @@ function __ERC165_init() internal nonpayable initializer
 ### __ERC165_init_unchained
 
 ```js
-function __ERC165_init_unchained() internal nonpayable initializer 
+function __ERC165_init_unchained() internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -81,7 +81,6 @@ returns(bool)
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -95,6 +94,5 @@ returns(bool)
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

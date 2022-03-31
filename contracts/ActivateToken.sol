@@ -12,7 +12,6 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 /*
 // OpenZepellin standard contracts
@@ -52,12 +51,16 @@ contract ActivateToken is Ownable,
   // Mapping any Ricardian contract requirements
   mapping (uint256 => uint256) private TokenIdToRicardianParent;
 
-  ProductActivate activateInterface;
-  CreatorToken creatorInterface;
-  ImmutableEntity entityInterface;
-  StringCommon commonInterface;
+  ProductActivate private activateInterface;
+  CreatorToken private creatorInterface;
+  ImmutableEntity private entityInterface;
+  StringCommon private commonInterface;
 
-  // OpenZepellin upgradable contracts
+  /// @notice Initialize the activate token smart contract
+  ///   Called during first deployment only (not on upgrade) as
+  ///   this is an OpenZepellin upgradable contract
+  /// @param commonContractAddr The StringCommon contract address
+  /// @param entityContractAddr The ImmutableEntity token contract address
   function initialize(address commonContractAddr, address entityContractAddr)
     public initializer
   {
@@ -79,7 +82,8 @@ contract ActivateToken is Ownable,
   }
 
   /// @notice Restrict the token to the activate contract
-  ///   Called internally. msg.sender must contract owner
+  ///   Called once after deployment to initialize Ecosystem.
+  ///   msg.sender must be contract owner
   /// @param activateAddress The ProductActivate contract address
   /// @param creatorAddress The Creator token contract address
   function restrictToken(address activateAddress, address creatorAddress)
@@ -109,7 +113,7 @@ contract ActivateToken is Ownable,
   }
 
   /// @notice Create a product activation license.
-  /// Not public, called internally. msg.sender is the license owner.
+  /// Public but internal. msg.sender must be product activate contract
   /// @param entityIndex The local entity index of the license
   /// @param productIndex The specific ID of the product
   /// @param licenseHash The external license activation hash
@@ -121,6 +125,8 @@ contract ActivateToken is Ownable,
                 uint256 ricardianParent)
     public returns (uint256)
   {
+    require(entityIndex > 0, commonInterface.EntityIsZero());
+
     uint256 activationId =
       ++NumberOfActivations[(uint64)(entityIndex | (productIndex << 32))];
 
@@ -129,12 +135,12 @@ contract ActivateToken is Ownable,
                       ((activationId << commonInterface.UniqueIdOffset()) & commonInterface.UniqueIdMask()) |
                       (licenseValue & (commonInterface.FlagsMask() | commonInterface.ExpirationMask() | commonInterface.ValueMask()));
 
+    // Require the product activate contract be the sender
+    require(msg.sender == address(activateInterface), "sender not link");
+
     // If no expiration to the activation, use those bits for more randomness
     if ((licenseValue & commonInterface.ExpirationFlag() == 0) && (activationId > 0xFFFF))
       tokenId |= ((activationId >> 16) << commonInterface.ExpirationOffset()) & commonInterface.ExpirationMask();
-
-    require(address(activateInterface) != address(0));
-    require(msg.sender == address(activateInterface));
 
 // Do NOT uncomment this, it can potentially infinite loop
 //   But the idea is valid, leaving until a better solution
@@ -174,7 +180,6 @@ contract ActivateToken is Ownable,
 
 
     // Require a unique tokenId
-    require(tokenId > 0, "TokenId zero");
     require(TokenIdToActivateId[tokenId] == 0, commonInterface.TokenNotUnique());
     require(ActivateIdToTokenId[licenseHash] == 0, commonInterface.TokenNotUnique());
 
@@ -415,10 +420,13 @@ contract ActivateToken is Ownable,
             resultValue, resultPrice);
   }
 
-  /// @notice Perform validity check before transfer of token allowed
+  /// @notice Perform validity check before transfer of token allowed.
+  /// Called internally before any token transfer and used to enforce
+  /// resale rights and Ricardian contract agreement requirements,
+  /// even when using third party exchanges.
   /// @param from The token origin address
   /// @param to The token destination address
-  /// @param tokenId The token to transfer
+  /// @param tokenId The token intended for transfer
   function _beforeTokenTransfer(address from, address to, uint256 tokenId)
       internal override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
   {

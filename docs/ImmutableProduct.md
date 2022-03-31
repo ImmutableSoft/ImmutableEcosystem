@@ -1,12 +1,12 @@
-# The Immutable Product - authentic product distribution (ImmutableProduct.sol)
+# Entity self-managed product interface (ImmutableProduct.sol)
 
-View Source: [\contracts\ImmutableProduct.sol](..\contracts\ImmutableProduct.sol)
+View Source: [contracts/ImmutableProduct.sol](../contracts/ImmutableProduct.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 
 **ImmutableProduct**
 
-Token transfers use the ImmuteToken only
+Entity requires registration and approval
 
 ## Structs
 ### Offer
@@ -383,7 +383,6 @@ erc20Tokens , prices, values, offerURLs, surcharges and parents are array return
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -397,6 +396,5 @@ erc20Tokens , prices, values, offerURLs, surcharges and parents are array return
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

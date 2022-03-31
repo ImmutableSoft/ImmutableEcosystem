@@ -1,8 +1,8 @@
 # ProductActivate.sol
 
-View Source: [\contracts\ProductActivate.sol](..\contracts\ProductActivate.sol)
+View Source: [contracts/ProductActivate.sol](../contracts/ProductActivate.sol)
 
-**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [PullPaymentUpgradeable](PullPaymentUpgradeable.md)**
+**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 
 **ProductActivate**
 
@@ -24,33 +24,31 @@ struct ActivationOffer {
 **Constants & Variables**
 
 ```js
-//private members
-address payable private Bank;
 mapping(uint256 => uint256) private TokenIdToOfferPrice;
 mapping(uint256 => uint256) private TransferSurcharge;
 contract ActivateToken private activateTokenInterface;
 contract CreatorToken private creatorTokenInterface;
-
-//internal members
-contract ImmutableEntity internal entityInterface;
-contract ImmutableProduct internal productInterface;
-contract StringCommon internal commonInterface;
+contract ImmutableEntity private entityInterface;
+contract ImmutableProduct private productInterface;
+contract StringCommon private commonInterface;
 
 ```
 
 ## Functions
 
 - [initialize(address commonAddr, address entityContractAddr, address productContractAddr, address activateTokenAddr, address creatorTokenAddr)](#initialize)
-- [activateDonate(uint256 amount)](#activatedonate)
-- [activateBankChange(address payable newBank)](#activatebankchange)
 - [activateCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue, uint256 transferSurcharge, uint256 ricardianParent)](#activatecreate)
-- [activatePurchase(uint256 entityIndex, uint256 productIndex, uint256 offerIndex, uint16 numLicenses, uint256[] licenseHashes, uint256[] ricardianClients)](#activatepurchase)
+- [activatePurchase(uint256 entityIndex, uint256 productIndex, uint256 offerIndex, uint16 numPurchases, uint256[] licenseHashes, uint256[] ricardianClients)](#activatepurchase)
 - [activateMove(uint256 entityIndex, uint256 productIndex, uint256 oldLicenseHash, uint256 newLicenseHash)](#activatemove)
 - [activateOfferResale(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 priceInEth)](#activateofferresale)
 - [activateTransfer(uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 newLicenseHash)](#activatetransfer)
 - [activateTokenIdToOfferPrice(uint256 tokenId)](#activatetokenidtoofferprice)
 
 ### initialize
+
+Initialize the ProductActivate smart contract
+   Called during first deployment only (not on upgrade) as
+   this is an OpenZepellin upgradable contract
 
 ```js
 function initialize(address commonAddr, address entityContractAddr, address productContractAddr, address activateTokenAddr, address creatorTokenAddr) public nonpayable initializer 
@@ -60,41 +58,11 @@ function initialize(address commonAddr, address entityContractAddr, address prod
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| commonAddr | address |  | 
-| entityContractAddr | address |  | 
-| productContractAddr | address |  | 
-| activateTokenAddr | address |  | 
-| creatorTokenAddr | address |  | 
-
-### activateDonate
-
-Transfer ETH funds to ImmutableSoft bank address.
- Uses OpenZeppelin PullPayment interface.
-
-```js
-function activateDonate(uint256 amount) public payable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| amount | uint256 |  | 
-
-### activateBankChange
-
-Change bank that contract pays ETH out too.
- Administrator only.
-
-```js
-function activateBankChange(address payable newBank) external nonpayable onlyOwner 
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| newBank | address payable | The Ethereum address of new ecosystem bank | 
+| commonAddr | address | The StringCommon contract address | 
+| entityContractAddr | address | The ImmutableEntity token contract address | 
+| productContractAddr | address | The ImmutableProduct token contract address | 
+| activateTokenAddr | address | The ActivateToken token contract address | 
+| creatorTokenAddr | address | The CreatorToken token contract address | 
 
 ### activateCreate
 
@@ -103,7 +71,7 @@ Create manual product activation license for end user.
  Costs 1 IuT token if sender not registered as automatic
 
 ```js
-function activateCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue, uint256 transferSurcharge, uint256 ricardianParent) external payable
+function activateCreate(uint256 productIndex, uint256 licenseHash, uint256 licenseValue, uint256 transferSurcharge, uint256 ricardianParent) external nonpayable
 ```
 
 **Arguments**
@@ -118,11 +86,11 @@ function activateCreate(uint256 productIndex, uint256 licenseHash, uint256 licen
 
 ### activatePurchase
 
-Purchase a software product activation license.
+Purchase a digital product activation license.
  mes.sender is the purchaser.
 
 ```js
-function activatePurchase(uint256 entityIndex, uint256 productIndex, uint256 offerIndex, uint16 numLicenses, uint256[] licenseHashes, uint256[] ricardianClients) external payable
+function activatePurchase(uint256 entityIndex, uint256 productIndex, uint256 offerIndex, uint16 numPurchases, uint256[] licenseHashes, uint256[] ricardianClients) external payable
 ```
 
 **Arguments**
@@ -132,18 +100,17 @@ function activatePurchase(uint256 entityIndex, uint256 productIndex, uint256 off
 | entityIndex | uint256 | The entity offering the product license | 
 | productIndex | uint256 | The specific ID of the product | 
 | offerIndex | uint256 | the product activation offer to purchase | 
-| numLicenses | uint16 | the number of activations to purchase | 
+| numPurchases | uint16 | the number of offers to purchase | 
 | licenseHashes | uint256[] | Array of end user identifiers to activate | 
 | ricardianClients | uint256[] | Array of end client agreement contracts | 
 
 ### activateMove
 
-Move a software product activation license.
- Costs 1 IuT token if sender not registered as automatic.
+Move a digital product activation license.
  mes.sender must be the activation license owner.
 
 ```js
-function activateMove(uint256 entityIndex, uint256 productIndex, uint256 oldLicenseHash, uint256 newLicenseHash) external payable
+function activateMove(uint256 entityIndex, uint256 productIndex, uint256 oldLicenseHash, uint256 newLicenseHash) external nonpayable
 ```
 
 **Arguments**
@@ -157,7 +124,7 @@ function activateMove(uint256 entityIndex, uint256 productIndex, uint256 oldLice
 
 ### activateOfferResale
 
-Offer a software product license for resale.
+Offer a digital product license for resale.
  mes.sender must own the activation license.
 
 ```js
@@ -180,7 +147,7 @@ the tokenId of the activation offered for resale
 
 ### activateTransfer
 
-Transfer/Resell a software product activation license.
+Transfer/Resell a digital product activation license.
  License must be 'for sale' and msg.sender is new owner.
 
 ```js
@@ -228,7 +195,6 @@ The price of the token if for sale
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -242,6 +208,5 @@ The price of the token if for sale
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

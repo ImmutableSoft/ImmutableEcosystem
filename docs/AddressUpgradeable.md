@@ -1,6 +1,6 @@
 # AddressUpgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\utils\AddressUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\AddressUpgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol](../@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol)
 
 **AddressUpgradeable**
 
@@ -16,7 +16,7 @@ Collection of functions related to the address type
 - [functionCallWithValue(address target, bytes data, uint256 value, string errorMessage)](#functioncallwithvalue)
 - [functionStaticCall(address target, bytes data)](#functionstaticcall)
 - [functionStaticCall(address target, bytes data, string errorMessage)](#functionstaticcall)
-- [_verifyCallResult(bool success, bytes returndata, string errorMessage)](#_verifycallresult)
+- [verifyCallResult(bool success, bytes returndata, string errorMessage)](#verifycallresult)
 
 ### isContract
 
@@ -31,6 +31,13 @@ Returns true if `account` is a contract.
   - a contract in construction
   - an address where a contract will be created
   - an address where a contract lived, but was destroyed
+ ====
+ [IMPORTANT]
+ ====
+ You shouldn't rely on `isContract` to protect against flash loan attacks!
+ Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets
+ like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract
+ constructor.
  ====
 
 ```js
@@ -72,7 +79,7 @@ function sendValue(address payable recipient, uint256 amount) internal nonpayabl
 ### functionCall
 
 Performs a Solidity function call using a low level `call`. A
- plain`call` is an unsafe replacement for a function call: use this
+ plain `call` is an unsafe replacement for a function call: use this
  function instead.
  If `target` reverts with a revert reason, it is bubbled up by this
  function (like regular Solidity function calls).
@@ -193,10 +200,14 @@ returns(bytes)
 | data | bytes |  | 
 | errorMessage | string |  | 
 
-### _verifyCallResult
+### verifyCallResult
+
+Tool to verifies that a low level call was successful, and revert if it wasn't, either by bubbling the
+ revert reason using the provided one.
+ _Available since v4.3._
 
 ```js
-function _verifyCallResult(bool success, bytes returndata, string errorMessage) private pure
+function verifyCallResult(bool success, bytes returndata, string errorMessage) internal pure
 returns(bytes)
 ```
 
@@ -221,7 +232,6 @@ returns(bytes)
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -235,6 +245,5 @@ returns(bytes)
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

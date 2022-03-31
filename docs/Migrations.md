@@ -1,6 +1,6 @@
 # Migrations.sol
 
-View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
+View Source: [contracts/Migrations.sol](../contracts/Migrations.sol)
 
 **Migrations**
 
@@ -82,7 +82,6 @@ function upgrade(address new_address) external nonpayable
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -96,6 +95,5 @@ function upgrade(address new_address) external nonpayable
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

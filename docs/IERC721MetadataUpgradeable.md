@@ -1,6 +1,6 @@
 # ERC-721 Non-Fungible Token Standard, optional metadata extension (IERC721MetadataUpgradeable.sol)
 
-View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721MetadataUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721MetadataUpgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol)
 
 **↗ Extends: [IERC721Upgradeable](IERC721Upgradeable.md)**
 **↘ Derived Contracts: [ERC721Upgradeable](ERC721Upgradeable.md)**
@@ -71,7 +71,6 @@ returns(string)
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -85,6 +84,5 @@ returns(string)
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

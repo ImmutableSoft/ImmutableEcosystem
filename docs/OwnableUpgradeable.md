@@ -1,9 +1,9 @@
 # OwnableUpgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\access\OwnableUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\access\OwnableUpgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol](../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ContextUpgradeable](ContextUpgradeable.md)**
-**↘ Derived Contracts: [ActivateToken](ActivateToken.md), [CreatorToken](CreatorToken.md), [CustomToken](CustomToken.md), [EscrowUpgradeable](EscrowUpgradeable.md), [ImmutableEntity](ImmutableEntity.md), [ImmutableProduct](ImmutableProduct.md), [ProductActivate](ProductActivate.md)**
+**↘ Derived Contracts: [ActivateToken](ActivateToken.md), [CreatorToken](CreatorToken.md), [CustomToken](CustomToken.md), [ImmutableEntity](ImmutableEntity.md), [ImmutableProduct](ImmutableProduct.md), [ProductActivate](ProductActivate.md), [StringCommon](StringCommon.md)**
 
 **OwnableUpgradeable**
 
@@ -55,13 +55,14 @@ modifier onlyOwner() internal
 - [owner()](#owner)
 - [renounceOwnership()](#renounceownership)
 - [transferOwnership(address newOwner)](#transferownership)
+- [_transferOwnership(address newOwner)](#_transferownership)
 
 ### __Ownable_init
 
 Initializes the contract setting the deployer as the initial owner.
 
 ```js
-function __Ownable_init() internal nonpayable initializer 
+function __Ownable_init() internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -72,7 +73,7 @@ function __Ownable_init() internal nonpayable initializer
 ### __Ownable_init_unchained
 
 ```js
-function __Ownable_init_unchained() internal nonpayable initializer 
+function __Ownable_init_unchained() internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -125,6 +126,21 @@ function transferOwnership(address newOwner) public nonpayable onlyOwner
 | ------------- |------------- | -----|
 | newOwner | address |  | 
 
+### _transferOwnership
+
+Transfers ownership of the contract to a new account (`newOwner`).
+ Internal function without access restriction.
+
+```js
+function _transferOwnership(address newOwner) internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| newOwner | address |  | 
+
 ## Contracts
 
 * [ActivateToken](ActivateToken.md)
@@ -138,7 +154,6 @@ function transferOwnership(address newOwner) public nonpayable onlyOwner
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -152,6 +167,5 @@ function transferOwnership(address newOwner) public nonpayable onlyOwner
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

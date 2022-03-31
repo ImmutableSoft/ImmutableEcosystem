@@ -1,12 +1,16 @@
-# Immutable Entity - managed trust zone for the ecosystem (ImmutableEntity.sol)
+# Immutable Entity trust zone used by ecosystem members (ImmutableEntity.sol)
 
-View Source: [\contracts\ImmutableEntity.sol](..\contracts\ImmutableEntity.sol)
+View Source: [contracts/ImmutableEntity.sol](../contracts/ImmutableEntity.sol)
 
-**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [PullPaymentUpgradeable](PullPaymentUpgradeable.md)**
+**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 
 **ImmutableEntity**
 
-Token transfers use the ImmuteToken by default
+Member entities can accept ETH escrow payments and change
+         or configure a recovery wallet address. Only after new
+         members create their Entity (with a blockchain transaction)
+         is ownership of the wallet address proven to ImmutableSoft
+         which then allows us to approve the new member.
 
 ## Structs
 ### Entity
@@ -17,7 +21,6 @@ struct Entity {
  address prevAddress,
  address nextAddress,
  string name,
- string entityEnsName,
  string infoURL,
  uint256 createTime
 }
@@ -27,16 +30,17 @@ struct Entity {
 **Constants & Variables**
 
 ```js
-//internal members
-string internal constant BankNotConfigured;
-uint256 internal NumberOfEntities;
-
 //private members
+address payable private Bank;
 mapping(address => uint256) private EntityIndex;
 mapping(uint256 => uint256) private EntityStatus;
 mapping(uint256 => address) private EntityArray;
 mapping(uint256 => struct ImmutableEntity.Entity) private Entities;
 contract StringCommon private commonInterface;
+
+//internal members
+uint256 internal UpgradeFee;
+uint256 internal NumberOfEntities;
 
 ```
 
@@ -44,12 +48,13 @@ contract StringCommon private commonInterface;
 
 ```js
 event entityEvent(uint256  entityIndex, string  name, string  url);
-event entityTransferEvent(uint256  entityIndex, uint256  productIndex, uint256  amount);
 ```
 
 ## Functions
 
 - [initialize(address commonAddr)](#initialize)
+- [entityOwnerBank(address payable newBank)](#entityownerbank)
+- [entityOwnerUpgradeFee(uint256 newFee)](#entityownerupgradefee)
 - [entityStatusUpdate(uint256 entityIndex, uint256 status)](#entitystatusupdate)
 - [entityCreate(string entityName, string entityURL)](#entitycreate)
 - [entityUpdate(string entityName, string entityURL)](#entityupdate)
@@ -57,21 +62,23 @@ event entityTransferEvent(uint256  entityIndex, uint256  productIndex, uint256  
 - [entityAddressNext(address nextAddress)](#entityaddressnext)
 - [entityAdminAddressNext(address entityAddress, address nextAddress)](#entityadminaddressnext)
 - [entityAddressMove(address oldAddress)](#entityaddressmove)
-- [entityPaymentsWithdraw()](#entitypaymentswithdraw)
-- [entityTransfer(uint256 entityIndex, uint256 productIndex)](#entitytransfer)
+- [entityUpgrade()](#entityupgrade)
+- [entityPay(uint256 entityIndex)](#entitypay)
 - [entityIndexStatus(uint256 entityIndex)](#entityindexstatus)
 - [entityAddressStatus(address entityAddress)](#entityaddressstatus)
 - [entityAddressToIndex(address entityAddress)](#entityaddresstoindex)
 - [entityIndexToAddress(uint256 entityIndex)](#entityindextoaddress)
 - [entityDetailsByIndex(uint256 entityIndex)](#entitydetailsbyindex)
 - [entityNumberOf()](#entitynumberof)
-- [entityPaymentsCheck()](#entitypaymentscheck)
+- [entityUpgradeFee()](#entityupgradefee)
+- [entityBank(uint256 entityIndex)](#entitybank)
 - [entityAllDetails()](#entityalldetails)
 
 ### initialize
 
-Contract initializer
- Executed on contract creation only.
+Initialize the ImmutableEntity smart contract
+   Called during first deployment only (not on upgrade) as
+   this is an OpenZepellin upgradable contract
 
 ```js
 function initialize(address commonAddr) public nonpayable initializer 
@@ -81,7 +88,37 @@ function initialize(address commonAddr) public nonpayable initializer
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| commonAddr | address |  | 
+| commonAddr | address | The StringCommon contract address | 
+
+### entityOwnerBank
+
+Change bank that contract pays ETH out too.
+ Administrator only.
+
+```js
+function entityOwnerBank(address payable newBank) external nonpayable onlyOwner 
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| newBank | address payable | The Ethereum address of new ecosystem bank | 
+
+### entityOwnerUpgradeFee
+
+Retrieve fee to upgrade.
+ Administrator only.
+
+```js
+function entityOwnerUpgradeFee(uint256 newFee) external nonpayable onlyOwner 
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| newFee | uint256 | the new upgrade fee | 
 
 ### entityStatusUpdate
 
@@ -201,13 +238,16 @@ function entityAddressMove(address oldAddress) external nonpayable
 | ------------- |------------- | -----|
 | oldAddress | address | The previous address of the entity | 
 
-### entityPaymentsWithdraw
+### entityUpgrade
 
-Withdraw all payments (ETH) into entity bank.
- Uses OpenZeppelin PullPayment interface.
+Pay (transfer ETH to ImmutableSoft) for an upgrade.
+ msg.sender must be registered Entity in good standing.
+ Payable, requires ETH transfer. Current status of Manual upgrades
+ to Automatic, Automatic upgrades to Custom. Upgrading Custom only
+ extends your membership.
 
 ```js
-function entityPaymentsWithdraw() external nonpayable
+function entityUpgrade() public payable
 ```
 
 **Arguments**
@@ -215,15 +255,15 @@ function entityPaymentsWithdraw() external nonpayable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### entityTransfer
+### entityPay
 
-Transfer ETH to an entity.
+Pay (transfer ETH to) an entity.
  Entity must exist and have bank configured.
  Payable, requires ETH transfer.
- msg.sender is the payee
+ msg.sender is the payee (could be ProductActivate contract)
 
 ```js
-function entityTransfer(uint256 entityIndex, uint256 productIndex) public payable
+function entityPay(uint256 entityIndex) public payable
 ```
 
 **Arguments**
@@ -231,7 +271,6 @@ function entityTransfer(uint256 entityIndex, uint256 productIndex) public payabl
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 | entityIndex | uint256 | The index of entity recipient bank | 
-| productIndex | uint256 |  | 
 
 ### entityIndexStatus
 
@@ -352,24 +391,42 @@ the number of entities
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 
-### entityPaymentsCheck
+### entityUpgradeFee
 
-Check payment (ETH) due entity bank.
- Uses OpenZeppelin PullPayment interface.
+Retrieve fee to upgrade.
 
 ```js
-function entityPaymentsCheck() external view
+function entityUpgradeFee() public view
 returns(uint256)
 ```
 
 **Returns**
 
-the amount of ETH in the entity escrow
+the number of entities
 
 **Arguments**
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
+
+### entityBank
+
+Retrieve bank address that contract pays out to
+
+```js
+function entityBank(uint256 entityIndex) external view
+returns(bank address)
+```
+
+**Returns**
+
+bank Ethereum address to pay out entity
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| entityIndex | uint256 | The index of the entity | 
 
 ### entityAllDetails
 
@@ -406,7 +463,6 @@ status , name and URL arrays are return values.\
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -420,6 +476,5 @@ status , name and URL arrays are return values.\
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

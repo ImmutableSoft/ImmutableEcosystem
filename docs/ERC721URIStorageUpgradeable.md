@@ -1,6 +1,6 @@
 # ERC721URIStorageUpgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721URIStorageUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721URIStorageUpgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ERC721Upgradeable](ERC721Upgradeable.md)**
 **↘ Derived Contracts: [CreatorToken](CreatorToken.md)**
@@ -29,7 +29,7 @@ uint256[49] private __gap;
 ### __ERC721URIStorage_init
 
 ```js
-function __ERC721URIStorage_init() internal nonpayable initializer 
+function __ERC721URIStorage_init() internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -40,7 +40,7 @@ function __ERC721URIStorage_init() internal nonpayable initializer
 ### __ERC721URIStorage_init_unchained
 
 ```js
-function __ERC721URIStorage_init_unchained() internal nonpayable initializer 
+function __ERC721URIStorage_init_unchained() internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -111,7 +111,6 @@ function _burn(uint256 tokenId) internal nonpayable
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -125,6 +124,5 @@ function _burn(uint256 tokenId) internal nonpayable
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

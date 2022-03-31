@@ -1,8 +1,8 @@
 # The Immutable Product - authentic product distribution (CreatorToken.sol)
 
-View Source: [\contracts\CreatorToken.sol](..\contracts\CreatorToken.sol)
+View Source: [contracts/CreatorToken.sol](../contracts/CreatorToken.sol)
 
-**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [PullPaymentUpgradeable](PullPaymentUpgradeable.md), [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md), [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md), [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)**
+**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md), [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md), [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)**
 
 **CreatorToken**
 
@@ -14,7 +14,6 @@ Token transfers use the ImmuteToken only
 ```js
 struct Release {
  uint256 hash,
- string fileURI,
  uint256 version,
  uint256 parent
 }
@@ -37,27 +36,25 @@ struct ReleaseInformation {
 **Constants & Variables**
 
 ```js
-//internal members
-mapping(uint256 => struct CreatorToken.Release) internal Releases;
-
 //private members
+mapping(uint256 => struct CreatorToken.Release) private Releases;
 mapping(uint256 => uint256) private HashToRelease;
 mapping(uint256 => mapping(uint256 => uint256)) private ReleasesNumberOf;
+uint256 private AnonProductID;
 contract StringCommon private commonInterface;
 contract ImmutableEntity private entityInterface;
 contract ImmutableProduct private productInterface;
 
-```
+//public members
+uint256 public AnonFee;
 
-**Events**
-
-```js
-event creatorReleaseEvent(uint256  entityIndex, uint256  productIndex, uint256  version);
 ```
 
 ## Functions
 
 - [initialize(address commonAddr, address entityAddr, address productAddr)](#initialize)
+- [creatorAnonFee(uint256 newFee)](#creatoranonfee)
+- [anonFile(uint256 newHash, string newFileUri)](#anonfile)
 - [creatorReleases(uint256[] productIndex, uint256[] newVersion, uint256[] newHash, string[] newFileUri, uint256[] parentHash)](#creatorreleases)
 - [creatorReleaseDetails(uint256 entityIndex, uint256 productIndex, uint256 releaseIndex)](#creatorreleasedetails)
 - [creatorReleaseHashDetails(uint256 fileHash)](#creatorreleasehashdetails)
@@ -72,8 +69,9 @@ event creatorReleaseEvent(uint256  entityIndex, uint256  productIndex, uint256  
 
 ### initialize
 
-Product contract initializer/constructor.
- Executed on contract creation only.
+Initialize the ImmutableProduct smart contract
+   Called during first deployment only (not on upgrade) as
+   this is an OpenZepellin upgradable contract
 
 ```js
 function initialize(address commonAddr, address entityAddr, address productAddr) public nonpayable initializer 
@@ -83,9 +81,40 @@ function initialize(address commonAddr, address entityAddr, address productAddr)
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| commonAddr | address |  | 
-| entityAddr | address |  | 
-| productAddr | address |  | 
+| commonAddr | address | The StringCommon contract address | 
+| entityAddr | address | The ImmutableEntity token contract address | 
+| productAddr | address | The ImmutableProduct token contract address | 
+
+### creatorAnonFee
+
+Retrieve fee to upgrade.
+ Administrator only.
+
+```js
+function creatorAnonFee(uint256 newFee) external nonpayable onlyOwner 
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| newFee | uint256 | the new anonymous use fee | 
+
+### anonFile
+
+Anonymous file security (PoE without credentials)
+ Entity and Product must exist.
+
+```js
+function anonFile(uint256 newHash, string newFileUri) external payable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| newHash | uint256 | The file SHA256 CRC hash | 
+| newFileUri | string | Public URI/name/reference of the file | 
 
 ### creatorReleases
 
@@ -326,7 +355,6 @@ TRUE (1) if supported, FALSE (0) otherwise
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -340,6 +368,5 @@ TRUE (1) if supported, FALSE (0) otherwise
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

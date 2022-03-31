@@ -14,13 +14,12 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 /*
 // OpenZepellin standard contracts
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-//import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 */
 
-/// @title The Immutable Product - authentic product distribution
+/// @title Entity self-managed product interface
 /// @author Sean Lawless for ImmutableSoft Inc.
-/// @notice Token transfers use the ImmuteToken only
+/// @notice Entity requires registration and approval
 contract ImmutableProduct is Initializable, OwnableUpgradeable
 {
   // Product activation offer
@@ -101,28 +100,25 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
 
     // Only a validated entity can create a product
     require(entityInterface.entityAddressStatus(msg.sender) > 0,
-            "Entity is not validated");
-    require(bytes(productName).length != 0, "Product name parameter invalid");
-    require(bytes(productURL).length != 0, "Product URL parameter invalid");
+            commonInterface.EntityNotValidated());
+    require(bytes(productName).length != 0, "name invalid");
+    require(bytes(productURL).length != 0, "URL invalid");
 
-    // If product exists with same name modify existing
+    // If product name exists exactly revert the transaction
     for (productID = 0; productID < NumberOfProducts[entityIndex];
          ++productID)
     {
-      // Check if the product name matches an existing product
+      // Check if the product name matches
       if (commonInterface.stringsEqual(Products[entityIndex][productID].name,
                                        productName))
-      {
-        // Revert the transaction as product already exists
-        revert("Product name already exists");
-      }
+        revert("name exists");
     }
 
     // Populate information for new product and increment index
     Products[entityIndex][lastProduct].name = productName;
     Products[entityIndex][lastProduct].infoURL = productURL;
     Products[entityIndex][lastProduct].logoURL = logoURL;
-    Products[entityIndex][lastProduct].numberOfOffers = 0;
+    Products[entityIndex][lastProduct].details = details;
     NumberOfProducts[entityIndex]++;
 
     // Emit an new product event and return the product index
@@ -155,9 +151,9 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     external
   {
     if (noResale)
-      require(expiration > 0, "No expiration must allow resale per EU law");
+      require(expiration > 0, "Resale requires expiration");
     if (limited > 0)
-      require(bulk == 0, "Bulk or limited, not both");
+      require(bulk == 0, "No Bulk when Limited");
 
     return productOffer(productIndex, erc20token, price,
                         (commonInterface.FeatureFlag() | commonInterface.ExpirationFlag() |
@@ -193,9 +189,9 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     external
   {
     if (noResale)
-      require(expiration > 0, "No expiration must allow resale per EU law");
+      require(expiration > 0, "Resale requires expiration");
     if (limited > 0)
-      require(bulk == 0, "Bulk or limited, not both");
+      require(bulk == 0, "No Bulk when Limited");
 
     return productOffer(productIndex, erc20token, price,
                         (commonInterface.LimitationFlag() | commonInterface.ExpirationFlag() |
@@ -233,6 +229,11 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     require(entityStatus > 0, commonInterface.EntityNotValidated());
     require((entityStatus & commonInterface.Nonprofit()) != commonInterface.Nonprofit(), "Nonprofit prohibited");
 
+    // Sanity check the input parameters
+    require(NumberOfProducts[entityIndex] > productIndex,
+            commonInterface.ProductNotFound());
+    require(price >= 0, "Offer requires price");
+
     // If token configured specified, do a quick validity check
     if (erc20token != address(0))
     {
@@ -241,33 +242,25 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
       IERC20Upgradeable theToken = IERC20Upgradeable(erc20token);
 
       require(theToken.totalSupply() > 0,
-              "Address is not ERC20 token or no supply");
+              "Not ERC20 token or no supply");
     }
-
-    require(NumberOfProducts[entityIndex] > productIndex,
-            "Product not found");
-    require(price >= 0, "Product offer price cannot be zero");
 
     // Check if any offer has been exhausted/revoked
     for (;offerId < Products[entityIndex][productIndex].numberOfOffers; ++offerId)
       if (Products[entityIndex][productIndex].offers[offerId].price == 0)
         break;
 
-    // Reuse old offer if present
-    if (offerId < Products[entityIndex][productIndex].numberOfOffers)
-    {
-      Products[entityIndex][productIndex].offers[offerId].tokenAddr = erc20token;
-      Products[entityIndex][productIndex].offers[offerId].price = price;
-      Products[entityIndex][productIndex].offers[offerId].value = value;
-      Products[entityIndex][productIndex].offers[offerId].infoURL = infoUrl;
-      Products[entityIndex][productIndex].offers[offerId].transferSurcharge = transferSurcharge;
-      Products[entityIndex][productIndex].offers[offerId].ricardianParent = requireRicardian;
-    }
+    // Assign new digital product offer
+    Products[entityIndex][productIndex].offers[offerId].tokenAddr = erc20token;
+    Products[entityIndex][productIndex].offers[offerId].price = price;
+    Products[entityIndex][productIndex].offers[offerId].value = value;
+    Products[entityIndex][productIndex].offers[offerId].infoURL = infoUrl;
+    Products[entityIndex][productIndex].offers[offerId].transferSurcharge = transferSurcharge;
+    Products[entityIndex][productIndex].offers[offerId].ricardianParent = requireRicardian;
 
-    // Otherwise create a new offer
-    else
-      Products[entityIndex][productIndex].offers[Products[entityIndex][productIndex].numberOfOffers++] =
-        Offer(erc20token, price, value, infoUrl, transferSurcharge, requireRicardian);
+    // If creating a new offer update the offer count
+    if (offerId >= Products[entityIndex][productIndex].numberOfOffers)
+      offerId = Products[entityIndex][productIndex].numberOfOffers++;
 
     emit productOfferEvent(entityIndex, productIndex,
                            Products[entityIndex][productIndex].name,
@@ -290,9 +283,9 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     require(entityStatus > 0, commonInterface.EntityNotValidated());
     require((entityStatus & commonInterface.Nonprofit()) != commonInterface.Nonprofit(), "Nonprofit prohibited");
     require(NumberOfProducts[entityIndex] > productIndex,
-            "Product not found");
+            commonInterface.ProductNotFound());
     require(Products[entityIndex][productIndex].numberOfOffers > offerIndex,
-            "Product offer out of range");
+            "Offer out of range");
 
     // Update the offer price, zero revokes the offer
     Products[entityIndex][productIndex].offers[offerIndex].price = price;
@@ -322,16 +315,16 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     require(entityIndex > 0, commonInterface.EntityIsZero());
 
     require(NumberOfProducts[entityIndex] > productIndex,
-            "Product not found");
+            commonInterface.ProductNotFound());
 
     require(Products[entityIndex][productIndex].numberOfOffers > offerIndex,
-            "Offer not found");
+            commonInterface.OfferNotFound());
 
     uint256 value =
       Products[entityIndex][productIndex].offers[offerIndex].value;
 
     uint256 count = (value & commonInterface.UniqueIdMask()) >> commonInterface.UniqueIdOffset();
-    require(count > 0, "Offer count not set");
+    require(count > 0, "Count required");
 
     value = value & ~(commonInterface.UniqueIdMask());
     value = value | (((count - 1) << commonInterface.UniqueIdOffset()) & commonInterface.UniqueIdMask());
@@ -373,11 +366,12 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     uint256 productID;
 
     // Only a validated entity can create a product
-    require(entityInterface.entityAddressStatus(msg.sender) > 0, "Entity is not validated");
-    require((bytes(productName).length == 0) || (bytes(productURL).length != 0), "Product URL parameter required");
-    require(NumberOfProducts[entityIndex] > productIndex, "Product not found");
+    require(entityInterface.entityAddressStatus(msg.sender) > 0, commonInterface.EntityNotValidated());
+    require((bytes(productName).length == 0) || (bytes(productURL).length != 0), "URL required");
+    require(NumberOfProducts[entityIndex] > productIndex,
+            commonInterface.ProductNotFound());
 
-    // Update the product information
+    // Check the product name for duplicates if present
     if (bytes(productName).length > 0)
     {
       // If product exists with same name then fatal error so revert
@@ -390,18 +384,11 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
           if (commonInterface.stringsEqual(Products[entityIndex][productID].name, productName))
           {
             // Revert the transaction as product already exists
-            revert("Product name already exists");
+            revert("name already exists");
           }
         }
       }
     }
-
-    // Else name is empty so remove all offers for this product
-    else
-      for (; Products[entityIndex][productIndex].numberOfOffers > 0;)
-        productOfferEditPrice(productIndex,
-                Products[entityIndex][productIndex].numberOfOffers - 1,
-                0);
 
     // Update the product information
     Products[entityIndex][productIndex].name = productName;
@@ -409,7 +396,7 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     Products[entityIndex][productIndex].logoURL = logoURL;
     Products[entityIndex][productIndex].details = details;
 
-    // Emit an new product event and return the product index
+    // Emit new product event and return the product index
     emit productEvent(entityIndex, productIndex, productName,
                       productURL, details);
     return;
@@ -449,7 +436,8 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     string memory resultInfoURL;
     string memory resultLogoURL;
 
-    require(NumberOfProducts[entityIndex] > productIndex, "Product not found");
+    require(NumberOfProducts[entityIndex] > productIndex,
+            commonInterface.ProductNotFound());
 
     // Return the hash for this organizations product and version
     resultInfoURL = Products[entityIndex][productIndex].infoURL;
@@ -514,12 +502,11 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
                          uint256 parent)
   {
     require(entityIndex > 0, commonInterface.EntityIsZero());
-
     require(NumberOfProducts[entityIndex] > productIndex,
-            "Product not found");
+            commonInterface.ProductNotFound());
 
     require(Products[entityIndex][productIndex].numberOfOffers > offerIndex,
-            "Offer not found");
+            commonInterface.OfferNotFound());
 
     // Return price, value/duration/flags and ERC token of offer
     return (Products[entityIndex][productIndex].offers[offerIndex].tokenAddr,
@@ -560,7 +547,7 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     require(entityIndex > 0, commonInterface.EntityIsZero());
 
     require(NumberOfProducts[entityIndex] > productIndex,
-            "Product not found");
+            commonInterface.ProductNotFound());
     OfferResult memory theResult;
 
     {

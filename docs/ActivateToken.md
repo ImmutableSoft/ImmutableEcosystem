@@ -1,6 +1,6 @@
 # ActivateToken.sol
 
-View Source: [\contracts\ActivateToken.sol](..\contracts\ActivateToken.sol)
+View Source: [contracts/ActivateToken.sol](../contracts/ActivateToken.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md), [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md)**
 
@@ -10,17 +10,14 @@ View Source: [\contracts\ActivateToken.sol](..\contracts\ActivateToken.sol)
 **Constants & Variables**
 
 ```js
-//private members
 mapping(uint256 => uint256) private ActivateIdToTokenId;
 mapping(uint256 => uint256) private TokenIdToActivateId;
 mapping(uint64 => uint64) private NumberOfActivations;
 mapping(uint256 => uint256) private TokenIdToRicardianParent;
-
-//internal members
-contract ProductActivate internal activateInterface;
-contract CreatorToken internal creatorInterface;
-contract ImmutableEntity internal entityInterface;
-contract StringCommon internal commonInterface;
+contract ProductActivate private activateInterface;
+contract CreatorToken private creatorInterface;
+contract ImmutableEntity private entityInterface;
+contract StringCommon private commonInterface;
 
 ```
 
@@ -43,6 +40,10 @@ contract StringCommon internal commonInterface;
 
 ### initialize
 
+Initialize the activate token smart contract
+   Called during first deployment only (not on upgrade) as
+   this is an OpenZepellin upgradable contract
+
 ```js
 function initialize(address commonContractAddr, address entityContractAddr) public nonpayable initializer 
 ```
@@ -51,13 +52,14 @@ function initialize(address commonContractAddr, address entityContractAddr) publ
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| commonContractAddr | address |  | 
-| entityContractAddr | address |  | 
+| commonContractAddr | address | The StringCommon contract address | 
+| entityContractAddr | address | The ImmutableEntity token contract address | 
 
 ### restrictToken
 
 Restrict the token to the activate contract
-   Called internally. msg.sender must contract owner
+   Called once after deployment to initialize Ecosystem.
+   msg.sender must be contract owner
 
 ```js
 function restrictToken(address activateAddress, address creatorAddress) public nonpayable onlyOwner 
@@ -88,7 +90,7 @@ function burn(uint256 tokenId) public nonpayable
 ### mint
 
 Create a product activation license.
- Not public, called internally. msg.sender is the license owner.
+ Public but internal. msg.sender must be product activate contract
 
 ```js
 function mint(address sender, uint256 entityIndex, uint256 productIndex, uint256 licenseHash, uint256 licenseValue, uint256 ricardianParent) public nonpayable
@@ -279,7 +281,10 @@ entities , products, hashes, values and prices as arrays.\
 
 ### _beforeTokenTransfer
 
-Perform validity check before transfer of token allowed
+Perform validity check before transfer of token allowed.
+ Called internally before any token transfer and used to enforce
+ resale rights and Ricardian contract agreement requirements,
+ even when using third party exchanges.
 
 ```js
 function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal nonpayable
@@ -291,7 +296,7 @@ function _beforeTokenTransfer(address from, address to, uint256 tokenId) interna
 | ------------- |------------- | -----|
 | from | address | The token origin address | 
 | to | address | The token destination address | 
-| tokenId | uint256 | The token to transfer | 
+| tokenId | uint256 | The token intended for transfer | 
 
 ### supportsInterface
 
@@ -325,7 +330,6 @@ TRUE (1) if supported, FALSE (0) otherwise
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -339,6 +343,5 @@ TRUE (1) if supported, FALSE (0) otherwise
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

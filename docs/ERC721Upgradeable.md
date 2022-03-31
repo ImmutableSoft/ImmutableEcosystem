@@ -1,6 +1,6 @@
 # ERC721Upgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\ERC721Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\ERC721Upgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ContextUpgradeable](ContextUpgradeable.md), [ERC165Upgradeable](ERC165Upgradeable.md), [IERC721Upgradeable](IERC721Upgradeable.md), [IERC721MetadataUpgradeable](IERC721MetadataUpgradeable.md)**
 **↘ Derived Contracts: [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md), [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md), [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)**
@@ -52,15 +52,17 @@ uint256[44] private __gap;
 - [_burn(uint256 tokenId)](#_burn)
 - [_transfer(address from, address to, uint256 tokenId)](#_transfer)
 - [_approve(address to, uint256 tokenId)](#_approve)
+- [_setApprovalForAll(address owner, address operator, bool approved)](#_setapprovalforall)
 - [_checkOnERC721Received(address from, address to, uint256 tokenId, bytes _data)](#_checkonerc721received)
 - [_beforeTokenTransfer(address from, address to, uint256 tokenId)](#_beforetokentransfer)
+- [_afterTokenTransfer(address from, address to, uint256 tokenId)](#_aftertokentransfer)
 
 ### __ERC721_init
 
 Initializes the contract by setting a `name` and a `symbol` to the token collection.
 
 ```js
-function __ERC721_init(string name_, string symbol_) internal nonpayable initializer 
+function __ERC721_init(string name_, string symbol_) internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -73,7 +75,7 @@ function __ERC721_init(string name_, string symbol_) internal nonpayable initial
 ### __ERC721_init_unchained
 
 ```js
-function __ERC721_init_unchained(string name_, string symbol_) internal nonpayable initializer 
+function __ERC721_init_unchained(string name_, string symbol_) internal nonpayable onlyInitializing 
 ```
 
 **Arguments**
@@ -173,8 +175,9 @@ returns(string)
 
 ### _baseURI
 
-Base URI for computing {tokenURI}. Empty by default, can be overriden
- in child contracts.
+Base URI for computing {tokenURI}. If set, the resulting URI for each
+ token will be the concatenation of the `baseURI` and the `tokenId`. Empty
+ by default, can be overriden in child contracts.
 
 ```js
 function _baseURI() internal view
@@ -470,6 +473,23 @@ function _approve(address to, uint256 tokenId) internal nonpayable
 | to | address |  | 
 | tokenId | uint256 |  | 
 
+### _setApprovalForAll
+
+Approve `operator` to operate on all of `owner` tokens
+ Emits a {ApprovalForAll} event.
+
+```js
+function _setApprovalForAll(address owner, address operator, bool approved) internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| owner | address |  | 
+| operator | address |  | 
+| approved | bool |  | 
+
 ### _checkOnERC721Received
 
 Internal function to invoke {IERC721Receiver-onERC721Received} on a target address.
@@ -502,12 +522,32 @@ Hook that is called before any token transfer. This includes minting
  transferred to `to`.
  - When `from` is zero, `tokenId` will be minted for `to`.
  - When `to` is zero, ``from``'s `tokenId` will be burned.
- - `from` cannot be the zero address.
- - `to` cannot be the zero address.
+ - `from` and `to` are never both zero.
  To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
 
 ```js
 function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| from | address |  | 
+| to | address |  | 
+| tokenId | uint256 |  | 
+
+### _afterTokenTransfer
+
+Hook that is called after any transfer of tokens. This includes
+ minting and burning.
+ Calling conditions:
+ - when `from` and `to` are both non-zero.
+ - `from` and `to` are never both zero.
+ To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
+
+```js
+function _afterTokenTransfer(address from, address to, uint256 tokenId) internal nonpayable
 ```
 
 **Arguments**
@@ -531,7 +571,6 @@ function _beforeTokenTransfer(address from, address to, uint256 tokenId) interna
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -545,6 +584,5 @@ function _beforeTokenTransfer(address from, address to, uint256 tokenId) interna
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

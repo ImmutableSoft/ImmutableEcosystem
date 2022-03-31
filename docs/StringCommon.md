@@ -1,6 +1,8 @@
 # Immutable String - common constants and string routines (StringCommon.sol)
 
-View Source: [\contracts\StringCommon.sol](..\contracts\StringCommon.sol)
+View Source: [contracts/StringCommon.sol](../contracts/StringCommon.sol)
+
+**↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 
 **StringCommon**
 
@@ -93,6 +95,7 @@ uint256 public constant ValueMask;
 string public constant EntityIsZero;
 string public constant OfferNotFound;
 string public constant EntityNotValidated;
+string public constant ProductNotFound;
 string public constant TokenEntityNoMatch;
 string public constant TokenProductNoMatch;
 string public constant TokenNotUnique;
@@ -101,7 +104,23 @@ string public constant TokenNotUnique;
 
 ## Functions
 
+- [initialize()](#initialize)
 - [stringsEqual(string _a, string _b)](#stringsequal)
+
+### initialize
+
+Initialize the StringCommon smart contract
+   Called during first deployment only (not on upgrade) as
+   this is an OpenZepellin upgradable contract
+
+```js
+function initialize() public nonpayable initializer 
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
 
 ### stringsEqual
 
@@ -137,7 +156,6 @@ true if strings are equal, otherwise false
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -151,6 +169,5 @@ true if strings are equal, otherwise false
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

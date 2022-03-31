@@ -3,11 +3,9 @@ pragma abicoder v2;
 
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-
 // OpenZepellin upgradable contracts
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
@@ -17,7 +15,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Enumer
 // OpenZepellin standard contracts
 //import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/PullPayment.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -32,13 +29,11 @@ import "./ImmutableProduct.sol";
 /// @notice Token transfers use the ImmuteToken only
 /// @dev Ecosystem is split in three, Entities, Releases and Licenses
 contract CreatorToken is Initializable, OwnableUpgradeable,
-                         PullPaymentUpgradeable,
                          ERC721EnumerableUpgradeable,
                          ERC721BurnableUpgradeable,
                          ERC721URIStorageUpgradeable
 /*
 contract CreatorToken is  Ownable,
-                          PullPayment,
                           ERC721Enumerable,
                           ERC721Burnable,
                           ERC721URIStorage
@@ -47,18 +42,15 @@ contract CreatorToken is  Ownable,
   struct Release
   {
     uint256 hash;
-    string fileURI;
     uint256 version; // version, architecture, languages
     uint256 parent; // Ricardian parent of this file (SHA256 hash)
   }
 
-  mapping(uint256 => Release) Releases;
+  mapping(uint256 => Release) private Releases;
   mapping (uint256 => uint256) private HashToRelease;
   mapping (uint256 => mapping (uint256 => uint256)) private ReleasesNumberOf;
-
-  // Product interface events
-  event creatorReleaseEvent(uint256 entityIndex,
-                            uint256 productIndex, uint256 version);
+  uint256 private AnonProductID;
+  uint256 public AnonFee;
 
   // External contract interfaces
   StringCommon private commonInterface;
@@ -69,13 +61,16 @@ contract CreatorToken is  Ownable,
   /// PRODUCT RELEASE
   ///////////////////////////////////////////////////////////
 
-  /// @notice Product contract initializer/constructor.
-  /// Executed on contract creation only.
+  /// @notice Initialize the ImmutableProduct smart contract
+  ///   Called during first deployment only (not on upgrade) as
+  ///   this is an OpenZepellin upgradable contract
+  /// @param commonAddr The StringCommon contract address
+  /// @param entityAddr The ImmutableEntity token contract address
+  /// @param productAddr The ImmutableProduct token contract address
   function initialize(address commonAddr, address entityAddr,
                       address productAddr) public initializer
   {
     __Ownable_init();
-    __PullPayment_init();
     __ERC721_init("Activate", "ACT");
     __ERC721Enumerable_init();
     __ERC721Burnable_init();
@@ -92,6 +87,58 @@ contract CreatorToken is  Ownable,
     commonInterface = StringCommon(commonAddr);
     entityInterface = ImmutableEntity(entityAddr);
     productInterface = ImmutableProduct(productAddr);
+    AnonFee = 1000000000000000000; //(1 MATIC ~ $2)
+  }
+
+  /// @notice Retrieve fee to upgrade.
+  /// Administrator only.
+  /// @param newFee the new anonymous use fee
+  function creatorAnonFee(uint256 newFee)
+    external onlyOwner
+  {
+    AnonFee = newFee;
+  }
+
+  /// @notice Anonymous file security (PoE without credentials)
+  /// Entity and Product must exist.
+  /// @param newHash The file SHA256 CRC hash
+  /// @param newFileUri Public URI/name/reference of the file
+  function anonFile(uint256 newHash, string memory newFileUri)
+    external payable
+  {
+    // Create the file PoE/release or revert if any error
+    require(newHash != 0, "Hash parameter is zero");
+    require(bytes(newFileUri).length != 0, "URI/name cannot be empty");
+    require(msg.value >= AnonFee, commonInterface.EntityIsZero());
+
+    // Serialize the entity (0), product and release IDs into unique tokenID
+    uint256 tokenId = ((0 << commonInterface.EntityIdOffset()) & commonInterface.EntityIdMask()) |
+                ((AnonProductID << commonInterface.ProductIdOffset()) & commonInterface.ProductIdMask()) |
+                (((++ReleasesNumberOf[0][0])
+                  << commonInterface.ReleaseIdOffset()) & commonInterface.ReleaseIdMask());
+
+    require(HashToRelease[newHash] == 0, "Hash already exists");
+    require(Releases[tokenId].hash == 0, "token already exists");
+
+    // Transfer ETH funds to ImmutableSoft
+    entityInterface.entityPay{value: msg.value }(0);
+
+    // Populate the release
+    Releases[tokenId].hash = newHash;
+
+    // Populate the reverse lookup (hash to token id lookup)
+    HashToRelease[newHash] = tokenId;
+
+    // Mint the new creator token
+    _mint(msg.sender, tokenId);
+    _setTokenURI(tokenId, newFileUri);
+
+    // Increment release counter and increment product ID on roll over
+    if (ReleasesNumberOf[0][0] >= 0xFFFFFFFF)
+    {
+      AnonProductID++;
+      ReleasesNumberOf[0][0] = 0;
+    }
   }
 
   /// @notice Create new release(s) of an existing product.
@@ -110,7 +157,7 @@ contract CreatorToken is  Ownable,
     uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
 
     // Only a validated entity can create a release
-    require(entityStatus > 0, "Entity is not validated");
+    require(entityStatus > 0, commonInterface.EntityNotValidated());
 
     require((productIndex.length == newVersion.length) &&
             (newVersion.length == newHash.length) &&
@@ -122,11 +169,11 @@ contract CreatorToken is  Ownable,
     for (uint i = 0; i < productIndex.length; ++i)
     {
       uint256 version = newVersion[i] | (block.timestamp << 160); // add timestamp
-      uint256 parentId = HashToRelease[parentHash[i]];
 
       require(newHash[i] != 0, "Hash parameter is zero");
       require(bytes(newFileUri[i]).length != 0, "URI cannot be empty");
-      require(productInterface.productNumberOf(entityIndex) > productIndex[i], "Product not found");
+      require(productInterface.productNumberOf(entityIndex) > productIndex[i],
+              commonInterface.ProductNotFound());
 
       // Serialize the entity, product and release IDs into unique tokenID
       uint256 tokenId = ((entityIndex << commonInterface.EntityIdOffset()) & commonInterface.EntityIdMask()) |
@@ -140,7 +187,8 @@ contract CreatorToken is  Ownable,
       // If a Ricardian leaf ensure the leaf is valid
       if (parentHash[i] > 0)
       {
-        require((parentId > 0), "Parent token not found");
+        uint256 parentId = HashToRelease[parentHash[i]];
+        require(parentId > 0, "Parent token not found");
 
         require(entityIndex ==
           ((parentId & commonInterface.EntityIdMask()) >> commonInterface.EntityIdOffset()),
@@ -153,19 +201,19 @@ contract CreatorToken is  Ownable,
       }
 
       // Populate the release
-      Releases[tokenId] = Release(newHash[i], newFileUri[i], version, parentHash[i]);
+      Releases[tokenId].hash = newHash[i];
+      Releases[tokenId].version = version;
+      if (parentHash[i] > 0)
+        Releases[tokenId].parent = parentHash[i];
 
       // Populate the reverse lookup (hash to token id lookup)
       HashToRelease[newHash[i]] = tokenId;
 
       // Mint the new creator token
       _mint(msg.sender, tokenId);
+      _setTokenURI(tokenId, newFileUri[i]);
 
       ++ReleasesNumberOf[entityIndex][productIndex[i]];
-
-      // Only emit events for non-Ricardian leaf's (public)
-      if (parentHash[i] == 0)
-        emit creatorReleaseEvent(entityIndex, productIndex[i], version);
     }
   }
 
@@ -185,7 +233,8 @@ contract CreatorToken is  Ownable,
                            uint256 fileHash, uint256 parentHash)
   {
     require(entityIndex > 0, commonInterface.EntityIsZero());
-    require(productInterface.productNumberOf(entityIndex) > productIndex, "Product not found");
+    require(productInterface.productNumberOf(entityIndex) > productIndex,
+            commonInterface.ProductNotFound());
     require(ReleasesNumberOf[entityIndex][productIndex] > releaseIndex,
             "Release not found");
 
@@ -195,7 +244,7 @@ contract CreatorToken is  Ownable,
               (((releaseIndex) << commonInterface.ReleaseIdOffset()) & commonInterface.ReleaseIdMask());
 
     // Return the version, URI and hash's for this product
-    return (Releases[tokenId].version, Releases[tokenId].fileURI,
+    return (Releases[tokenId].version, tokenURI(tokenId),
             Releases[tokenId].hash, Releases[tokenId].parent);
   }
 
@@ -215,20 +264,21 @@ contract CreatorToken is  Ownable,
                          string memory URI, uint256 parent)
   {
     uint256 tokenId = HashToRelease[fileHash];
-    uint256 entityIndex = ((tokenId & commonInterface.EntityIdMask()) >> commonInterface.EntityIdOffset());
-    uint256 productIndex = ((tokenId & commonInterface.ProductIdMask()) >> commonInterface.ProductIdOffset());
-    uint256 releaseIndex = ((tokenId & commonInterface.ReleaseIdMask()) >> commonInterface.ReleaseIdOffset());
 
-    // Ensure release hash lookup is valid
-    if ((entityIndex == 0) ||
-        (productInterface.productNumberOf(entityIndex) <= productIndex) ||
-        (ReleasesNumberOf[entityIndex][productIndex] <= releaseIndex))
+    // Return token information if found
+    if (tokenId != 0)
+    {
+      uint256 entityIndex = ((tokenId & commonInterface.EntityIdMask()) >> commonInterface.EntityIdOffset());
+      uint256 productIndex = ((tokenId & commonInterface.ProductIdMask()) >> commonInterface.ProductIdOffset());
+      uint256 releaseIndex = ((tokenId & commonInterface.ReleaseIdMask()) >> commonInterface.ReleaseIdOffset());
+
+      // Return entity, product, version, URI and parent for this hash
+      return (entityIndex, productIndex, releaseIndex,
+              Releases[tokenId].version, tokenURI(tokenId),
+              Releases[tokenId].parent);
+    }
+    else
       return (0, 0, 0, 0, "", 0);
-
-    // Return entity, product, version, URI and parent for this hash
-    return (entityIndex, productIndex, releaseIndex,
-            Releases[tokenId].version, Releases[tokenId].fileURI,
-            Releases[tokenId].parent);
   }
 
   struct ReleaseInformation
@@ -338,7 +388,8 @@ contract CreatorToken is  Ownable,
                            uint256[] memory hashes, uint256[] memory parents)
   {
     require(entityIndex > 0, commonInterface.EntityIsZero());
-    require(productInterface.productNumberOf(entityIndex) > productIndex, "Product not found");
+    require(productInterface.productNumberOf(entityIndex) > productIndex,
+            commonInterface.ProductNotFound());
 
     uint256[] memory resultVersion = new uint256[](ReleasesNumberOf[entityIndex][productIndex]);
     string[] memory resultURI = new string[](ReleasesNumberOf[entityIndex][productIndex]);
@@ -354,7 +405,7 @@ contract CreatorToken is  Ownable,
               ((productIndex << commonInterface.ProductIdOffset()) & commonInterface.ProductIdMask()) |
               ((i << commonInterface.ReleaseIdOffset()) & commonInterface.ReleaseIdMask());
       resultVersion[i] = Releases[tokenId].version;
-      resultURI[i] = Releases[tokenId].fileURI;
+      resultURI[i] = tokenURI(tokenId);
       resultHash[i] = Releases[tokenId].hash;
       resultParent[i] = Releases[tokenId].parent;
     }
@@ -402,14 +453,7 @@ contract CreatorToken is  Ownable,
     (ERC721Upgradeable, ERC721URIStorageUpgradeable)
       returns (string memory)
   {
-    // Deserialize the entity, product and release IDs from tokenID
-    uint256 entityIndex = ((tokenId & commonInterface.EntityIdMask()) >>
-                           commonInterface.EntityIdOffset());
-
-    require(entityIndex > 0, "Entity is zero");
-
-    // Index into the release and return the URI
-    return (Releases[tokenId].fileURI);
+    return super.tokenURI(tokenId);
   }
 
   /// @notice Burn a product activation license.

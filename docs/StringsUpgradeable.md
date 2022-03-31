@@ -1,6 +1,6 @@
 # StringsUpgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\utils\StringsUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\StringsUpgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol](../@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol)
 
 **StringsUpgradeable**
 
@@ -10,7 +10,7 @@ String operations.
 **Constants & Variables**
 
 ```js
-bytes16 private constant alphabet;
+bytes16 private constant _HEX_SYMBOLS;
 
 ```
 
@@ -79,7 +79,6 @@ returns(string)
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -93,6 +92,5 @@ returns(string)
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

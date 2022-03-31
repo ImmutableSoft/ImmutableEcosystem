@@ -180,13 +180,15 @@ contract StringCommon is Initializable, OwnableUpgradeable
   string public constant OfferNotFound = "Offer not found";
   string public constant EntityNotValidated = "Entity not validated";
 
-//  string public constant HashCannotBeZero = "Hash cannot be zero";
+  string public constant ProductNotFound = "Product not found";
+
   string public constant TokenEntityNoMatch = "Token entity does not match";
   string public constant TokenProductNoMatch = "Token product id does not match";
   string public constant TokenNotUnique = "TokenId is NOT unique";
 
-  /// @notice String and Common contract initializer/constructor.
-  /// Executed on contract creation only.
+  /// @notice Initialize the StringCommon smart contract
+  ///   Called during first deployment only (not on upgrade) as
+  ///   this is an OpenZepellin upgradable contract
   function initialize() public initializer
   {
     __Ownable_init();

@@ -1,6 +1,6 @@
 # IERC20Upgradeable.sol
 
-View Source: [@openzeppelin\contracts-upgradeable\token\ERC20\IERC20Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC20\IERC20Upgradeable.sol)
+View Source: [@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol)
 
 **↘ Derived Contracts: [ERC20Upgradeable](ERC20Upgradeable.md), [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)**
 
@@ -19,10 +19,10 @@ event Approval(address indexed owner, address indexed spender, uint256  value);
 
 - [totalSupply()](#totalsupply)
 - [balanceOf(address account)](#balanceof)
-- [transfer(address recipient, uint256 amount)](#transfer)
+- [transfer(address to, uint256 amount)](#transfer)
 - [allowance(address owner, address spender)](#allowance)
 - [approve(address spender, uint256 amount)](#approve)
-- [transferFrom(address sender, address recipient, uint256 amount)](#transferfrom)
+- [transferFrom(address from, address to, uint256 amount)](#transferfrom)
 
 ### totalSupply
 
@@ -55,12 +55,12 @@ returns(uint256)
 
 ### transfer
 
-Moves `amount` tokens from the caller's account to `recipient`.
+Moves `amount` tokens from the caller's account to `to`.
  Returns a boolean value indicating whether the operation succeeded.
  Emits a {Transfer} event.
 
 ```js
-function transfer(address recipient, uint256 amount) external nonpayable
+function transfer(address to, uint256 amount) external nonpayable
 returns(bool)
 ```
 
@@ -68,7 +68,7 @@ returns(bool)
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| recipient | address |  | 
+| to | address |  | 
 | amount | uint256 |  | 
 
 ### allowance
@@ -116,14 +116,14 @@ returns(bool)
 
 ### transferFrom
 
-Moves `amount` tokens from `sender` to `recipient` using the
+Moves `amount` tokens from `from` to `to` using the
  allowance mechanism. `amount` is then deducted from the caller's
  allowance.
  Returns a boolean value indicating whether the operation succeeded.
  Emits a {Transfer} event.
 
 ```js
-function transferFrom(address sender, address recipient, uint256 amount) external nonpayable
+function transferFrom(address from, address to, uint256 amount) external nonpayable
 returns(bool)
 ```
 
@@ -131,8 +131,8 @@ returns(bool)
 
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
-| sender | address |  | 
-| recipient | address |  | 
+| from | address |  | 
+| to | address |  | 
 | amount | uint256 |  | 
 
 ## Contracts
@@ -148,7 +148,6 @@ returns(bool)
 * [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)
 * [ERC721Upgradeable](ERC721Upgradeable.md)
 * [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)
-* [EscrowUpgradeable](EscrowUpgradeable.md)
 * [IERC165Upgradeable](IERC165Upgradeable.md)
 * [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)
 * [IERC20Upgradeable](IERC20Upgradeable.md)
@@ -162,6 +161,5 @@ returns(bool)
 * [Migrations](Migrations.md)
 * [OwnableUpgradeable](OwnableUpgradeable.md)
 * [ProductActivate](ProductActivate.md)
-* [PullPaymentUpgradeable](PullPaymentUpgradeable.md)
 * [StringCommon](StringCommon.md)
 * [StringsUpgradeable](StringsUpgradeable.md)

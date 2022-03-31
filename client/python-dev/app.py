@@ -6,10 +6,11 @@ blockchain_address = 'https://polygon-rpc.com/'
 # Client instance to interact with the blockchain
 web3 = Web3(HTTPProvider(blockchain_address))
 # Set the default account (so we don't need to set the "from" for every transaction call)
-web3.eth.defaultAccount = web3.eth.accounts[0]
+# TODO: enable this for write
+#web3.eth.defaultAccount = web3.eth.accounts[0]
 
 # Path to the compiled contract JSON file
-compiled_contract_path = '../build/contracts/CreatorToken.json'
+compiled_contract_path = '../src/contracts/CreatorToken.json'
 # Deployed contract address (see `migrate` command output: `contract address`)
 #  deploy_polygon_mainnet.txt
 deployed_contract_address = '0x02a5d5C9c22eeDfAbE54c42Cd81F907Ffb27567C'
