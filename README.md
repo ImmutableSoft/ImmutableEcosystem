@@ -74,6 +74,8 @@ If you get the above web page instead of the MetaMask Connect Notification and y
 
 ![image ropsten](./docs/images/RopstenTestNetwork.PNG)
 
+If you are a digital creator please start with the [Digital Creator Interface](#digital-creator-interface) to join and add your creations to the marketplace. Browsers of the marketplace should continue with the End User Interface below.
+
 ## End User Interface
 
 The primary goal of the Ecosystem is to allow users to download, authenticate, install and purchase digital product activation assets safely and directly with the original digital creator. The Immutable Ecosystem allows users the ability to browse for all types of digital products. The goal of the Applications menu interface is to help users find their digital products quickly so they can install and purchase/activate those products securely. Each product displayed in the ecosystem has the product name, logo and link to the product website to learn more about a product before downloading.
