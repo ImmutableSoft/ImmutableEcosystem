@@ -2,17 +2,22 @@ import json
 from web3 import Web3, HTTPProvider
 
 #####################################################################
-# CONFIGURATION
+# WALLET CONFIGURATION
+#  Change below to load from a keystore or env variable
+#  Ganache testing only. (Account 0 of ganache-cli --deterministic)
+#####################################################################
+private_key  =  '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
+from_address  =  '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
+
+#####################################################################
+# BLOCKCHAIN CONFIGURATION
 #####################################################################
 # UNCOMMENt ONLY ONE COLLECTION OF ENDPOINT AND CONTRACT ADDRESSES
 
 #####################################################################
-# Truffle development (Account 0 of ganache-cli --deterministic)
+# Truffle development
 #####################################################################
-#private_key  =  '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
-#from_address  =  '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
 #endpoint_address = 'http://127.0.0.1:8545/'
-
 # Deployed contract addresses (see `migrate` command output: `contract address`)
 #entity_contract_address = '0xdd88f7448305079728c32ecaAFCA6a87166d52B6'
 #product_contract_address = '0x61f31C64EcDA67357ed8ca64EB80780c2033de5a'
@@ -24,8 +29,6 @@ from web3 import Web3, HTTPProvider
 # Polygon Mumbai
 #####################################################################
 #   Deployed contract addresses (see `deploy_polygon_mumbai.txt')
-private_key  =  '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
-from_address  =  '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
 endpoint_address = 'https://matic-mumbai.chainstacklabs.com/'
 chain_id = 80001
 entity_contract_address = '0x4e3113E6DD6A7646aa8520905eC30A341D907B1d'
@@ -38,8 +41,6 @@ productActivate_contract_address = '0xdd88f7448305079728c32ecaAFCA6a87166d52B6'
 # Polygon Mainnet
 #   Deployed contract addresses (see `deploy_polygon_mainnet.txt')
 #####################################################################
-#private_key  =  '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
-#from_address  =  '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
 #endpoint_address = 'https://polygon-rpc.com/'
 #chain_id = 137
 #entity_contract_address = '0xdd88f7448305079728c32ecaAFCA6a87166d52B6'
