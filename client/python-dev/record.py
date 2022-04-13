@@ -88,8 +88,13 @@ newRelease = creatorContract.functions.creatorReleases([fileProductId], [fileVer
     'from': from_address,
 })
 
+# Sign the transaction with private key configured above
 signed_txn = web3.eth.account.sign_transaction(newRelease, private_key)
-
-#web3.eth.send_raw_transaction(signed_txn.rawTransaction)
-
 print(signed_txn.rawTransaction)
+
+# Send the transaction and wait for receipt of it being mined
+#   Note: This can take awhile, and may fail due to low gas on
+#         Mainnet (Polygon/Ethereum).
+tx_hash = web3.eth.send_raw_transaction(signed_txn.rawTransaction)
+receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+print(dict(receipt))
