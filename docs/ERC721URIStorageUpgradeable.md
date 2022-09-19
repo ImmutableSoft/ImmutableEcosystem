@@ -1,6 +1,6 @@
 # ERC721URIStorageUpgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721URIStorageUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721URIStorageUpgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ERC721Upgradeable](ERC721Upgradeable.md)**
 **↘ Derived Contracts: [CreatorToken](CreatorToken.md)**

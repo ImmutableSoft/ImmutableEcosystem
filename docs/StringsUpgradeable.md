@@ -1,6 +1,6 @@
 # StringsUpgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol](../@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\utils\StringsUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\StringsUpgradeable.sol)
 
 **StringsUpgradeable**
 

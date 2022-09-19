@@ -1,6 +1,6 @@
 # Immutable Entity trust zone used by ecosystem members (ImmutableEntity.sol)
 
-View Source: [contracts/ImmutableEntity.sol](../contracts/ImmutableEntity.sol)
+View Source: [\contracts\ImmutableEntity.sol](..\contracts\ImmutableEntity.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 

@@ -1,6 +1,6 @@
 # ERC721Upgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\ERC721Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\ERC721Upgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ContextUpgradeable](ContextUpgradeable.md), [ERC165Upgradeable](ERC165Upgradeable.md), [IERC721Upgradeable](IERC721Upgradeable.md), [IERC721MetadataUpgradeable](IERC721MetadataUpgradeable.md)**
 **↘ Derived Contracts: [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md), [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md), [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)**
@@ -177,7 +177,7 @@ returns(string)
 
 Base URI for computing {tokenURI}. If set, the resulting URI for each
  token will be the concatenation of the `baseURI` and the `tokenId`. Empty
- by default, can be overriden in child contracts.
+ by default, can be overridden in child contracts.
 
 ```js
 function _baseURI() internal view

@@ -1,6 +1,6 @@
 # CustomToken.sol
 
-View Source: [contracts/CustomToken.sol](../contracts/CustomToken.sol)
+View Source: [\contracts\CustomToken.sol](..\contracts\CustomToken.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [ERC20Upgradeable](ERC20Upgradeable.md)**
 

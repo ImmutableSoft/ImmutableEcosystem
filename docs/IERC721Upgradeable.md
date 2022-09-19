@@ -1,6 +1,6 @@
 # IERC721Upgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\IERC721Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\IERC721Upgradeable.sol)
 
 **↗ Extends: [IERC165Upgradeable](IERC165Upgradeable.md)**
 **↘ Derived Contracts: [ERC721Upgradeable](ERC721Upgradeable.md), [IERC721EnumerableUpgradeable](IERC721EnumerableUpgradeable.md), [IERC721MetadataUpgradeable](IERC721MetadataUpgradeable.md)**
@@ -21,13 +21,13 @@ event ApprovalForAll(address indexed owner, address indexed operator, bool  appr
 
 - [balanceOf(address owner)](#balanceof)
 - [ownerOf(uint256 tokenId)](#ownerof)
+- [safeTransferFrom(address from, address to, uint256 tokenId, bytes data)](#safetransferfrom)
 - [safeTransferFrom(address from, address to, uint256 tokenId)](#safetransferfrom)
 - [transferFrom(address from, address to, uint256 tokenId)](#transferfrom)
 - [approve(address to, uint256 tokenId)](#approve)
-- [getApproved(uint256 tokenId)](#getapproved)
 - [setApprovalForAll(address operator, bool _approved)](#setapprovalforall)
+- [getApproved(uint256 tokenId)](#getapproved)
 - [isApprovedForAll(address owner, address operator)](#isapprovedforall)
-- [safeTransferFrom(address from, address to, uint256 tokenId, bytes data)](#safetransferfrom)
 
 ### balanceOf
 
@@ -60,6 +60,30 @@ returns(owner address)
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 | tokenId | uint256 |  | 
+
+### safeTransferFrom
+
+Safely transfers `tokenId` token from `from` to `to`.
+ Requirements:
+ - `from` cannot be the zero address.
+ - `to` cannot be the zero address.
+ - `tokenId` token must exist and be owned by `from`.
+ - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}.
+ - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
+ Emits a {Transfer} event.
+
+```js
+function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) external nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| from | address |  | 
+| to | address |  | 
+| tokenId | uint256 |  | 
+| data | bytes |  | 
 
 ### safeTransferFrom
 
@@ -129,23 +153,6 @@ function approve(address to, uint256 tokenId) external nonpayable
 | to | address |  | 
 | tokenId | uint256 |  | 
 
-### getApproved
-
-Returns the account approved for `tokenId` token.
- Requirements:
- - `tokenId` must exist.
-
-```js
-function getApproved(uint256 tokenId) external view
-returns(operator address)
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| tokenId | uint256 |  | 
-
 ### setApprovalForAll
 
 Approve or remove `operator` as an operator for the caller.
@@ -165,6 +172,23 @@ function setApprovalForAll(address operator, bool _approved) external nonpayable
 | operator | address |  | 
 | _approved | bool |  | 
 
+### getApproved
+
+Returns the account approved for `tokenId` token.
+ Requirements:
+ - `tokenId` must exist.
+
+```js
+function getApproved(uint256 tokenId) external view
+returns(operator address)
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| tokenId | uint256 |  | 
+
 ### isApprovedForAll
 
 Returns if the `operator` is allowed to manage all of the assets of `owner`.
@@ -181,30 +205,6 @@ returns(bool)
 | ------------- |------------- | -----|
 | owner | address |  | 
 | operator | address |  | 
-
-### safeTransferFrom
-
-Safely transfers `tokenId` token from `from` to `to`.
- Requirements:
- - `from` cannot be the zero address.
- - `to` cannot be the zero address.
- - `tokenId` token must exist and be owned by `from`.
- - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}.
- - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
- Emits a {Transfer} event.
-
-```js
-function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) external nonpayable
-```
-
-**Arguments**
-
-| Name        | Type           | Description  |
-| ------------- |------------- | -----|
-| from | address |  | 
-| to | address |  | 
-| tokenId | uint256 |  | 
-| data | bytes |  | 
 
 ## Contracts
 

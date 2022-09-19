@@ -57,11 +57,14 @@ contract CreatorToken is  Ownable,
   ImmutableEntity private entityInterface;
   ImmutableProduct private productInterface;
 
+  string private __name;
+  string private __symbol;
+
   ///////////////////////////////////////////////////////////
   /// PRODUCT RELEASE
   ///////////////////////////////////////////////////////////
 
-  /// @notice Initialize the ImmutableProduct smart contract
+  /// @notice Initialize the CreatorToken smart contract
   ///   Called during first deployment only (not on upgrade) as
   ///   this is an OpenZepellin upgradable contract
   /// @param commonAddr The StringCommon contract address
@@ -71,7 +74,7 @@ contract CreatorToken is  Ownable,
                       address productAddr) public initializer
   {
     __Ownable_init();
-    __ERC721_init("Activate", "ACT");
+    __ERC721_init("ImmutableSoft", "IMSFT");
     __ERC721Enumerable_init();
     __ERC721Burnable_init();
     __ERC721URIStorage_init();
@@ -102,8 +105,9 @@ contract CreatorToken is  Ownable,
   /// @notice Anonymous file security (PoE without credentials)
   /// Entity and Product must exist.
   /// @param newHash The file SHA256 CRC hash
-  /// @param newFileUri Public URI/name/reference of the file
-  function anonFile(uint256 newHash, string memory newFileUri)
+  /// @param newFileUri URI/name/reference of the file
+  /// @param version The version and flags of the file
+  function anonFile(uint256 newHash, string memory newFileUri, uint256 version)
     external payable
   {
     // Create the file PoE/release or revert if any error
@@ -125,6 +129,8 @@ contract CreatorToken is  Ownable,
 
     // Populate the release
     Releases[tokenId].hash = newHash;
+    Releases[tokenId].version = version |
+                           (block.timestamp << 160); // add timestamp
 
     // Populate the reverse lookup (hash to token id lookup)
     HashToRelease[newHash] = tokenId;
@@ -244,8 +250,12 @@ contract CreatorToken is  Ownable,
               (((releaseIndex) << commonInterface.ReleaseIdOffset()) & commonInterface.ReleaseIdMask());
 
     // Return the version, URI and hash's for this product
-    return (Releases[tokenId].version, tokenURI(tokenId),
-            Releases[tokenId].hash, Releases[tokenId].parent);
+    if (Releases[tokenId].version > 0)
+      return (Releases[tokenId].version, tokenURI(tokenId),
+              Releases[tokenId].hash, Releases[tokenId].parent);
+    else // burned
+      return (Releases[tokenId].version, "",
+              Releases[tokenId].hash, Releases[tokenId].parent);
   }
 
   /// @notice Reverse lookup, return entity, product, URI of product release.
@@ -405,7 +415,10 @@ contract CreatorToken is  Ownable,
               ((productIndex << commonInterface.ProductIdOffset()) & commonInterface.ProductIdMask()) |
               ((i << commonInterface.ReleaseIdOffset()) & commonInterface.ReleaseIdMask());
       resultVersion[i] = Releases[tokenId].version;
-      resultURI[i] = tokenURI(tokenId);
+      if (Releases[tokenId].version > 0)
+        resultURI[i] = tokenURI(tokenId);
+      else
+        resultURI[i] = "";
       resultHash[i] = Releases[tokenId].hash;
       resultParent[i] = Releases[tokenId].parent;
     }
@@ -456,13 +469,38 @@ contract CreatorToken is  Ownable,
     return super.tokenURI(tokenId);
   }
 
-  /// @notice Burn a product activation license.
+  /// @notice Change the URI of the token Id
+  ///   Token must exist and caller must be owner or approved
+  /// @param tokenId The unique token identifier
+  /// @param _tokenURI The NFT's new associated URI/URL for this token
+  function setTokenURI(uint256 tokenId, string memory _tokenURI) public
+  {
+    //solhint-disable-next-line max-line-length
+    require(_isApprovedOrOwner(_msgSender(), tokenId), "setTokenURI: caller is not owner nor approved");
+    return super._setTokenURI(tokenId, _tokenURI);
+  }
+
+  /// @notice Burn a product file release.
   /// Not public, called internally. msg.sender must be the token owner.
   /// @param tokenId The tokenId to burn
   function _burn(uint256 tokenId) internal virtual override(ERC721Upgradeable,
                                                        ERC721URIStorageUpgradeable)
   {
-    super.burn(tokenId);
+    uint256 entityIndex = ((tokenId & commonInterface.EntityIdMask()) >> commonInterface.EntityIdOffset());
+    uint256 productIndex = ((tokenId & commonInterface.ProductIdMask()) >> commonInterface.ProductIdOffset());
+    uint256 releaseIndex = ((tokenId & commonInterface.ReleaseIdMask()) >> commonInterface.ReleaseIdOffset());
+
+    // Burn token and remove the recorded info (hash, version, etc.)
+    super._burn(tokenId);
+    HashToRelease[Releases[tokenId].hash] = 0;
+    Releases[tokenId].hash = 0;
+    Releases[tokenId].version = 0;
+    if (Releases[tokenId].parent > 0)
+      Releases[tokenId].parent = 0;
+
+    // If latest release, decrease per-product count
+    if (releaseIndex == ReleasesNumberOf[entityIndex][productIndex] - 1)
+      --ReleasesNumberOf[entityIndex][productIndex];
   }
 
   /// @notice Return the type of supported ERC interfaces
@@ -473,5 +511,38 @@ contract CreatorToken is  Ownable,
       returns (bool)
   {
     return super.supportsInterface(interfaceId);
+  }
+
+/* Used once to fix initial bug (copy/paste error from ActivateToken)
+  /// @notice Change the branding of the token (name and symbol)
+  /// @param newName The new token name
+  /// @param newSymbol The new token symbol
+  function changeBrand(string memory newName, string memory newSymbol) public onlyOwner
+  {
+    __name = newName;
+    __symbol = newSymbol;
+  }
+*/
+
+  /// @notice Retrieve the token name
+  /// @return Return the token name as a string
+  function name() public view virtual override(ERC721Upgradeable)
+      returns (string memory)
+  {
+    if (bytes(__name).length > 0)
+      return __name;
+    else
+      return super.name();
+  }
+
+  /// @notice Retrieve the token symbol
+  /// @return Return the token symbol as a string
+  function symbol() public view virtual override(ERC721Upgradeable)
+      returns (string memory)
+  {
+    if (bytes(__symbol).length > 0)
+      return __symbol;
+    else
+      return super.symbol();
   }
 }

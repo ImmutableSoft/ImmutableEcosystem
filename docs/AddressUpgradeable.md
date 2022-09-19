@@ -1,6 +1,6 @@
 # AddressUpgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol](../@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\utils\AddressUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\AddressUpgradeable.sol)
 
 **AddressUpgradeable**
 

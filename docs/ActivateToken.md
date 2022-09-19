@@ -1,6 +1,6 @@
 # ActivateToken.sol
 
-View Source: [contracts/ActivateToken.sol](../contracts/ActivateToken.sol)
+View Source: [\contracts\ActivateToken.sol](..\contracts\ActivateToken.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md), [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md)**
 

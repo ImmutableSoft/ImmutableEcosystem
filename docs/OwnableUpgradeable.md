@@ -1,6 +1,6 @@
 # OwnableUpgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol](../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\access\OwnableUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\access\OwnableUpgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ContextUpgradeable](ContextUpgradeable.md)**
 **↘ Derived Contracts: [ActivateToken](ActivateToken.md), [CreatorToken](CreatorToken.md), [CustomToken](CustomToken.md), [ImmutableEntity](ImmutableEntity.md), [ImmutableProduct](ImmutableProduct.md), [ProductActivate](ProductActivate.md), [StringCommon](StringCommon.md)**

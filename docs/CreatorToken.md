@@ -1,6 +1,6 @@
 # The Immutable Product - authentic product distribution (CreatorToken.sol)
 
-View Source: [contracts/CreatorToken.sol](../contracts/CreatorToken.sol)
+View Source: [\contracts\CreatorToken.sol](..\contracts\CreatorToken.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md), [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md), [ERC721BurnableUpgradeable](ERC721BurnableUpgradeable.md), [ERC721URIStorageUpgradeable](ERC721URIStorageUpgradeable.md)**
 
@@ -44,6 +44,8 @@ uint256 private AnonProductID;
 contract StringCommon private commonInterface;
 contract ImmutableEntity private entityInterface;
 contract ImmutableProduct private productInterface;
+string private __name;
+string private __symbol;
 
 //public members
 uint256 public AnonFee;
@@ -54,7 +56,7 @@ uint256 public AnonFee;
 
 - [initialize(address commonAddr, address entityAddr, address productAddr)](#initialize)
 - [creatorAnonFee(uint256 newFee)](#creatoranonfee)
-- [anonFile(uint256 newHash, string newFileUri)](#anonfile)
+- [anonFile(uint256 newHash, string newFileUri, uint256 version)](#anonfile)
 - [creatorReleases(uint256[] productIndex, uint256[] newVersion, uint256[] newHash, string[] newFileUri, uint256[] parentHash)](#creatorreleases)
 - [creatorReleaseDetails(uint256 entityIndex, uint256 productIndex, uint256 releaseIndex)](#creatorreleasedetails)
 - [creatorReleaseHashDetails(uint256 fileHash)](#creatorreleasehashdetails)
@@ -64,8 +66,11 @@ uint256 public AnonFee;
 - [creatorReleasesNumberOf(uint256 entityIndex, uint256 productIndex)](#creatorreleasesnumberof)
 - [_beforeTokenTransfer(address from, address to, uint256 tokenId)](#_beforetokentransfer)
 - [tokenURI(uint256 tokenId)](#tokenuri)
+- [setTokenURI(uint256 tokenId, string _tokenURI)](#settokenuri)
 - [_burn(uint256 tokenId)](#_burn)
 - [supportsInterface(bytes4 interfaceId)](#supportsinterface)
+- [name()](#name)
+- [symbol()](#symbol)
 
 ### initialize
 
@@ -106,7 +111,7 @@ Anonymous file security (PoE without credentials)
  Entity and Product must exist.
 
 ```js
-function anonFile(uint256 newHash, string newFileUri) external payable
+function anonFile(uint256 newHash, string newFileUri, uint256 version) external payable
 ```
 
 **Arguments**
@@ -114,7 +119,8 @@ function anonFile(uint256 newHash, string newFileUri) external payable
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 | newHash | uint256 | The file SHA256 CRC hash | 
-| newFileUri | string | Public URI/name/reference of the file | 
+| newFileUri | string | URI/name/reference of the file | 
+| version | uint256 | The version and flags of the file | 
 
 ### creatorReleases
 
@@ -308,9 +314,25 @@ the file name and/or URI secured by this token
 | ------------- |------------- | -----|
 | tokenId | uint256 | The unique token identifier | 
 
+### setTokenURI
+
+Change the URI of the token Id
+   Token must exist and caller must be owner or approved
+
+```js
+function setTokenURI(uint256 tokenId, string _tokenURI) public nonpayable
+```
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+| tokenId | uint256 | The unique token identifier | 
+| _tokenURI | string | The NFT's new associated URI/URL for this token | 
+
 ### _burn
 
-Burn a product activation license.
+Burn a product file release.
  Not public, called internally. msg.sender must be the token owner.
 
 ```js
@@ -341,6 +363,42 @@ TRUE (1) if supported, FALSE (0) otherwise
 | Name        | Type           | Description  |
 | ------------- |------------- | -----|
 | interfaceId | bytes4 | The interface desired | 
+
+### name
+
+Retrieve the token name
+
+```js
+function name() public view
+returns(string)
+```
+
+**Returns**
+
+Return the token name as a string
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
+
+### symbol
+
+Retrieve the token symbol
+
+```js
+function symbol() public view
+returns(string)
+```
+
+**Returns**
+
+Return the token symbol as a string
+
+**Arguments**
+
+| Name        | Type           | Description  |
+| ------------- |------------- | -----|
 
 ## Contracts
 

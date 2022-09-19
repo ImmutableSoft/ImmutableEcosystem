@@ -1,6 +1,6 @@
 # IERC165Upgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol](../@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\utils\introspection\IERC165Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\utils\introspection\IERC165Upgradeable.sol)
 
 **↘ Derived Contracts: [ERC165Upgradeable](ERC165Upgradeable.md), [IERC721Upgradeable](IERC721Upgradeable.md)**
 

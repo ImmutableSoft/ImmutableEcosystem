@@ -81,7 +81,7 @@ module.exports = {
       timeoutBlocks: 200,
       skipDryRun: true,
       chainId: 137,
-      gasPrice: 40000000000  // 32gwei Estimate real world ETH costs
+      gasPrice: 32000000000  // 32gwei Estimate real world ETH costs
     },
     //polygon Testnet
     polygon_testnet: {
@@ -109,11 +109,11 @@ module.exports = {
 
   compilers: {
     solc: {
-      version: "0.8.11", // change this to download new compiler, cool!
+      version: "0.8.14", // change this to download new compiler, cool!
       settings: {
         optimizer: {
           enabled: true,
-          runs: 2000,
+          runs: 1000,
           details: {
             // Removes duplicate code blocks
             deduplicate: true,
@@ -177,6 +177,11 @@ module.exports = {
   },
   
   plugins: [
-    'truffle-contract-size'
-  ]
+    'truffle-contract-size',
+    'truffle-plugin-verify'
+  ],
+  api_keys: {
+    etherscan: '4X9YYVYZE94IP4U52RYB37AK3B8ZQN146B',
+    polygonscan: '4X9YYVYZE94IP4U52RYB37AK3B8ZQN146B'
+  }
 };

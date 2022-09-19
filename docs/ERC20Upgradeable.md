@@ -1,6 +1,6 @@
 # ERC20Upgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC20\ERC20Upgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC20\ERC20Upgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ContextUpgradeable](ContextUpgradeable.md), [IERC20Upgradeable](IERC20Upgradeable.md), [IERC20MetadataUpgradeable](IERC20MetadataUpgradeable.md)**
 **↘ Derived Contracts: [CustomToken](CustomToken.md)**
@@ -385,7 +385,7 @@ function _approve(address owner, address spender, uint256 amount) internal nonpa
 
 ### _spendAllowance
 
-Spend `amount` form the allowance of `owner` toward `spender`.
+Updates `owner` s allowance for `spender` based on spent `amount`.
  Does not update the allowance amount in case of infinite allowance.
  Revert if not enough allowance is available.
  Might emit an {Approval} event.

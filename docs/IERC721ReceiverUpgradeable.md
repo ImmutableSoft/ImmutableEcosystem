@@ -1,6 +1,6 @@
 # ERC721 token receiver interface (IERC721ReceiverUpgradeable.sol)
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\IERC721ReceiverUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\IERC721ReceiverUpgradeable.sol)
 
 **IERC721ReceiverUpgradeable**
 
@@ -17,7 +17,7 @@ Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC7
  by `operator` from `from`, this function is called.
  It must return its Solidity selector to confirm the token transfer.
  If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
- The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
+ The selector can be obtained in Solidity with `IERC721Receiver.onERC721Received.selector`.
 
 ```js
 function onERC721Received(address operator, address from, uint256 tokenId, bytes data) external nonpayable

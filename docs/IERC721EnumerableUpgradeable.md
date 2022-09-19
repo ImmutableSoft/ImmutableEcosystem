@@ -1,6 +1,6 @@
 # ERC-721 Non-Fungible Token Standard, optional enumeration extension (IERC721EnumerableUpgradeable.sol)
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721EnumerableUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721EnumerableUpgradeable.sol)
 
 **↗ Extends: [IERC721Upgradeable](IERC721Upgradeable.md)**
 **↘ Derived Contracts: [ERC721EnumerableUpgradeable](ERC721EnumerableUpgradeable.md)**

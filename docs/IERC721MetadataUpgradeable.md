@@ -1,6 +1,6 @@
 # ERC-721 Non-Fungible Token Standard, optional metadata extension (IERC721MetadataUpgradeable.sol)
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721MetadataUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\IERC721MetadataUpgradeable.sol)
 
 **↗ Extends: [IERC721Upgradeable](IERC721Upgradeable.md)**
 **↘ Derived Contracts: [ERC721Upgradeable](ERC721Upgradeable.md)**

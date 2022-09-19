@@ -1,6 +1,6 @@
 # ERC721 Burnable Token (ERC721BurnableUpgradeable.sol)
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721BurnableUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC721\extensions\ERC721BurnableUpgradeable.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [ContextUpgradeable](ContextUpgradeable.md), [ERC721Upgradeable](ERC721Upgradeable.md)**
 **↘ Derived Contracts: [ActivateToken](ActivateToken.md), [CreatorToken](CreatorToken.md)**

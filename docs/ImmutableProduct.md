@@ -1,6 +1,6 @@
 # Entity self-managed product interface (ImmutableProduct.sol)
 
-View Source: [contracts/ImmutableProduct.sol](../contracts/ImmutableProduct.sol)
+View Source: [\contracts\ImmutableProduct.sol](..\contracts\ImmutableProduct.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 

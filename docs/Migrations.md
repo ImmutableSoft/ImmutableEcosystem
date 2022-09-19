@@ -1,6 +1,6 @@
 # Migrations.sol
 
-View Source: [contracts/Migrations.sol](../contracts/Migrations.sol)
+View Source: [\contracts\Migrations.sol](..\contracts\Migrations.sol)
 
 **Migrations**
 

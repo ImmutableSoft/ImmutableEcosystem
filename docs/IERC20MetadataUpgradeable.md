@@ -1,6 +1,6 @@
 # IERC20MetadataUpgradeable.sol
 
-View Source: [@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol](../@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol)
+View Source: [@openzeppelin\contracts-upgradeable\token\ERC20\extensions\IERC20MetadataUpgradeable.sol](..\@openzeppelin\contracts-upgradeable\token\ERC20\extensions\IERC20MetadataUpgradeable.sol)
 
 **↗ Extends: [IERC20Upgradeable](IERC20Upgradeable.md)**
 **↘ Derived Contracts: [ERC20Upgradeable](ERC20Upgradeable.md)**

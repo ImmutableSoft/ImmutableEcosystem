@@ -358,11 +358,12 @@ contract ProductActivate is Ownable
 
     // Look up the license owner and their entity status
     uint256 fee = 0;
+    uint256 surcharge = 0;
     address licenseOwner = activateTokenInterface.ownerOf(tokenId);
     address payable payableOwner = payable(licenseOwner);
     uint256 ownerStatus = entityInterface.entityAddressStatus(licenseOwner);
 
-    require(msg.value >= TokenIdToOfferPrice[tokenId] + TransferSurcharge[tokenId], "Not enough ETH");
+    require(msg.value >= TokenIdToOfferPrice[tokenId], "Not enough ETH");
 
     // Transfer the activate token and update to the new owner
     activateTokenInterface.safeTransferFrom(licenseOwner,
@@ -377,8 +378,15 @@ contract ProductActivate is Ownable
 
     // Transfer any surcharge to original creator if required
     if (TransferSurcharge[tokenId] > 0)
-      entityInterface.entityPay{value: TransferSurcharge[tokenId]}
-               (entityIndex);
+    {
+      // If less than 100 it is a percentage
+      if (TransferSurcharge[tokenId] < 100)
+        surcharge = ((msg.value * TransferSurcharge[tokenId]) / 100);
+      else
+        surcharge = TransferSurcharge[tokenId];
+      
+      entityInterface.entityPay{value: surcharge}(entityIndex);
+    }
 
     // If activation owner is registered, use lower fee if any
     //   Any additional ETH is a "tip" to creator
@@ -393,20 +401,20 @@ contract ProductActivate is Ownable
         entityInterface.entityPay{value: fee }(0);
 
       // Transfer the ETH payment to the registered bank
-      entityInterface.entityPay{value: msg.value - TransferSurcharge[tokenId] - fee}
+      entityInterface.entityPay{value: msg.value - surcharge - fee}
                (entityInterface.entityAddressToIndex(licenseOwner));
     }
 
-    // Otherwise an unregistered resale has a 5% fee
+    // Otherwise an unregistered resale has a 15% fee
     else
     {
-      fee = (msg.value * 5) / 100;
+      fee = (msg.value * 15) / 100;
 
       // Transfer fee to ImmutableSoft
       entityInterface.entityPay{value: fee }(0);
 
       // Transfer ETH funds minus the fee if any
-      payableOwner.transfer(msg.value - TransferSurcharge[tokenId] - fee);
+      payableOwner.transfer(msg.value - surcharge - fee);
     }
   }
 

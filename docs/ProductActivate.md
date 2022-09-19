@@ -1,6 +1,6 @@
 # ProductActivate.sol
 
-View Source: [contracts/ProductActivate.sol](../contracts/ProductActivate.sol)
+View Source: [\contracts\ProductActivate.sol](..\contracts\ProductActivate.sol)
 
 **↗ Extends: [Initializable](Initializable.md), [OwnableUpgradeable](OwnableUpgradeable.md)**
 
