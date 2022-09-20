@@ -20,6 +20,8 @@ import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 
 // ImmutableSoft DAO smart contracts
 import "./StringCommon.sol";
+import "./ImmutableEntity.sol";
+import "./ImmutableProduct.sol";
 import "./CreatorToken.sol";
 
 /// @title Example call proxy for NFT collection - uses CreatorToken
@@ -50,11 +52,42 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
               uint256 entity, uint256 product)
      Ownable()*/
   function initialize(address commonAddr, address creatorTokenAddr,
-                uint256 entity, uint256 product) public initializer
+      address entityAddr, address productAddr,
+      string memory collectionName, string memory theSymbol,
+      uint256 entity, uint256 product) public initializer
   {
     __Ownable_init();
-    _name = "CollectionProxy";
-    _symbol = "PXY";
+    ImmutableEntity entityInterface = ImmutableEntity(entityAddr);
+
+    // If not immutablesoft owner, check entity owner matches sender
+    if (msg.sender != entityInterface.owner())
+    {
+      uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
+      uint256 entityIndex = entityInterface.entityAddressToIndex(msg.sender);
+
+      // Ensure the proxy is deployed with entity address
+      require(entity == entityIndex, "Not authorized");
+
+      // Only a validated commercial entity can create an offer
+      require(entityStatus > 0, commonInterface.EntityNotValidated());
+      require((entityStatus & commonInterface.Nonprofit()) !=
+              commonInterface.Nonprofit(), "Nonprofit prohibited");
+
+      // Verify product and use product name as collection name
+      string memory url;
+      string memory logo;
+      uint256 details;
+      ImmutableProduct productInterface = ImmutableProduct(productAddr);
+      (_name, url, logo, details) = productInterface.productDetails(entity, product);
+      require(commonInterface.stringsEqual(_name, collectionName),
+              "Product name does not match");
+    }
+    else
+      _name = collectionName;
+
+
+    // Finalize the smart contract data
+    _symbol = theSymbol;
     _entity = entity;
     _product = product;
     commonInterface = StringCommon(commonAddr);
