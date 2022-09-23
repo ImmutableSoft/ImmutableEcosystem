@@ -2175,7 +2175,7 @@ contract("ImmutableEcosystem", accounts => {
     assert(i, numTokens, "A proxy token index has zero tokenId");
   });
 
-  it("Read entire collection and verify tokenId", async () => {
+  it("Read entire collection and verify URI and owner exist", async () => {
     const numTokens = await collectionProxyInstance.totalSupply();
     var i;
     var tokenId;
@@ -2188,6 +2188,31 @@ contract("ImmutableEcosystem", accounts => {
       if (tokenUri.length <= 0)
         break;
       if (tokenOwner.toString(16).length <= 0)
+        break;
+    }
+    console.log(i);
+    assert(i, numTokens, "A proxy token index has zero tokenId");
+  });
+
+  it("Read entire collection and verify tokenID with DAO", async () => {
+    const numTokens = await collectionProxyInstance.totalSupply();
+    var i;
+    var tokenId;
+
+    for (i = 1; i <= numTokens; ++i)
+    {
+      tokenId = await collectionProxyInstance.tokenByIndex(i);
+      tokenUri = await collectionProxyInstance.tokenURI(tokenId);
+      tokenOwner = await collectionProxyInstance.ownerOf(tokenId);
+
+      daoId = await collectionProxyInstance.idToDAO(tokenId);
+      daoUri = await creatorTokenInstance.tokenURI(daoId);
+      daoOwner = await creatorTokenInstance.ownerOf(daoId);
+
+      // Make sure DAO URI and Owner match proxy
+      if (tokenUri != daoUri)
+        break;
+      if (tokenOwner != daoOwner)
         break;
     }
     console.log(i);

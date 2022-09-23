@@ -68,7 +68,7 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
       // Ensure the proxy is deployed with entity address
       require(entity == entityIndex, "Not authorized");
 
-      // Only a validated commercial entity can create an offer
+      // Only a validated commercial entity can create a proxy
       require(entityStatus > 0, commonInterface.EntityNotValidated());
       require((entityStatus & commonInterface.Nonprofit()) !=
               commonInterface.Nonprofit(), "Nonprofit prohibited");
@@ -84,7 +84,6 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
     }
     else
       _name = collectionName;
-
 
     // Finalize the smart contract data
     _symbol = theSymbol;
@@ -119,13 +118,27 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
     return creatorToken.supportsInterface(interfaceId);
   }
 
+  /// @notice Convert tokenID from this proxy to ImmutableSoft DAO
+  /// @param tokenId The proxy identifier (only release id)
+  /// @return The CreatorToken (ImmutableSoft) token Id
+  function idToDAO(uint256 tokenId)
+    public view returns (uint256)
+  {
+    return ((_entity << commonInterface.EntityIdOffset()) &
+            commonInterface.EntityIdMask()) |
+           ((_product << commonInterface.ProductIdOffset()) &
+            commonInterface.ProductIdMask()) |
+           ((tokenId << commonInterface.ReleaseIdOffset()) &
+            commonInterface.ReleaseIdMask());
+  }
+
   /// @notice Look up the release URI from the token Id
   /// @param tokenId The unique token identifier
   /// @return the file name and/or URI secured by this token
   function tokenURI(uint256 tokenId) public view
       returns (string memory)
   {
-    return creatorToken.tokenURI(tokenId);
+    return creatorToken.tokenURI(idToDAO(tokenId));
   }
 
   /// @notice Approve and address for token Id transfer/burn
@@ -133,7 +146,7 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
   /// @param to The tokenId to approve
   function approve(address to, uint256 tokenId) public
   {
-    return creatorToken.approve(to, tokenId);
+    return creatorToken.approve(to, idToDAO(tokenId));
   }
   
   /// @notice Query approval address for token Id
@@ -142,7 +155,7 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
   function getApproved(uint256 tokenId) public view
     returns (address operator)
   {
-    return creatorToken.getApproved(tokenId);
+    return creatorToken.getApproved(idToDAO(tokenId));
   }
 
   /// @notice Query approval address for owner
@@ -161,7 +174,7 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
   function ownerOf(uint256 tokenId) public view
     returns (address owner)
   {
-    return creatorToken.ownerOf(tokenId);
+    return creatorToken.ownerOf(idToDAO(tokenId));
   }
 
   /// @notice Change approval rights for operator
@@ -179,7 +192,7 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
   function safeTransferFrom(address from, address to, uint256 tokenId)
     public
   {
-    return creatorToken.safeTransferFrom(from, to, tokenId);
+    return creatorToken.safeTransferFrom(from, to, idToDAO(tokenId));
   }
 
   /// @notice Safely transfer a token with data
@@ -191,7 +204,8 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
                             bytes calldata data)
     public
   {
-    return creatorToken.safeTransferFrom(from, to, tokenId, data);
+    return creatorToken.safeTransferFrom(from, to, idToDAO(tokenId),
+                                         data);
   }
 
   /// @notice Transfer a token
@@ -201,7 +215,7 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
   function transferFrom(address from, address to, uint256 tokenId)
     public
   {
-    return creatorToken.transferFrom(from, to, tokenId);
+    return creatorToken.transferFrom(from, to, idToDAO(tokenId));
   }
 
   /// @notice Find and return the number of or tokenID of
@@ -220,10 +234,12 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
     //Interate ownedTokens and count only this entity and product
     for (i = 0;i < max; ++i)
     {
+      // Read the next token id (by owner or global)
       uint256 tokenId = (owner != address(0)) ?
                         creatorToken.tokenOfOwnerByIndex(owner, i) :
                         creatorToken.tokenByIndex(i);
-                          
+
+      // Deserialize the entity and product identifiers
       uint256 entityIndex = ((tokenId &
                              commonInterface.EntityIdMask()) >>
                              commonInterface.EntityIdOffset());
@@ -231,12 +247,16 @@ contract CollectionProxy is Ownable, IERC721Metadata, IERC721Enumerable
                               commonInterface.ProductIdMask()) >>
                               commonInterface.ProductIdOffset());
 
+      // If identifiers match this proxy, count and/or return if found
       if ((entityIndex == _entity) && (productIndex == _product))
       {
         ++currentIndex;
-        if ((index > 0) && (index == currentIndex))
-          return tokenId;
 
+        // If specific token, return just the release identifier
+        //   shifted to LSB.
+        if ((index > 0) && (index == currentIndex))
+          return ((tokenId & commonInterface.ReleaseIdMask()) >>
+                   commonInterface.ReleaseIdOffset());
       }
     }
 
