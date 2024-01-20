@@ -65,6 +65,25 @@ export function versionStringToUint256(versionString)
   return version;
 }
 
+// Returns hex string of creator tokenId
+export function findCreatorTokenId(entity, product, release)
+{
+  var tokenId = bigInt(0);
+    
+//224 entity offset
+//192 product offset
+//160 release offset
+
+  tokenId = tokenId.add(entity);
+  tokenId = tokenId.shiftLeft(32);
+  tokenId = tokenId.add(product);
+  tokenId = tokenId.shiftLeft(32);
+  tokenId = tokenId.add(release);
+  tokenId = tokenId.shiftLeft(160);
+
+  return '0x' + tokenId.toString(16);
+}
+
 export function convertFormToDataURI(formData)
 {
   var result = {};

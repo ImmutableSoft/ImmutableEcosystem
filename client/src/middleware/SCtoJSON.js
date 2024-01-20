@@ -13,7 +13,7 @@ export default class SCtoJSON {
   //   {
   //     "subcategories" :
   //     [
-  //       { "subcategoryNumber" : 1, "subcategorgyName" : "JSON Form" },
+  //       { "number" : 1, "name" : "JSON Form" },
   //       {... }
   //     ]
   //   }
@@ -47,11 +47,11 @@ export default class SCtoJSON {
     // If a custom category is registered use it
     if (subcategories)
     {
-      for (var i = 0; i < categories.length; ++i)
+      for (var i = 0; i < subcategories.length; ++i)
       {
-        if (typeBigInt.and(categories[i].subcategoryNumber).
-                       compare(categories[i].subcategoryNumber) == 0)
-          versionString = versionString + " " + categories[i].subcategoryName;
+        if (typeBigInt.and(subcategories[i].number).
+                       compare(subcategories[i].number) == 0)
+          versionString = versionString + " " + subcategories[i].name;
       } 
     }
     else /* otherwise default for software apps */
@@ -159,11 +159,11 @@ export default class SCtoJSON {
     // If a custom subcategory is registered use it
     if (subcategories)
     {
-      for (var i = 0; i < categories.length; ++i)
+      for (var i = 0; i < subcategories.length; ++i)
       {
-        if (typeBigInt.and(categories[i].subcategoryNumber).
-                       compare(categories[i].subcategoryNumber) == 0)
-          versionString = versionString + " " + categories[i].subcategoryName;
+        if (typeBigInt.and(subcategories[i].number).
+                       compare(subcategories[i].number) == 0)
+          versionString = versionString + " " + subcategories[i].name;
       } 
     }
     else /* otherwise default for software apps */
@@ -811,7 +811,7 @@ export default class SCtoJSON {
                                      '0x' + bigActivation.toString(16) + '::' +
                                      expireDate.toISOString().substr(0,10) + ':' +
                                      resaleString + ' ' +
-                                     this.versionUint128ToString(allLimitations, getSubcategories(newProducts[index].category)) + '::' +
+                                     this.versionUint128ToString(allLimitations, MarketExtension?.subcategories) + '::' +
                                      licenseDetails[4][j] + // expire date and resale price
                                      '::' + newProducts[index].logo); // Logo URL
             }
