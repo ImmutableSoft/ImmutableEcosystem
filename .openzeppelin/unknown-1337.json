@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x254dffcd3277C0b1660F6d42EFbB754edaBAbC2B",
-    "txHash": "0x12604f1c72a3d00bbbb36b31e7032dbbdf5a2ae84fba24c9d8bdf5c730e0082c"
+    "txHash": "0x36e2823376ab859137c672739f2417426e9eed5206175302310f3b8d5c6ca794"
   },
   "proxies": [
     {
@@ -1561,46 +1561,6 @@
       "kind": "transparent"
     },
     {
-      "address": "0xC89Ce4735882C9F0f0FE26686c53074E09B0D550",
-      "txHash": "0xd871f26884e4c5e0068934d04d5f4eda42421809f676593caac2add23f449ba2",
-      "kind": "transparent"
-    },
-    {
-      "address": "0xe982E462b094850F12AF94d21D470e21bE9D0E9C",
-      "txHash": "0xa4619bdbdbb527096a8c48d132589b46dd1e138e64e6dc3333ee44a4cceab7f9",
-      "kind": "transparent"
-    },
-    {
-      "address": "0x9b1f7F645351AF3631a656421eD2e40f2802E6c0",
-      "txHash": "0x84ebdcdfdbc23de6e8ac72c814b3aada53c1024621b28fc2b838751f35186b0d",
-      "kind": "transparent"
-    },
-    {
-      "address": "0xA57B8a5584442B467b4689F1144D269d096A3daF",
-      "txHash": "0x76739ca6eb049e69b5918bbfe6d08ceef17b21219e7ec3eb1b83df5807bcd2d5",
-      "kind": "transparent"
-    },
-    {
-      "address": "0x0E696947A06550DEf604e82C26fd9E493e576337",
-      "txHash": "0xf31784dbff96f80f8981aee551949ecaf1c8df32b8d2c42f6be85ede6e0dd601",
-      "kind": "transparent"
-    },
-    {
-      "address": "0xA94B7f0465E98609391C623d0560C5720a3f2D33",
-      "txHash": "0x5d76a4b5d4e60e8f806a66ed4e934a0b996ea032d02f28fb6013b1f58ffb2a07",
-      "kind": "transparent"
-    },
-    {
-      "address": "0xFC628dd79137395F3C9744e33b1c5DE554D94882",
-      "txHash": "0xeb62ad51829c94f3773ff9fcdc16d8879a97bb2eaca3d7b630a86ea80650278a",
-      "kind": "transparent"
-    },
-    {
-      "address": "0x5017A545b09ab9a30499DE7F431DF0855bCb7275",
-      "txHash": "0x308b01fdeb504b3425f41f7c7502454041119cf76f235c888298dbccd1b184bf",
-      "kind": "transparent"
-    },
-    {
       "address": "0x2D8BE6BF0baA74e0A907016679CaE9190e80dD0A",
       "txHash": "0x4a4f985c43696c3861fd800a511c233c4848a57408dc398938d4e84b092625ef",
       "kind": "transparent"
@@ -1638,6 +1598,46 @@
     {
       "address": "0xCeeFD27e0542aFA926B87d23936c79c276A48277",
       "txHash": "0x38206d1eddbc200632e5972d5560cb237a32fbe0f5726d67ffb8e4dd9a91fd59",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xC89Ce4735882C9F0f0FE26686c53074E09B0D550",
+      "txHash": "0x14f37e323cf9720f317dd7acd81ddad715939964c5005ecdd546581dbaf6139e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xe982E462b094850F12AF94d21D470e21bE9D0E9C",
+      "txHash": "0x39aeb15bd3a566ffcee1c001a3a0173a2028ec011db976262556a2a0320cd890",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9b1f7F645351AF3631a656421eD2e40f2802E6c0",
+      "txHash": "0xbe8f52c6ba8c8320cfb21a7e96fc0e7507bfc5c88eff7cc59cddc48b0e76e66b",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xA57B8a5584442B467b4689F1144D269d096A3daF",
+      "txHash": "0xba58ab419c65f4f22fbb832347807c253d8072e470c3bd507ae7e9736b30048f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0E696947A06550DEf604e82C26fd9E493e576337",
+      "txHash": "0x80516698c473188d28c364e0d3aae05535f63802ffadd23b1ae8a0dcc31635c8",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xA94B7f0465E98609391C623d0560C5720a3f2D33",
+      "txHash": "0xbe5461ce34219afa0b7c9f5ed3bfe09d87e8914fad48e8dbe5c17f5b1ef95b05",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xFC628dd79137395F3C9744e33b1c5DE554D94882",
+      "txHash": "0x2e657d0e8451aeb150bf2be4b17bbddca6eeddef1809df9c8f41a826d8bfa01b",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x5017A545b09ab9a30499DE7F431DF0855bCb7275",
+      "txHash": "0x88859acb8d33f017a817b30499905328ff3b328fd8f95e6ea1463a0ba1a57cfc",
       "kind": "transparent"
     }
   ],
@@ -3979,8 +3979,9 @@
     },
     "20ffc40a704d6d4f5e56d8a6b23356ab2b8bd066a049c0ede125fda6b10b42a0": {
       "address": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
-      "txHash": "0x9400bad7565e6f2a941b385633037b651950448b4f7a8c9e36a2e53469523993",
+      "txHash": "0xa406a26b387cc87fd154f04f64896bacd7db7586f79daf8dac8019005efdd31c",
       "layout": {
+        "solcVersion": "0.8.14",
         "storage": [
           {
             "contract": "Initializable",
@@ -4033,13 +4034,15 @@
           "t_bool": {
             "label": "bool"
           }
-        }
+        },
+        "namespaces": {}
       }
     },
     "7d340f359f988c9e9d5f8d7089a9968d42643ee8d7b6e89afbd2a70ab31bd377": {
       "address": "0x9561C133DD8580860B6b7E504bC5Aa500f0f06a7",
-      "txHash": "0x1f8795e1020d773f51db706c0ebbb22e20d70c239af115497e8e0f86d5d1b84e",
+      "txHash": "0x560fdc9b9aa2537219652a73fe3f35b1e26934e9f87f218d5d2478aa5f51bfea",
       "layout": {
+        "solcVersion": "0.8.14",
         "storage": [
           {
             "contract": "Initializable",
@@ -4076,49 +4079,49 @@
             "contract": "ImmutableEntity",
             "label": "Bank",
             "type": "t_address_payable",
-            "src": "..\\project:\\contracts\\ImmutableEntity.sol:34"
+            "src": "..\\@openzeppelin\\contracts\\utils\\Context.sol:25"
           },
           {
             "contract": "ImmutableEntity",
             "label": "UpgradeFee",
             "type": "t_uint256",
-            "src": "..\\project:\\contracts\\ImmutableEntity.sol:35"
+            "src": "..\\@openzeppelin\\contracts\\utils\\Context.sol:25"
           },
           {
             "contract": "ImmutableEntity",
             "label": "EntityIndex",
             "type": "t_mapping(t_address,t_uint256)",
-            "src": "..\\project:\\contracts\\ImmutableEntity.sol:38"
+            "src": "..\\@openzeppelin\\contracts\\utils\\Context.sol:25"
           },
           {
             "contract": "ImmutableEntity",
             "label": "EntityStatus",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "src": "..\\project:\\contracts\\ImmutableEntity.sol:41"
+            "src": "..\\@openzeppelin\\contracts\\utils\\Context.sol:25"
           },
           {
             "contract": "ImmutableEntity",
             "label": "EntityArray",
             "type": "t_mapping(t_uint256,t_address)",
-            "src": "..\\project:\\contracts\\ImmutableEntity.sol:56"
+            "src": "..\\@openzeppelin\\contracts\\utils\\Context.sol:25"
           },
           {
             "contract": "ImmutableEntity",
             "label": "Entities",
-            "type": "t_mapping(t_uint256,t_struct(Entity)6924_storage)",
-            "src": "..\\project:\\contracts\\ImmutableEntity.sol:59"
+            "type": "t_mapping(t_uint256,t_struct(Entity)6670_storage)",
+            "src": "..\\@openzeppelin\\contracts\\utils\\Context.sol:25"
           },
           {
             "contract": "ImmutableEntity",
             "label": "NumberOfEntities",
             "type": "t_uint256",
-            "src": "..\\project:\\contracts\\ImmutableEntity.sol:60"
+            "src": "..\\@openzeppelin\\contracts\\utils\\Context.sol:25"
           },
           {
             "contract": "ImmutableEntity",
             "label": "commonInterface",
-            "type": "t_contract(StringCommon)11996",
-            "src": "..\\project:\\contracts\\ImmutableEntity.sol:63"
+            "type": "t_contract(StringCommon)11725",
+            "src": "..\\@openzeppelin\\contracts\\utils\\Context.sol:25"
           }
         ],
         "types": {
@@ -4140,10 +4143,10 @@
           "t_mapping(t_uint256,t_address)": {
             "label": "mapping(uint256 => address)"
           },
-          "t_mapping(t_uint256,t_struct(Entity)6924_storage)": {
+          "t_mapping(t_uint256,t_struct(Entity)6670_storage)": {
             "label": "mapping(uint256 => struct ImmutableEntity.Entity)"
           },
-          "t_struct(Entity)6924_storage": {
+          "t_struct(Entity)6670_storage": {
             "label": "struct ImmutableEntity.Entity",
             "members": [
               {
@@ -4175,7 +4178,7 @@
           "t_string_storage": {
             "label": "string"
           },
-          "t_contract(StringCommon)11996": {
+          "t_contract(StringCommon)11725": {
             "label": "contract StringCommon"
           },
           "t_array(t_uint256)49_storage": {
@@ -4190,175 +4193,15 @@
           "t_bool": {
             "label": "bool"
           }
-        }
-      }
-    },
-    "94652ec4587861e6be529dbd8623d2f5343035f0acd34544158b53e643658f99": {
-      "address": "0x0290FB167208Af455bB137780163b7B7a9a10C16",
-      "txHash": "0x7284f28f906f8059390858f4bbe9d42d9ade6a9cf9b27374d74ae7102d6376de",
-      "layout": {
-        "storage": [
-          {
-            "contract": "Initializable",
-            "label": "_initialized",
-            "type": "t_uint8",
-            "src": "..\\@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "contract": "Initializable",
-            "label": "_initializing",
-            "type": "t_bool",
-            "src": "..\\@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
-          },
-          {
-            "contract": "ContextUpgradeable",
-            "label": "__gap",
-            "type": "t_array(t_uint256)50_storage",
-            "src": "..\\@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:36"
-          },
-          {
-            "contract": "OwnableUpgradeable",
-            "label": "_owner",
-            "type": "t_address",
-            "src": "..\\@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:22"
-          },
-          {
-            "contract": "OwnableUpgradeable",
-            "label": "__gap",
-            "type": "t_array(t_uint256)49_storage",
-            "src": "..\\@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:87"
-          },
-          {
-            "contract": "ImmutableProduct",
-            "label": "Products",
-            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(Product)8096_storage))",
-            "src": "..\\project:\\contracts\\ImmutableProduct.sol:49"
-          },
-          {
-            "contract": "ImmutableProduct",
-            "label": "NumberOfProducts",
-            "type": "t_mapping(t_uint256,t_uint256)",
-            "src": "..\\project:\\contracts\\ImmutableProduct.sol:50"
-          },
-          {
-            "contract": "ImmutableProduct",
-            "label": "entityInterface",
-            "type": "t_contract(ImmutableEntity)8054",
-            "src": "..\\project:\\contracts\\ImmutableProduct.sol:61"
-          },
-          {
-            "contract": "ImmutableProduct",
-            "label": "commonInterface",
-            "type": "t_contract(StringCommon)11996",
-            "src": "..\\project:\\contracts\\ImmutableProduct.sol:62"
-          }
-        ],
-        "types": {
-          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(Product)8096_storage))": {
-            "label": "mapping(uint256 => mapping(uint256 => struct ImmutableProduct.Product))"
-          },
-          "t_uint256": {
-            "label": "uint256"
-          },
-          "t_mapping(t_uint256,t_struct(Product)8096_storage)": {
-            "label": "mapping(uint256 => struct ImmutableProduct.Product)"
-          },
-          "t_struct(Product)8096_storage": {
-            "label": "struct ImmutableProduct.Product",
-            "members": [
-              {
-                "label": "name",
-                "type": "t_string_storage"
-              },
-              {
-                "label": "infoURL",
-                "type": "t_string_storage"
-              },
-              {
-                "label": "logoURL",
-                "type": "t_string_storage"
-              },
-              {
-                "label": "details",
-                "type": "t_uint256"
-              },
-              {
-                "label": "numberOfOffers",
-                "type": "t_uint256"
-              },
-              {
-                "label": "offers",
-                "type": "t_mapping(t_uint256,t_struct(Offer)8080_storage)"
-              }
-            ]
-          },
-          "t_string_storage": {
-            "label": "string"
-          },
-          "t_mapping(t_uint256,t_struct(Offer)8080_storage)": {
-            "label": "mapping(uint256 => struct ImmutableProduct.Offer)"
-          },
-          "t_struct(Offer)8080_storage": {
-            "label": "struct ImmutableProduct.Offer",
-            "members": [
-              {
-                "label": "tokenAddr",
-                "type": "t_address"
-              },
-              {
-                "label": "price",
-                "type": "t_uint256"
-              },
-              {
-                "label": "value",
-                "type": "t_uint256"
-              },
-              {
-                "label": "infoURL",
-                "type": "t_string_storage"
-              },
-              {
-                "label": "transferSurcharge",
-                "type": "t_uint256"
-              },
-              {
-                "label": "ricardianParent",
-                "type": "t_uint256"
-              }
-            ]
-          },
-          "t_address": {
-            "label": "address"
-          },
-          "t_mapping(t_uint256,t_uint256)": {
-            "label": "mapping(uint256 => uint256)"
-          },
-          "t_contract(ImmutableEntity)8054": {
-            "label": "contract ImmutableEntity"
-          },
-          "t_contract(StringCommon)11996": {
-            "label": "contract StringCommon"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]"
-          },
-          "t_uint8": {
-            "label": "uint8"
-          },
-          "t_bool": {
-            "label": "bool"
-          }
-        }
+        },
+        "namespaces": {}
       }
     },
     "c166939e1c6e07215688420f84e6736293969a2696e0be465515e33a26a26a2b": {
       "address": "0x630589690929E9cdEFDeF0734717a9eF3Ec7Fcfe",
-      "txHash": "0x3df8056b84cb5349465881d23f34a84919d9475697d64b7d80a58e339cac69a7",
+      "txHash": "0x63e8bbf4a397e3b3d0d9b09a020270193505d1fe161718d74a7c009988fc9877",
       "layout": {
+        "solcVersion": "0.8.14",
         "storage": [
           {
             "contract": "Initializable",
@@ -4479,49 +4322,49 @@
             "contract": "ActivateToken",
             "label": "ActivateIdToTokenId",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "src": "..\\project:\\contracts\\ActivateToken.sol:46"
+            "src": "..\\project:\\contracts\\ActivateToken.sol:45"
           },
           {
             "contract": "ActivateToken",
             "label": "TokenIdToActivateId",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "src": "..\\project:\\contracts\\ActivateToken.sol:47"
+            "src": "..\\project:\\contracts\\ActivateToken.sol:46"
           },
           {
             "contract": "ActivateToken",
             "label": "NumberOfActivations",
             "type": "t_mapping(t_uint64,t_uint64)",
-            "src": "..\\project:\\contracts\\ActivateToken.sol:50"
+            "src": "..\\project:\\contracts\\ActivateToken.sol:49"
           },
           {
             "contract": "ActivateToken",
             "label": "TokenIdToRicardianParent",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "src": "..\\project:\\contracts\\ActivateToken.sol:53"
+            "src": "..\\project:\\contracts\\ActivateToken.sol:52"
           },
           {
             "contract": "ActivateToken",
             "label": "activateInterface",
-            "type": "t_contract(ProductActivate)11484",
-            "src": "..\\project:\\contracts\\ActivateToken.sol:55"
+            "type": "t_contract(ProductActivate)11213",
+            "src": "..\\project:\\contracts\\ActivateToken.sol:54"
           },
           {
             "contract": "ActivateToken",
             "label": "creatorInterface",
-            "type": "t_contract(CreatorToken)6856",
-            "src": "..\\project:\\contracts\\ActivateToken.sol:56"
+            "type": "t_contract(CreatorToken)6602",
+            "src": "..\\project:\\contracts\\ActivateToken.sol:55"
           },
           {
             "contract": "ActivateToken",
             "label": "entityInterface",
-            "type": "t_contract(ImmutableEntity)8054",
-            "src": "..\\project:\\contracts\\ActivateToken.sol:57"
+            "type": "t_contract(ImmutableEntity)7800",
+            "src": "..\\project:\\contracts\\ActivateToken.sol:56"
           },
           {
             "contract": "ActivateToken",
             "label": "commonInterface",
-            "type": "t_contract(StringCommon)11996",
-            "src": "..\\project:\\contracts\\ActivateToken.sol:58"
+            "type": "t_contract(StringCommon)11725",
+            "src": "..\\project:\\contracts\\ActivateToken.sol:57"
           }
         ],
         "types": {
@@ -4537,16 +4380,16 @@
           "t_uint64": {
             "label": "uint64"
           },
-          "t_contract(ProductActivate)11484": {
+          "t_contract(ProductActivate)11213": {
             "label": "contract ProductActivate"
           },
-          "t_contract(CreatorToken)6856": {
+          "t_contract(CreatorToken)6602": {
             "label": "contract CreatorToken"
           },
-          "t_contract(ImmutableEntity)8054": {
+          "t_contract(ImmutableEntity)7800": {
             "label": "contract ImmutableEntity"
           },
-          "t_contract(StringCommon)11996": {
+          "t_contract(StringCommon)11725": {
             "label": "contract StringCommon"
           },
           "t_array(t_uint256)50_storage": {
@@ -4591,13 +4434,15 @@
           "t_uint8": {
             "label": "uint8"
           }
-        }
+        },
+        "namespaces": {}
       }
     },
     "19270007c8a167113c9784a9c973459b679e9690963a39de49fe0a5da7ffe512": {
       "address": "0xb09bCc172050fBd4562da8b229Cf3E45Dc3045A6",
-      "txHash": "0x80ad79cef89f8b557d56f6f7997e916a54e3422a61deb3ed1b425e53c4c7b169",
+      "txHash": "0xfded1518acf39c78a0fd5963561d86815284beda2aaec3cc021aa02ff04606e1",
       "layout": {
+        "solcVersion": "0.8.14",
         "storage": [
           {
             "contract": "Initializable",
@@ -4698,13 +4543,15 @@
           "t_bool": {
             "label": "bool"
           }
-        }
+        },
+        "namespaces": {}
       }
     },
     "7d2a7fa7f9e00b7f955bfd57f0938b72195cea55746d8fb946808291f665965c": {
       "address": "0x2612Af3A521c2df9EAF28422Ca335b04AdF3ac66",
-      "txHash": "0x09004ddffec1a9a24cdc1ecc78537f9691e9f9af903b3bad1dd70bfc423aa951",
+      "txHash": "0x72e7cf65769ddad9c187e7d7cf94a5ee28291f640e427b7e8186cb190a3981b0",
       "layout": {
+        "solcVersion": "0.8.14",
         "storage": [
           {
             "contract": "Initializable",
@@ -4836,72 +4683,72 @@
           {
             "contract": "CreatorToken",
             "label": "Releases",
-            "type": "t_mapping(t_uint256,t_struct(Release)5185_storage)",
-            "src": "..\\project:\\contracts\\CreatorToken.sol:49"
+            "type": "t_mapping(t_uint256,t_struct(Release)4931_storage)",
+            "src": "..\\project:\\contracts\\CreatorToken.sol:50"
           },
           {
             "contract": "CreatorToken",
             "label": "HashToRelease",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "src": "..\\project:\\contracts\\CreatorToken.sol:50"
+            "src": "..\\project:\\contracts\\CreatorToken.sol:51"
           },
           {
             "contract": "CreatorToken",
             "label": "ReleasesNumberOf",
             "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))",
-            "src": "..\\project:\\contracts\\CreatorToken.sol:51"
+            "src": "..\\project:\\contracts\\CreatorToken.sol:52"
           },
           {
             "contract": "CreatorToken",
             "label": "AnonProductID",
             "type": "t_uint256",
-            "src": "..\\project:\\contracts\\CreatorToken.sol:52"
+            "src": "..\\project:\\contracts\\CreatorToken.sol:53"
           },
           {
             "contract": "CreatorToken",
             "label": "AnonFee",
             "type": "t_uint256",
-            "src": "..\\project:\\contracts\\CreatorToken.sol:53"
+            "src": "..\\project:\\contracts\\CreatorToken.sol:54"
           },
           {
             "contract": "CreatorToken",
             "label": "commonInterface",
-            "type": "t_contract(StringCommon)11996",
-            "src": "..\\project:\\contracts\\CreatorToken.sol:56"
-          },
-          {
-            "contract": "CreatorToken",
-            "label": "entityInterface",
-            "type": "t_contract(ImmutableEntity)8054",
+            "type": "t_contract(StringCommon)11725",
             "src": "..\\project:\\contracts\\CreatorToken.sol:57"
           },
           {
             "contract": "CreatorToken",
-            "label": "productInterface",
-            "type": "t_contract(ImmutableProduct)10027",
+            "label": "entityInterface",
+            "type": "t_contract(ImmutableEntity)7800",
             "src": "..\\project:\\contracts\\CreatorToken.sol:58"
+          },
+          {
+            "contract": "CreatorToken",
+            "label": "productInterface",
+            "type": "t_contract(ImmutableProduct)9756",
+            "src": "..\\project:\\contracts\\CreatorToken.sol:59"
           },
           {
             "contract": "CreatorToken",
             "label": "__name",
             "type": "t_string_storage",
-            "src": "..\\project:\\contracts\\CreatorToken.sol:60"
+            "src": "..\\project:\\contracts\\CreatorToken.sol:61"
           },
           {
             "contract": "CreatorToken",
             "label": "__symbol",
             "type": "t_string_storage",
-            "src": "..\\project:\\contracts\\CreatorToken.sol:61"
+            "src": "..\\project:\\contracts\\CreatorToken.sol:62"
           }
         ],
         "types": {
-          "t_mapping(t_uint256,t_struct(Release)5185_storage)": {
+          "t_mapping(t_uint256,t_struct(Release)4931_storage)": {
             "label": "mapping(uint256 => struct CreatorToken.Release)"
           },
           "t_uint256": {
             "label": "uint256"
           },
-          "t_struct(Release)5185_storage": {
+          "t_struct(Release)4931_storage": {
             "label": "struct CreatorToken.Release",
             "members": [
               {
@@ -4924,13 +4771,13 @@
           "t_mapping(t_uint256,t_mapping(t_uint256,t_uint256))": {
             "label": "mapping(uint256 => mapping(uint256 => uint256))"
           },
-          "t_contract(StringCommon)11996": {
+          "t_contract(StringCommon)11725": {
             "label": "contract StringCommon"
           },
-          "t_contract(ImmutableEntity)8054": {
+          "t_contract(ImmutableEntity)7800": {
             "label": "contract ImmutableEntity"
           },
-          "t_contract(ImmutableProduct)10027": {
+          "t_contract(ImmutableProduct)9756": {
             "label": "contract ImmutableProduct"
           },
           "t_string_storage": {
@@ -4978,13 +4825,15 @@
           "t_uint8": {
             "label": "uint8"
           }
-        }
+        },
+        "namespaces": {}
       }
     },
     "ef1acbf0ec5d7883fcc97459ca4d46f12f880b2f691aeaab590e6b16faa7cfc8": {
       "address": "0xDb56f2e9369E0D7bD191099125a3f6C370F8ed15",
-      "txHash": "0xe50a5f5a189de2f02ad5687480f5e5abf7326e182fd3a93cc82e87d2c997b669",
+      "txHash": "0x1508873550f8d66c7a47c3aba808adca807ea8aba14fa645e819927b120c9b12",
       "layout": {
+        "solcVersion": "0.8.14",
         "storage": [
           {
             "contract": "Initializable",
@@ -5021,43 +4870,43 @@
             "contract": "ProductActivate",
             "label": "TokenIdToOfferPrice",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "src": "..\\project:\\contracts\\ProductActivate.sol:34"
+            "src": "..\\project:\\contracts\\CallProxy.sol:30"
           },
           {
             "contract": "ProductActivate",
             "label": "TransferSurcharge",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "src": "..\\project:\\contracts\\ProductActivate.sol:35"
+            "src": "..\\project:\\contracts\\CallProxy.sol:31"
           },
           {
             "contract": "ProductActivate",
             "label": "activateTokenInterface",
-            "type": "t_contract(ActivateToken)4588",
-            "src": "..\\project:\\contracts\\ProductActivate.sol:37"
+            "type": "t_contract(ActivateToken)4275",
+            "src": "..\\project:\\contracts\\CallProxy.sol:32"
           },
           {
             "contract": "ProductActivate",
             "label": "creatorTokenInterface",
-            "type": "t_contract(CreatorToken)6856",
-            "src": "..\\project:\\contracts\\ProductActivate.sol:38"
+            "type": "t_contract(CreatorToken)6602",
+            "src": "..\\project:\\contracts\\CallProxy.sol:34"
           },
           {
             "contract": "ProductActivate",
             "label": "entityInterface",
-            "type": "t_contract(ImmutableEntity)8054",
-            "src": "..\\project:\\contracts\\ProductActivate.sol:39"
+            "type": "t_contract(ImmutableEntity)7800",
+            "src": "..\\project:\\contracts\\CallProxy.sol:35"
           },
           {
             "contract": "ProductActivate",
             "label": "productInterface",
-            "type": "t_contract(ImmutableProduct)10027",
-            "src": "..\\project:\\contracts\\ProductActivate.sol:40"
+            "type": "t_contract(ImmutableProduct)9756",
+            "src": "..\\project:\\contracts\\CallProxy.sol:36"
           },
           {
             "contract": "ProductActivate",
             "label": "commonInterface",
-            "type": "t_contract(StringCommon)11996",
-            "src": "..\\project:\\contracts\\ProductActivate.sol:41"
+            "type": "t_contract(StringCommon)11725",
+            "src": "..\\project:\\contracts\\CallProxy.sol:36"
           }
         ],
         "types": {
@@ -5067,19 +4916,19 @@
           "t_uint256": {
             "label": "uint256"
           },
-          "t_contract(ActivateToken)4588": {
+          "t_contract(ActivateToken)4275": {
             "label": "contract ActivateToken"
           },
-          "t_contract(CreatorToken)6856": {
+          "t_contract(CreatorToken)6602": {
             "label": "contract CreatorToken"
           },
-          "t_contract(ImmutableEntity)8054": {
+          "t_contract(ImmutableEntity)7800": {
             "label": "contract ImmutableEntity"
           },
-          "t_contract(ImmutableProduct)10027": {
+          "t_contract(ImmutableProduct)9756": {
             "label": "contract ImmutableProduct"
           },
-          "t_contract(StringCommon)11996": {
+          "t_contract(StringCommon)11725": {
             "label": "contract StringCommon"
           },
           "t_address": {
@@ -5097,13 +4946,179 @@
           "t_bool": {
             "label": "bool"
           }
-        }
+        },
+        "namespaces": {}
       }
     },
-    "8fde2c8b62a32f35ec3e394bf556353cbbf525ccef7001dc2b59aa7a54b8526a": {
-      "address": "0x7C728214be9A0049e6a86f2137ec61030D0AA964",
-      "txHash": "0xfcfa551266af2489bc198340496b67b338adab706d71537d466dccb676cac7d9",
+    "c0ade2bd394c597e660d7a1a05ce95ba40d0342e8c96d15bfea9eff4eb67f472": {
+      "address": "0x0290FB167208Af455bB137780163b7B7a9a10C16",
+      "txHash": "0x734c5f196b27d3083015b41d25dc527338544efe18bbc2256771d9f7bf679bc2",
       "layout": {
+        "solcVersion": "0.8.14",
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_uint8",
+            "src": "..\\@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "..\\@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:36"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "..\\@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:22"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "..\\@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:87"
+          },
+          {
+            "contract": "ImmutableProduct",
+            "label": "Products",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(Product)7842_storage))",
+            "src": "..\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol:26"
+          },
+          {
+            "contract": "ImmutableProduct",
+            "label": "NumberOfProducts",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "..\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol:26"
+          },
+          {
+            "contract": "ImmutableProduct",
+            "label": "entityInterface",
+            "type": "t_contract(ImmutableEntity)7800",
+            "src": "..\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol:26"
+          },
+          {
+            "contract": "ImmutableProduct",
+            "label": "commonInterface",
+            "type": "t_contract(StringCommon)11725",
+            "src": "..\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol:26"
+          }
+        ],
+        "types": {
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(Product)7842_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct ImmutableProduct.Product))"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_uint256,t_struct(Product)7842_storage)": {
+            "label": "mapping(uint256 => struct ImmutableProduct.Product)"
+          },
+          "t_struct(Product)7842_storage": {
+            "label": "struct ImmutableProduct.Product",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "infoURL",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "logoURL",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "details",
+                "type": "t_uint256"
+              },
+              {
+                "label": "numberOfOffers",
+                "type": "t_uint256"
+              },
+              {
+                "label": "offers",
+                "type": "t_mapping(t_uint256,t_struct(Offer)7826_storage)"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_mapping(t_uint256,t_struct(Offer)7826_storage)": {
+            "label": "mapping(uint256 => struct ImmutableProduct.Offer)"
+          },
+          "t_struct(Offer)7826_storage": {
+            "label": "struct ImmutableProduct.Offer",
+            "members": [
+              {
+                "label": "tokenAddr",
+                "type": "t_address"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "value",
+                "type": "t_uint256"
+              },
+              {
+                "label": "infoURL",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "transferSurcharge",
+                "type": "t_uint256"
+              },
+              {
+                "label": "ricardianParent",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_contract(ImmutableEntity)7800": {
+            "label": "contract ImmutableEntity"
+          },
+          "t_contract(StringCommon)11725": {
+            "label": "contract StringCommon"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        },
+        "namespaces": {}
+      }
+    },
+    "aba80a4e7d4f0ef6dbf473f7965053d8c7bb9c9efa06680352acc00f14f1f178": {
+      "address": "0x7C728214be9A0049e6a86f2137ec61030D0AA964",
+      "txHash": "0x12e3576729f9a07fb0d7f36205d177d722eeb33169f15c096c1a2b5fc8e59426",
+      "layout": {
+        "solcVersion": "0.8.14",
         "storage": [
           {
             "contract": "Initializable",
@@ -5140,37 +5155,37 @@
             "contract": "CollectionProxy",
             "label": "_name",
             "type": "t_string_storage",
-            "src": "..\\project:\\contracts\\CollectionProxy.sol:34"
+            "src": "..\\project:\\contracts\\CollectionProxy.sol:36"
           },
           {
             "contract": "CollectionProxy",
             "label": "_symbol",
             "type": "t_string_storage",
-            "src": "..\\project:\\contracts\\CollectionProxy.sol:35"
+            "src": "..\\project:\\contracts\\CollectionProxy.sol:37"
           },
           {
             "contract": "CollectionProxy",
             "label": "_entity",
             "type": "t_uint256",
-            "src": "..\\project:\\contracts\\CollectionProxy.sol:36"
+            "src": "..\\project:\\contracts\\CollectionProxy.sol:38"
           },
           {
             "contract": "CollectionProxy",
             "label": "_product",
             "type": "t_uint256",
-            "src": "..\\project:\\contracts\\CollectionProxy.sol:37"
+            "src": "..\\project:\\contracts\\CollectionProxy.sol:39"
           },
           {
             "contract": "CollectionProxy",
             "label": "commonInterface",
-            "type": "t_contract(StringCommon)11996",
-            "src": "..\\project:\\contracts\\CollectionProxy.sol:40"
+            "type": "t_contract(StringCommon)11725",
+            "src": "..\\project:\\contracts\\CollectionProxy.sol:42"
           },
           {
             "contract": "CollectionProxy",
             "label": "creatorToken",
-            "type": "t_contract(CreatorToken)6856",
-            "src": "..\\project:\\contracts\\CollectionProxy.sol:41"
+            "type": "t_contract(CreatorToken)6602",
+            "src": "..\\project:\\contracts\\CollectionProxy.sol:43"
           }
         ],
         "types": {
@@ -5180,10 +5195,10 @@
           "t_uint256": {
             "label": "uint256"
           },
-          "t_contract(StringCommon)11996": {
+          "t_contract(StringCommon)11725": {
             "label": "contract StringCommon"
           },
-          "t_contract(CreatorToken)6856": {
+          "t_contract(CreatorToken)6602": {
             "label": "contract CreatorToken"
           },
           "t_address": {
@@ -5201,7 +5216,8 @@
           "t_bool": {
             "label": "bool"
           }
-        }
+        },
+        "namespaces": {}
       }
     }
   }

@@ -483,23 +483,38 @@ contract("ImmutableEcosystem", accounts => {
 
   it("Check owner of new release token", async () => {
 
-    const tokenOwner = await creatorTokenInstance.
-      ownerOf('0x0000000100000000000000000000000000000000000000000000000000000000');
+    let tokenid = await creatorTokenInstance.tokenOfOwnerByIndex(Account, 9);
+    const tokenOwner = await creatorTokenInstance.ownerOf(tokenid);
 
     assert.equal(Account, tokenOwner);
   });
 
-  it("Burn a release token9", async () => {
-    // Read the name from the ecosystem
+  it("Transfer release token to Account2", async () => {
+
     let tokenid = await creatorTokenInstance.tokenOfOwnerByIndex(Account, 9);
-    console.log(tokenid);
-    await creatorTokenInstance.approve('0x0000000000000000000000000000000000000000', '0x' + tokenid.toString(16), { from: Account });
-    await creatorTokenInstance.burn('0x' + tokenid.toString(16), { from: Account });
+    await creatorTokenInstance.
+      safeTransferFrom(Account, Account2, tokenid, { from: Account });
 
-    let nextTokenid = await creatorTokenInstance.tokenOfOwnerByIndex(Account, 9);
+    const tokenOwner = await creatorTokenInstance.ownerOf(tokenid);
+    assert.equal(Account2, tokenOwner);
+  });
 
-    if (tokenid.toString(16) == nextTokenid.toString(16))
-      assert.equal(0, 1, "Failed! Token was not burned");
+  it("Approve Account for Account2 token", async () => {
+    let tokenid = await creatorTokenInstance.tokenOfOwnerByIndex(Account2, 0);
+
+    await creatorTokenInstance.
+      approve(Account, tokenid, { from: Account2 });
+  });
+
+
+  it("Original Account burn a transferred release token", async () => {
+    // Read the name from the ecosystem
+    let tokenid = await creatorTokenInstance.tokenOfOwnerByIndex(Account2, 0);
+    await creatorTokenInstance.burn(tokenid, { from: Account });
+
+    // Ensure token no longer exists
+    await truffleAssert.fails(creatorTokenInstance.tokenOfOwnerByIndex(Account2, 0));
+
   });
 
   it("Create three (3) products and verify", async () => {
@@ -896,6 +911,32 @@ contract("ImmutableEcosystem", accounts => {
   });
 
   it("Create a product license offer", async () => {
+    // Create the produce license offer for a one year activation
+
+    // Update the license value with the expiration
+    var expiringLicense = bigInt(365 * (24 * (60 * 60)));//.shiftLeft(128);
+
+    // Add the product activation value (1)
+//    expiringLicense = expiringLicense.add(1);
+
+    await immutableProductInstance.productOfferLimitation(0,
+       '0x0000000000000000000000000000000000000000', 10000000000,
+       0, '0x' + expiringLicense.toString(16), 0, 0, "", 0, 0, 0, { from: Account });
+
+    var offerPrice = await immutableProductInstance.productOfferDetails(1, 0, 0, { from: Account });
+    assert.equal(offerPrice[1], 10000000000, "Failed, product activation license price mismatch");
+  });
+
+  it("Revoke the new product license offer", async () => {
+    // Revoke the produce license offer
+    await immutableProductInstance.productOfferEditPrice(0, 0, 0, { from: Account });
+
+    // Ensure offer no longer exists
+    await truffleAssert.fails(immutableProductInstance.productOfferDetails(
+              1, 0, 0));
+  });
+
+  it("Create another product license offer", async () => {
     // Create the produce license offer for a one year activation
 
     // Update the license value with the expiration

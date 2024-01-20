@@ -223,7 +223,7 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
   {
     uint256 entityStatus = entityInterface.entityAddressStatus(msg.sender);
     uint256 entityIndex = entityInterface.entityAddressToIndex(msg.sender);
-    uint256 offerId = 0;
+    uint256 offerId;/* = 0*/
 
     // Only a validated commercial entity can create an offer
     require(entityStatus > 0, commonInterface.EntityNotValidated());
@@ -245,10 +245,8 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
               "Not ERC20 token or no supply");
     }
 
-    // Check if any offer has been exhausted/revoked
-    for (;offerId < Products[entityIndex][productIndex].numberOfOffers; ++offerId)
-      if (Products[entityIndex][productIndex].offers[offerId].price == 0)
-        break;
+    // Save and then update the offer count
+    offerId = Products[entityIndex][productIndex].numberOfOffers++;
 
     // Assign new digital product offer
     Products[entityIndex][productIndex].offers[offerId].tokenAddr = erc20token;
@@ -257,10 +255,6 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     Products[entityIndex][productIndex].offers[offerId].infoURL = infoUrl;
     Products[entityIndex][productIndex].offers[offerId].transferSurcharge = transferSurcharge;
     Products[entityIndex][productIndex].offers[offerId].ricardianParent = requireRicardian;
-
-    // If creating a new offer update the offer count
-    if (offerId >= Products[entityIndex][productIndex].numberOfOffers)
-      offerId = Products[entityIndex][productIndex].numberOfOffers++;
 
     emit productOfferEvent(entityIndex, productIndex,
                            Products[entityIndex][productIndex].name,
@@ -295,10 +289,14 @@ contract ImmutableProduct is Initializable, OwnableUpgradeable
     // While the last offer and empty, remove index
     while ((Products[entityIndex][productIndex].numberOfOffers > 0) &&
            (offerIndex == Products[entityIndex][productIndex].numberOfOffers - 1) &&
-           (Products[entityIndex][productIndex].offers[offerIndex].price == 0))
+           (Products[entityIndex][productIndex].offers[offerIndex].price == 0) &&
+           (Products[entityIndex][productIndex].offers[offerIndex].value == 0))
     {
-      offerIndex--;
       Products[entityIndex][productIndex].numberOfOffers--;
+      if (offerIndex > 0)
+        offerIndex--;
+      else
+        break;
     }
   }
 
